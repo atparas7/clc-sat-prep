@@ -184,9 +184,9 @@
   /* ---------------- CONTENT (empty — ready to fill in) ---------------- */
 
   var SECTIONS = {
-    english: { title:"English", icon:"📖", color:"english", tests:[] },
-    math: { title:"Math", icon:"📐", color:"practice", tests:[] },
-    full: { title:"Full Test", icon:"🎯", color:"full", tests:[] }
+    english: { title:"English", icon:"📖", color:"english", tests:[], blurb:"Vocabulary · Boundaries & Form practice" },
+    math: { title:"Math", icon:"📐", color:"practice", tests:[], blurb:"Theory guides · Extra practice · Desmos" },
+    full: { title:"Full Test", icon:"🎯", color:"full", tests:[], blurb:"" }
   };
   var SECTION_ORDER = ["english","math","full"];
 
@@ -244,16 +244,16 @@
   ];
 
   var MATH_SUBCATS = [
-    {key:"theory", label:"Theory", icon:"📚", desc:"Formulas and concepts explained — no questions yet."},
+    {key:"theory", label:"Theory", icon:"📚", desc:"Full theory guides (PDF) — Algebra, Geometry & Trigonometry, Advanced Math, Problem-Solving & Data Analysis."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"Practice tests — coming soon."},
-    {key:"extra", label:"Extra Practice", icon:"➕", desc:"Additional practice banks."},
-    {key:"desmos", label:"Desmos", icon:"🧮", desc:"The built-in graphing calculator allowed on the Digital SAT Math section."},
+    {key:"extra", label:"Extra Practice", icon:"➕", desc:"4 timed practice sets — Algebra, Geometry & Trigonometry, Advanced Math, Problem-Solving & Data Analysis (90 questions)."},
+    {key:"desmos", label:"Desmos", icon:"🧮", desc:"Intro video + 48-slide guide to the built-in Desmos graphing calculator."},
     {key:"revision", label:"Revision Maths", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."}
   ];
 
   var ENGLISH_SUBCATS = [
-    {key:"theory", label:"Theory", icon:"📚", desc:"Rules and concepts explained — no questions yet."},
-    {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"Word bank and words-in-context practice — coming soon."},
+    {key:"theory", label:"Theory", icon:"📚", desc:"Rules and concepts explained — coming soon."},
+    {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"SAT Vocabulary Vol. 1 — word bank and words-in-context practice."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"Boundaries and Form, Structure & Sense — 38 questions with full explanations."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"Additional question sets — coming soon."},
     {key:"revision", label:"Revision English", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."}
@@ -403,7 +403,7 @@ function screenSignin(){
       html += "<button class=\"tile-col\" onclick=\"go('section',{key:'"+key+"'})\">"+
         "<div class=\"icon\" style=\"background:var(--"+s.color+"-soft); color:var(--"+s.color+");\">"+s.icon+"</div>"+
         "<strong>"+escapeHtml(s.title)+"</strong>"+
-        "<span>"+(s.tests.length ? s.tests.length+" test(s)" : "No content yet")+"</span>"+
+        "<span>"+(s.tests.length ? s.tests.length+" test(s)" : (s.blurb || "No content yet"))+"</span>"+
         "</button>";
     });
     html += "</div>";
@@ -437,6 +437,7 @@ function screenSignin(){
       html += "<button class=\"tile-col\" onclick=\"go('englishsub',{key:'"+sc.key+"'})\">"+
         "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+sc.icon+"</div>"+
         "<strong>"+escapeHtml(sc.label)+"</strong>"+
+        "<span>"+escapeHtml(sc.desc)+"</span>"+
         "</button>";
     });
     html += "</div>";
@@ -498,6 +499,7 @@ function screenSignin(){
       html += "<button class=\"tile-col\" onclick=\"go('mathsub',{key:'"+sc.key+"'})\">"+
         "<div class=\"icon\" style=\"background:var(--practice-soft); color:var(--practice);\">"+sc.icon+"</div>"+
         "<strong>"+escapeHtml(sc.label)+"</strong>"+
+        "<span>"+escapeHtml(sc.desc)+"</span>"+
         "</button>";
     });
     html += "</div>";
@@ -894,6 +896,7 @@ function screenSignin(){
   }
 })();
 </script>
+
 
 
 
