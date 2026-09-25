@@ -225,6 +225,13 @@
     {key:"data-analysis", label:"Problem-Solving & Data Analysis Trap-Question Bank", icon:"📊", count:140, href:"practice/data-analysis-trap-bank.html"}
   ];
 
+  var MATH_THEORY_DECKS = {
+    "algebra": "theory/algebra-theory.pdf",
+    "geometry-trigonometry": "theory/geometry-trig-theory.pdf",
+    "advanced-math": "theory/advanced-math-theory.pdf",
+    "data-analysis": "theory/data-analysis-theory.pdf"
+  };
+
   var ENGLISH_VOCAB_BANKS = [
     {key:"vocab-vol1", label:"SAT VOCABULARY VOL1", icon:"🔤", href:"vocabulary/sat-vocabulary-vol1.html"}
   ];
@@ -523,10 +530,18 @@ function screenSignin(){
     if(key==="theory"){
       var html = "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+sc.icon+" Theory — choose a topic</p><div class=\"section-grid\">";
       MATH_THEORY_TOPICS.forEach(function(topic){
-        html += "<button class=\"tile-col\" onclick=\"openMathTheoryTopic('"+topic.key+"')\">"+
-          "<div class=\"icon\" style=\"background:var(--practice-soft); color:var(--practice);\">"+topic.icon+"</div>"+
-          "<strong>"+escapeHtml(topic.label)+"</strong>"+
-          "</button>";
+        var deckHref = MATH_THEORY_DECKS[topic.key];
+        if(deckHref){
+          html += "<a class=\"tile-col\" href=\""+deckHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+            "<div class=\"icon\" style=\"background:var(--practice-soft); color:var(--practice);\">"+topic.icon+"</div>"+
+            "<strong>"+escapeHtml(topic.label)+"</strong>"+
+            "</a>";
+        } else {
+          html += "<button class=\"tile-col\" onclick=\"openMathTheoryTopic('"+topic.key+"')\">"+
+            "<div class=\"icon\" style=\"background:var(--practice-soft); color:var(--practice);\">"+topic.icon+"</div>"+
+            "<strong>"+escapeHtml(topic.label)+"</strong>"+
+            "</button>";
+        }
       });
       html += "</div>";
       return html;
