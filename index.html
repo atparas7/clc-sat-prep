@@ -226,6 +226,16 @@
     "data-analysis": "theory/data-analysis-theory.pdf"
   };
 
+  var ENGLISH_THEORY_TOPICS = [
+    {key:"conventions", label:"Standard English Conventions", icon:"✔️", href:"theory/english-conventions-theory.pdf", extraHref:"theory/english-conventions-companion.pdf", extraLabel:"Presentation Companion (1 worked Q per skill)"},
+    {key:"info-ideas", label:"Information and Ideas", icon:"🔎", href:"theory/english-information-ideas-theory.pdf"},
+    {key:"craft-structure", label:"Craft and Structure", icon:"🏛️", href:"theory/english-craft-structure-theory.pdf"},
+    {key:"expression", label:"Expression of Ideas", icon:"💬", href:"theory/english-expression-ideas-theory.pdf"},
+    {key:"central-ideas", label:"Central Ideas & Details", icon:"🎯", href:"theory/english-central-ideas-details.pdf"},
+    {key:"cross-text", label:"Cross-Text Connections", icon:"🔗", href:"theory/english-cross-text-connections.pdf"},
+    {key:"inference", label:"Inference", icon:"🧩", href:"theory/english-inference.pdf"}
+  ];
+
   var ENGLISH_VOCAB_BANKS = [
     {key:"vocab-vol1", label:"SAT VOCABULARY VOL1", icon:"🔤", href:"vocabulary/sat-vocabulary-vol1.html"}
   ];
@@ -290,7 +300,7 @@
   ];
 
   var ENGLISH_SUBCATS = [
-    {key:"theory", label:"Theory", icon:"📚", desc:"Rules and concepts explained — coming soon."},
+    {key:"theory", label:"Theory", icon:"📚", desc:"7 topic guides covering all four Reading & Writing domains, with worked examples."},
     {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"SAT Vocabulary Vol. 1 — word bank and words-in-context practice."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"Boundaries and Form, Structure & Sense — 38 questions with full explanations."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"5 full domain tests (Information & Ideas, Conventions, Expression of Ideas, Craft & Structure, Transitions) — 180 questions total."},
@@ -516,6 +526,27 @@ function screenSignin(){
       });
       html2 += "</div>";
       return html2;
+    }
+    if(key==="theory"){
+      var html4 = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Theory</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Seven guides covering all four Reading & Writing domains — rules, patterns, and fully worked examples. Each opens as a PDF in a new tab.</p>"+
+        "</div><div class=\"section-grid\">";
+      ENGLISH_THEORY_TOPICS.forEach(function(topic){
+        html4 += "<a class=\"tile-col\" href=\""+topic.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+          "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+topic.icon+"</div>"+
+          "<strong>"+escapeHtml(topic.label)+"</strong>"+
+          "</a>";
+      });
+      html4 += "</div>";
+      var companion = ENGLISH_THEORY_TOPICS.filter(function(x){return x.extraHref;})[0];
+      if(companion){
+        html4 += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+escapeHtml(companion.label)+" — extra resource</p>"+
+          "<a class=\"btn ghost\" href=\""+companion.extraHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">"+escapeHtml(companion.extraLabel)+" ↓</a>"+
+          "</div>";
+      }
+      return html4;
     }
     if(key==="extra"){
       var html3 = "<div class=\"card\" style=\"position:relative;\">"+
@@ -981,10 +1012,6 @@ function screenSignin(){
   }
 })();
 </script>
-
-
-
-
 
 
 
