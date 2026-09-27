@@ -230,6 +230,14 @@
     {key:"vocab-vol1", label:"SAT VOCABULARY VOL1", icon:"🔤", href:"vocabulary/sat-vocabulary-vol1.html"}
   ];
 
+  var ENGLISH_EXTRA_TESTS = [
+    {key:"info-ideas", label:"Information & Ideas", icon:"🔎", count:47, href:"practice/english-information-ideas.html"},
+    {key:"conventions", label:"Standard English Conventions", icon:"✔️", count:38, href:"practice/english-standard-conventions.html"},
+    {key:"expression", label:"Expression of Ideas", icon:"💬", count:33, href:"practice/english-expression-ideas.html"},
+    {key:"craft-structure", label:"Craft & Structure", icon:"🏛️", count:32, href:"practice/english-craft-structure.html"},
+    {key:"transitions", label:"Transitions Practice", icon:"🔗", count:30, href:"practice/english-transitions-practice.html"}
+  ];
+
   var MATH_EXTRA_PRACTICE_BANKS = [
     {key:"algebra-2", label:"Algebra", icon:"🔢", count:23, href:"practice/algebra-bank2.html"},
     {key:"geometry-trig-2", label:"Geometry & Trigonometry (Set 2)", icon:"📐", count:21, href:"practice/geometry-trig-bank2.html"},
@@ -285,7 +293,7 @@
     {key:"theory", label:"Theory", icon:"📚", desc:"Rules and concepts explained — coming soon."},
     {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"SAT Vocabulary Vol. 1 — word bank and words-in-context practice."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"Boundaries and Form, Structure & Sense — 38 questions with full explanations."},
-    {key:"extra", label:"Extra Practice", icon:"➕", desc:"Additional question sets — coming soon."},
+    {key:"extra", label:"Extra Practice", icon:"➕", desc:"5 full domain tests (Information & Ideas, Conventions, Expression of Ideas, Craft & Structure, Transitions) — 180 questions total."},
     {key:"revision", label:"Revision English", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."}
   ];
 
@@ -508,6 +516,22 @@ function screenSignin(){
       });
       html2 += "</div>";
       return html2;
+    }
+    if(key==="extra"){
+      var html3 = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Extra Practice</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Five full domain tests built from real College Board Question Bank items, each with a full Rule / Tip / Trap / Vocabulary breakdown. Each opens in a new tab as its own complete testing environment.</p>"+
+        "</div><div class=\"section-grid\">";
+      ENGLISH_EXTRA_TESTS.forEach(function(t){
+        html3 += "<a class=\"tile-col\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+          "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+t.icon+"</div>"+
+          "<strong>"+escapeHtml(t.label)+"</strong>"+
+          "<span>"+t.count+" questions</span>"+
+          "</a>";
+      });
+      html3 += "</div>";
+      return html3;
     }
     return "<div class=\"card\" style=\"position:relative;\">"+
       "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
@@ -957,6 +981,7 @@ function screenSignin(){
   }
 })();
 </script>
+
 
 
 
