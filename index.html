@@ -233,7 +233,8 @@
     {key:"expression", label:"Expression of Ideas", icon:"💬", href:"theory/english-expression-ideas-theory.pdf"},
     {key:"central-ideas", label:"Central Ideas & Details", icon:"🎯", href:"theory/english-central-ideas-details.pdf"},
     {key:"cross-text", label:"Cross-Text Connections", icon:"🔗", href:"theory/english-cross-text-connections.pdf"},
-    {key:"inference", label:"Inference", icon:"🧩", href:"theory/english-inference.pdf"}
+    {key:"inference", label:"Inference", icon:"🧩", href:"theory/english-inference.pdf"},
+    {key:"resolve-paradox", label:"Resolve the Paradox", icon:"⚖️", href:"theory/english-resolve-paradox-theory.pdf", testHref:"practice/english-resolve-paradox-practice.html", testLabel:"Practice Test (20 questions)"}
   ];
 
   var ENGLISH_VOCAB_BANKS = [
@@ -300,7 +301,7 @@
   ];
 
   var ENGLISH_SUBCATS = [
-    {key:"theory", label:"Theory", icon:"📚", desc:"7 topic guides covering all four Reading & Writing domains, with worked examples."},
+    {key:"theory", label:"Theory", icon:"📚", desc:"8 topic guides covering all four Reading & Writing domains, with worked examples."},
     {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"SAT Vocabulary Vol. 1 — word bank and words-in-context practice."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"Boundaries and Form, Structure & Sense — 38 questions with full explanations."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"5 full domain tests (Information & Ideas, Conventions, Expression of Ideas, Craft & Structure, Transitions) — 180 questions total."},
@@ -531,7 +532,7 @@ function screenSignin(){
       var html4 = "<div class=\"card\" style=\"position:relative;\">"+
         "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
         "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Theory</p>"+
-        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Seven guides covering all four Reading & Writing domains — rules, patterns, and fully worked examples. Each opens as a PDF in a new tab.</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Eight guides covering all four Reading & Writing domains — rules, patterns, and fully worked examples. Each opens as a PDF in a new tab.</p>"+
         "</div><div class=\"section-grid\">";
       ENGLISH_THEORY_TOPICS.forEach(function(topic){
         html4 += "<a class=\"tile-col\" href=\""+topic.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
@@ -540,12 +541,17 @@ function screenSignin(){
           "</a>";
       });
       html4 += "</div>";
-      var companion = ENGLISH_THEORY_TOPICS.filter(function(x){return x.extraHref;})[0];
-      if(companion){
-        html4 += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+escapeHtml(companion.label)+" — extra resource</p>"+
-          "<a class=\"btn ghost\" href=\""+companion.extraHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">"+escapeHtml(companion.extraLabel)+" ↓</a>"+
-          "</div>";
-      }
+      ENGLISH_THEORY_TOPICS.filter(function(x){return x.extraHref || x.testHref;}).forEach(function(t){
+        html4 += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+escapeHtml(t.label)+" — extra resource</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        if(t.extraHref){
+          html4 += "<a class=\"btn ghost\" href=\""+t.extraHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.extraLabel)+" ↓</a>";
+        }
+        if(t.testHref){
+          html4 += "<a class=\"btn gold\" href=\""+t.testHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.testLabel)+" ↗</a>";
+        }
+        html4 += "</div></div>";
+      });
       return html4;
     }
     if(key==="extra"){
