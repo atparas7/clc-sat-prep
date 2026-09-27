@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLC — Grammar and Sentence Structure — Full Test 1 (Mixed)</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; margin:0; background:#f7f5f0; color:#241a12; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
+.card { background:#fff; border-radius: 10px; padding: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom:20px; }
+h1 { color:#A8002E; font-size: 1.6rem; margin-top:0; }
+.start-btn, #submit-btn, #confirm-submit { background:#A8002E; color:#fff; border:none; padding:12px 28px; border-radius:6px; font-size:1rem; cursor:pointer; }
+.start-btn:hover, #submit-btn:hover { background:#8a0026; }
+.timing-options { display:flex; gap:14px; margin:18px 0; }
+.timing-card { flex:1; border:2px solid #ddd; border-radius:8px; padding:16px; cursor:pointer; text-align:center; }
+.timing-card.selected { border-color:#A8002E; background:#FBF3E3; }
+.timing-card h3 { margin:0 0 6px 0; color:#A8002E; font-size:1.05rem; }
+.timing-card div.mins { font-size:1.5rem; font-weight:bold; color:#241a12; }
+.nav-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.nav-btn { width:38px; height:38px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.9rem; }
+.nav-btn.current { border-color:#A8002E; border-width:2px; }
+.nav-btn.answered { background:#F5EFE0; }
+#q-text{font-size:1.08rem;line-height:1.6;margin:14px 0 20px}
+.choice-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid #ddd; border-radius:6px; margin-bottom:10px; cursor:pointer; }
+.choice-row:hover { background:#faf6ee; }
+.choice-row.selected { border-color:#A8002E; background:#FBF3E3; }
+.choice-letter { font-weight:bold; color:#A8002E; }
+.timer-box { position:sticky; top:0; background:#241a12; color:#fff; padding:8px 16px; border-radius:6px; font-weight:bold; text-align:center; margin-bottom:14px; font-size:1.1rem; z-index:10; }
+.timer-box.low-time { background:#A8002E; }
+.review-card { border:1px solid #ddd; border-radius:8px; padding:18px; margin-bottom:16px; }
+.review-card.correct { border-left: 5px solid #1F7A3D; }
+.review-card.incorrect { border-left: 5px solid #A8002E; }
+.review-q { font-weight:600; margin-bottom:10px; }
+.review-choice { display:flex; gap:8px; padding:6px 0; }
+.review-choice.right-answer { color:#1F7A3D; font-weight:600; }
+.review-choice.user-wrong { color:#A8002E; font-weight:600; }
+.review-section { margin-top:12px; }
+.review-section-label { font-weight:bold; color:#B8882A; font-family: Georgia, serif; font-size:1rem; margin-bottom:4px; }
+.review-rule { background:#faf6ee; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; }
+.review-tip { background:#FBF3E3; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #B8882A; }
+.review-trap { background:#FCEDEE; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #A8002E; }
+.review-poe-list { margin:6px 0 0 0; padding-left:20px; font-size:.92rem; color:#3a3a3a; }
+.review-poe-list li { margin-bottom:5px; line-height:1.45; }
+.review-poe-list li.correct-letter { color:#1F7A3D; font-weight:600; }
+.score-big { font-size:2.4rem; color:#A8002E; font-weight:bold; }
+.hidden { display:none !important; }
+.subtitle { color:#5A5A5A; font-size:0.95rem; margin-bottom:20px; }
+#confirm-box { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
+#confirm-box .card { max-width:420px; text-align:center; }
+#print-btn { position:fixed; bottom:20px; right:20px; background:#B8882A; color:#fff; border:none; padding:12px 18px; border-radius:24px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.2); font-size:0.95rem; }
+@media print {
+  #print-btn, #intro-screen, #test-screen, #confirm-box { display:none !important; }
+  body { background:#fff; }
+  .card { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="intro-screen" class="card">
+    <h1 id="intro-title">Full Test 1 (Mixed)</h1>
+    <div id="intro-subtitle" class="subtitle">A mixed 20-question test drawing from every skill in this category.</div>
+    <p id="intro-count"></p>
+    <div id="timing-options" class="timing-options"></div>
+    <button class="start-btn">Start Test</button>
+  </div>
+
+  <div id="test-screen" class="card hidden">
+    <div id="timer-box" class="timer-box"></div>
+    <div id="q-counter" style="font-weight:600;color:#5A5A5A;margin-bottom:8px;"></div>
+    <div id="q-text"></div>
+    <div id="choices"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+      <button id="prev-btn" style="width:auto;padding:8px 16px;">&larr; Back</button>
+      <button id="next-btn" style="width:auto;padding:8px 16px;">Next &rarr;</button>
+    </div>
+    <div id="nav-grid" class="nav-grid"></div>
+    <button id="submit-btn">Submit Test</button>
+  </div>
+
+  <div id="results-screen" class="card hidden">
+    <h1 id="results-title">Results</h1>
+    <div class="score-big"></div>
+    <div id="review-container"></div>
+  </div>
+
+  <button id="print-btn" class="hidden">Export / Print PDF</button>
+
+  <div id="confirm-box" class="hidden">
+    <div class="card">
+      <p>Submit your test? You won't be able to change your answers after this.</p>
+      <button id="confirm-submit">Yes, Submit</button>
+      <button id="cancel-submit" style="background:#ccc;color:#333;">Cancel</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+const TEST = {"label": "Full Test 1 (Mixed)", "description": "A mixed 20-question test drawing from every skill in this category.", "questions": [{"question": "She not only finished the race but also ______ a new personal record.", "choices": {"D": "setting", "A": "set", "B": "to set", "C": "had set"}, "correct": "A", "difficulty": "Easy", "skill": "Parallel Structure", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "\"Not only...but also\" requires matching grammatical forms on both sides \u2014 \"finished\" and \"set\" are both simple past tense.", "tip": "When a sentence lists, joins, or compares items, every item must share the same grammatical form \u2014 check the first item in the list or pair, then confirm every other item matches it.", "trap": "This choice, \"setting,\" functions as a gerund or present-participle form here, which does not fit the grammatical role the sentence requires in this position.", "poe": {"D": "This choice, \"setting,\" functions as a gerund or present-participle form here, which does not fit the grammatical role the sentence requires in this position.", "A": "\"Not only...but also\" requires matching grammatical forms on both sides \u2014 \"finished\" and \"set\" are both simple past tense.", "B": "This choice, \"to set,\" functions as an infinitive verb form here, which does not fit the grammatical role the sentence requires in this position.", "C": "This choice, \"had set,\" breaks the parallel grammatical pattern established by the rest of the list, pair, or comparison."}}, {"question": "Each year in the fall, when the weather starts to cool in the northern hemisphere, millions of North American monarch butterflies journey south. Searching for food and warmer habitats, they ______ thousands of miles\u2014from as far north as Canada all the way down to Mexico\u2014on this annual migration.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "flew", "B": "were flying", "C": "had flown", "D": "fly"}, "correct": "D", "difficulty": "Medium", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense. In this choice, the present tense verb \u201cfly\u201d is consistent with the other present tense verb ( \u201cjourney\u201d) used to describe the butterflies\u2019 yearly migration. Together, these simple present tense verbs correctly indicate that the migration is a current, yearly occurrence.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "The simple past tense verb \u201cflew\u201d isn\u2019t consistent with the other present tense verb used to describe the butterflies\u2019 yearly migration.", "poe": {"D": "The convention being tested is the use of verbs to express tense. In this choice, the present tense verb \u201cfly\u201d is consistent with the other present tense verb ( \u201cjourney\u201d) used to describe the butterflies\u2019 yearly migration. Together, these simple present tense verbs correctly indicate that the migration is a current, yearly occurrence.", "A": "The simple past tense verb \u201cflew\u201d isn\u2019t consistent with the other present tense verb used to describe the butterflies\u2019 yearly migration.", "B": "The past progressive tense verb \u201cwere flying\u201d isn\u2019t consistent with the other present tense verb used to describe the butterflies\u2019 yearly migration.", "C": "The past perfect tense verb \u201chad flown\u201d isn\u2019t consistent with the other present tense verb used to describe the butterflies\u2019 yearly migration."}}, {"question": "Known as Earth\u2019s \u201cliving skin,\u201d biocrusts are thin layers of soil held together by surface-dwelling microorganisms such as fungi, lichens, and cyanobacteria. Fortifying soil in arid ecosystems against erosion, ______<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "a recent study\u2019s estimate is that these crusts reduce global dust emissions by 60 percent each year.", "B": "an estimated 60 percent reduction in global dust emissions each year is due to these crusts, according to a recent study.", "C": "these crusts reduce global dust emissions by an estimated 60 percent each year, according to a recent study.", "D": "a recent study has estimated that these crusts reduce global dust emissions by 60 percent each year."}, "correct": "C", "difficulty": "Hard", "skill": "Modifiers", "domain": "Standard English Conventions", "tags": [], "rule": "The subject of the modifier \"fortifying soil in arid ecosystems against erosion\" is \"biocrusts.\" Subject-modifier placement requires a modifier and its subject to be next to each other, so \"biocrusts\" or some variant meaning \"biocrusts\" (in this case, \"these crusts\") must begin the missing clause.", "tip": "Check the word or phrase right after an introductory modifier \u2014 that word must be the one actually being described, or the sentence has a misplaced or dangling modifier.", "trap": "Modifiers and their subjects must go next to each other. The subject of the modifier \"fortifying soil in arid ecosystems against erosion\" is \"biocrusts,\" not \"a recent study\u2019s estimate.\"", "poe": {"C": "The subject of the modifier \"fortifying soil in arid ecosystems against erosion\" is \"biocrusts.\" Subject-modifier placement requires a modifier and its subject to be next to each other, so \"biocrusts\" or some variant meaning \"biocrusts\" (in this case, \"these crusts\") must begin the missing clause.", "A": "Modifiers and their subjects must go next to each other. The subject of the modifier \"fortifying soil in arid ecosystems against erosion\" is \"biocrusts,\" not \"a recent study\u2019s estimate.\"", "B": "Modifiers and their subjects must go next to each other. The subject of the modifier \"fortifying soil in arid ecosystems against erosion\" is \"biocrusts,\" not \"an estimated 60 percent reduction.\"", "D": "Modifiers and their subjects must go next to each other. The subject of the modifier \"fortifying soil in arid ecosystems against erosion\" is \"biocrusts,\" not \"a recent study.\""}}, {"question": "Solarpunk is an art movement that imagines renewable energy\u2013powered technology infused complementarily into nature. In Paolo Bacigalupi\u2019s solarpunk short story \u201cEfficiency,\u201d an artificial intelligence that absorbs sustainable energies, redistributing them through intricate networks of weights and generators, ______ Chicago\u2019s energy grid.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "have been powering", "B": "power", "C": "powers", "D": "are powering"}, "correct": "C", "difficulty": "Hard", "skill": "Subject-Verb Agreement", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement. The singular verb \"powers\" agrees in number with the singular subject \"an artificial intelligence.\"", "tip": "Find the true subject by mentally crossing out any phrase that sits between the subject and the verb, then check that the verb matches that subject in number.", "trap": "Because the plural verb \"have been powering\" doesn\u2019t agree in number with the singular subject \"an artificial intelligence.\"", "poe": {"C": "The convention being tested is subject-verb agreement. The singular verb \"powers\" agrees in number with the singular subject \"an artificial intelligence.\"", "A": "Because the plural verb \"have been powering\" doesn\u2019t agree in number with the singular subject \"an artificial intelligence.\"", "B": "Because the plural verb \"power\" doesn\u2019t agree in number with the singular subject \"an artificial intelligence.\"", "D": "Because the plural verb \"are powering\" doesn\u2019t agree in number with the singular subject \"an artificial intelligence.\""}}, {"question": "The design was praised for being both functional and ______ .", "choices": {"D": "beautiful", "A": "a thing of beauty", "B": "showing beauty", "C": "having beauty"}, "correct": "D", "difficulty": "Easy", "skill": "Parallel Structure", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "\"Both...and\" requires matching forms \u2014 \"functional\" and \"beautiful\" are both simple adjectives.", "tip": "When a sentence lists, joins, or compares items, every item must share the same grammatical form \u2014 check the first item in the list or pair, then confirm every other item matches it.", "trap": "This choice, \"a thing of beauty,\" breaks the parallel grammatical pattern established by the rest of the list, pair, or comparison.", "poe": {"D": "\"Both...and\" requires matching forms \u2014 \"functional\" and \"beautiful\" are both simple adjectives.", "A": "This choice, \"a thing of beauty,\" breaks the parallel grammatical pattern established by the rest of the list, pair, or comparison.", "B": "This choice, \"showing beauty,\" breaks the parallel grammatical pattern established by the rest of the list, pair, or comparison.", "C": "This choice, \"having beauty,\" breaks the parallel grammatical pattern established by the rest of the list, pair, or comparison."}}, {"question": "In 2015, a team led by materials scientists Anirudha Sumant and Diana Berman succeeded in reducing the coefficient of friction (COF) between two surfaces to the lowest possible level\u2014superlubricity. A nearly frictionless (and, as its name suggests, extremely slippery) state, ______<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "when their COF drops below 0.01, two surfaces reach superlubricity.", "B": "two surfaces, when their COF drops below 0.01, reach superlubricity.", "C": "reaching superlubricity occurs when two surfaces\u2019 COF drops below 0.01.", "D": "superlubricity is reached when two surfaces\u2019 COF drops below 0.01."}, "correct": "D", "difficulty": "Hard", "skill": "Modifiers", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-modifier placement. This choice makes the noun \u201csuperlubricity\u201d the subject of the sentence and places it immediately after the modifying phrase \u201ca nearly frictionless\u2026state.\u201d In doing so, this choice clearly establishes that superlubricity\u2014and not another noun in the sentence\u2014is being described as nearly frictionless and extremely slippery.", "tip": "Check the word or phrase right after an introductory modifier \u2014 that word must be the one actually being described, or the sentence has a misplaced or dangling modifier.", "trap": "Because it results in a dangling modifier. Regardless of the introductory \u201cwhen\u2026\u201d clause, the main subject \u201ctwo surfaces\u201d follows the modifying phrase (\u201cA nearly frictionless\u2026state\u201d), illogically suggesting that the surfaces are the nearly frictionless, extremely slippery state.", "poe": {"D": "The convention being tested is subject-modifier placement. This choice makes the noun \u201csuperlubricity\u201d the subject of the sentence and places it immediately after the modifying phrase \u201ca nearly frictionless\u2026state.\u201d In doing so, this choice clearly establishes that superlubricity\u2014and not another noun in the sentence\u2014is being described as nearly frictionless and extremely slippery.", "A": "Because it results in a dangling modifier. Regardless of the introductory \u201cwhen\u2026\u201d clause, the main subject \u201ctwo surfaces\u201d follows the modifying phrase (\u201cA nearly frictionless\u2026state\u201d), illogically suggesting that the surfaces are the nearly frictionless, extremely slippery state.", "B": "Because it results in a dangling modifier. The placement of the noun phrase \u201ctwo surfaces\u201d immediately after the modifying phrase illogically suggests that the surfaces are a nearly frictionless and extremely slippery state.", "C": "Because it results in a dangling modifier. The placement of the gerund phrase \u201creaching superlubricity\u201d immediately after the modifying phrase illogically suggests that the act of reaching superlubricity is the nearly frictionless, extremely slippery state."}}, {"question": "The museum's collection is larger than ______ .", "choices": {"A": "the gallery downtown", "B": "that of the gallery downtown", "C": "the gallery downtown has", "D": "having the gallery downtown"}, "correct": "B", "difficulty": "Easy", "skill": "Parallel Structure", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "The comparison must compare collections to collections \u2014 \"that of the gallery downtown\" correctly stands in for \"the collection of the gallery downtown.\"", "tip": "When a sentence lists, joins, or compares items, every item must share the same grammatical form \u2014 check the first item in the list or pair, then confirm every other item matches it.", "trap": "This choice compares directly to \"the gallery downtown\" itself, rather than to what that thing HAS or IS \u2014 creating an illogical comparison between two different types of things.", "poe": {"A": "This choice compares directly to \"the gallery downtown\" itself, rather than to what that thing HAS or IS \u2014 creating an illogical comparison between two different types of things.", "B": "The comparison must compare collections to collections \u2014 \"that of the gallery downtown\" correctly stands in for \"the collection of the gallery downtown.\"", "C": "This choice, \"the gallery downtown has,\" functions as a plural noun or a verb form here, which does not fit the grammatical role the sentence requires in this position.", "D": "This choice compares directly to \"having the gallery downtown\" itself, rather than to what that thing HAS or IS \u2014 creating an illogical comparison between two different types of things."}}, {"question": "In the 1950s, a man named Joseph McVicker was struggling to keep his business afloat when his sister-in-law Kay Zufall advised him to repurpose the company\u2019s product, a nontoxic, clay-like substance for removing soot from wallpaper, as a modeling putty for kids. In addition, Zufall ______ selling the product under a child-friendly name: Play-Doh.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "suggested", "B": "suggests", "C": "had suggested", "D": "was suggesting"}, "correct": "A", "difficulty": "Hard", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense. In this choice, the simple past tense verb \u201csuggested\u201d properly indicates that Zufall offered her suggestion for the product\u2019s name in the past. This verb tense is consistent with the previous sentence\u2019s use of a simple past tense verb (\u201cadvised\u201d) to describe Zufall\u2019s advice to McVicker in the 1950s.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the present tense verb \u201csuggests\u201d doesn\u2019t indicate that Zufall offered her suggestion in the past.", "poe": {"A": "The convention being tested is the use of verbs to express tense. In this choice, the simple past tense verb \u201csuggested\u201d properly indicates that Zufall offered her suggestion for the product\u2019s name in the past. This verb tense is consistent with the previous sentence\u2019s use of a simple past tense verb (\u201cadvised\u201d) to describe Zufall\u2019s advice to McVicker in the 1950s.", "B": "Because the present tense verb \u201csuggests\u201d doesn\u2019t indicate that Zufall offered her suggestion in the past.", "C": "Because the past perfect verb \u201chad suggested\u201d isn\u2019t consistent with the previous sentence\u2019s use of the simple past tense verb \u201cadvised\u201d to describe Zufall\u2019s advice to McVicker.", "D": "Because the past progressive verb \u201cwas suggesting\u201d isn\u2019t consistent with the previous sentence\u2019s use of the simple past tense verb \u201cadvised\u201d to describe Zufall\u2019s advice to McVicker."}}, {"question": "Many folktales that originate in the Czech language start with a phrase that roughly translates to \u201cthere was, there was not.\u201d Many tales that originate in English use \u201conce upon a time.\u201d Such phrases, known as story starters, ______ from language to language.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "vary", "B": "has varied", "C": "varies", "D": "is varying"}, "correct": "A", "difficulty": "Hard", "skill": "Subject-Verb Agreement", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement. The plural verb \u201cvary\u201d agrees in number with the plural subject \u201csuch phrases.\u201d The supplementary phrase \u201cknown as story starters,\u201d set off by commas, doesn\u2019t change the subject\u2019s number.", "tip": "Find the true subject by mentally crossing out any phrase that sits between the subject and the verb, then check that the verb matches that subject in number.", "trap": "The singular verb phrase \u201chas varied\u201d doesn\u2019t agree in number with the plural subject \u201csuch phrases.\u201d", "poe": {"A": "The convention being tested is subject-verb agreement. The plural verb \u201cvary\u201d agrees in number with the plural subject \u201csuch phrases.\u201d The supplementary phrase \u201cknown as story starters,\u201d set off by commas, doesn\u2019t change the subject\u2019s number.", "B": "The singular verb phrase \u201chas varied\u201d doesn\u2019t agree in number with the plural subject \u201csuch phrases.\u201d", "C": "The singular verb \u201cvaries\u201d doesn\u2019t agree in number with the plural subject \u201csuch phrases.\u201d", "D": "The singular verb phrase \u201cis varying\u201d doesn\u2019t agree in number with the plural subject \u201csuch phrases.\u201d"}}, {"question": "The committee will either approve the budget or ______ it back for revisions.", "choices": {"D": "sending", "A": "send", "B": "sent", "C": "to send"}, "correct": "A", "difficulty": "Easy", "skill": "Parallel Structure", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "\"Either...or\" requires matching forms \u2014 \"approve\" and \"send\" are both base verb forms after \"will.\"", "tip": "When a sentence lists, joins, or compares items, every item must share the same grammatical form \u2014 check the first item in the list or pair, then confirm every other item matches it.", "trap": "This choice, \"sending,\" functions as a gerund or present-participle form here, which does not fit the grammatical role the sentence requires in this position.", "poe": {"D": "This choice, \"sending,\" functions as a gerund or present-participle form here, which does not fit the grammatical role the sentence requires in this position.", "A": "\"Either...or\" requires matching forms \u2014 \"approve\" and \"send\" are both base verb forms after \"will.\"", "B": "This choice, \"sent,\" breaks the parallel grammatical pattern established by the rest of the list, pair, or comparison.", "C": "This choice, \"to send,\" functions as an infinitive verb form here, which does not fit the grammatical role the sentence requires in this position."}}, {"question": "Featuring jagged peaks of black ink surrounded by hazy swirls of blue and green paint, Zhang Daqian\u2019s 1983 painting Panorama of Mount Lu is inspired by the tradition of qingl\u00fc shanshui, a type of Chinese landscape painting ______ by the use of blue and green hues to depict ethereal, otherworldly landscapes.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "has been characterized", "B": "will be characterized", "C": "characterized", "D": "is characterized"}, "correct": "C", "difficulty": "Hard", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verb forms within a sentence. The nonfinite past participle \"characterized\" is correctly used within a supplementary element that modifies the main clause \"Zhang...shanshui,\" defining qingl\u00fc shanshui and explaining some of its identifying traits.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because it results in a comma splice. Using the finite present perfect tense verb \"has been characterized\" creates a second main clause in the sentence, and the two main clauses can\u2019t be joined in this way by only the comma before \"a type.\"", "poe": {"C": "The convention being tested is the use of verb forms within a sentence. The nonfinite past participle \"characterized\" is correctly used within a supplementary element that modifies the main clause \"Zhang...shanshui,\" defining qingl\u00fc shanshui and explaining some of its identifying traits.", "A": "Because it results in a comma splice. Using the finite present perfect tense verb \"has been characterized\" creates a second main clause in the sentence, and the two main clauses can\u2019t be joined in this way by only the comma before \"a type.\"", "B": "Because it results in a comma splice. Using the finite future tense verb \"will be characterized\" creates a second main clause in the sentence, and the two main clauses can\u2019t be joined in this way by only the comma before \"a type.\"", "D": "Because it results in a comma splice. Using the finite present tense verb \"is characterized\" creates a second main clause in the sentence, and the two main clauses can\u2019t be joined in this way by only the comma before \"a type.\""}}, {"question": "In a rural area along the border between Oklahoma and Texas, amateur astronomers gather each year to observe the night sky at the Okie-Tex Star Party. Like most star parties, Okie-Tex takes place in an area with low light pollution, ______ dark skies and ideal stargazing conditions.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "ensuring", "B": "this will ensure", "C": "ensures", "D": "it ensures"}, "correct": "A", "difficulty": "Medium", "skill": "Pronouns", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verb forms within a sentence. The nonfinite present participle \"ensuring\" is correctly used to form a supplementary element that modifies the main clause \"Okie-Tex takes place in an area with low light pollution,\" describing the viewing conditions of the star party.", "tip": "Find the antecedent first, then check that the pronoun matches it in number \u2014 and make sure it is clear which noun the pronoun refers to.", "trap": "Because it results in a comma splice. The pronoun \"this\" and the finite future tense verb \"will ensure\" would add an additional main clause to this sentence, and the comma after \"pollution\" can\u2019t be used in this way to join two main clauses.", "poe": {"A": "The convention being tested is the use of verb forms within a sentence. The nonfinite present participle \"ensuring\" is correctly used to form a supplementary element that modifies the main clause \"Okie-Tex takes place in an area with low light pollution,\" describing the viewing conditions of the star party.", "B": "Because it results in a comma splice. The pronoun \"this\" and the finite future tense verb \"will ensure\" would add an additional main clause to this sentence, and the comma after \"pollution\" can\u2019t be used in this way to join two main clauses.", "C": "Because it results in an ungrammatical sentence. The finite present tense verb \"ensures\" can\u2019t be used in this way to form a supplementary element to modify the main clause.", "D": "Because it results in a comma splice. The pronoun \"it\" and the finite present tense verb \"ensures\" would add an additional main clause to this sentence, and the comma after \"pollution\" can\u2019t be used in this way to join two main clauses."}}, {"question": "In 1930, Japanese American artist Chiura Obata depicted the natural beauty of Yosemite National Park in two memorable woodcuts: Evening at Carl Inn and Lake Basin in the High Sierra. In 2019, ______ exhibited alongside 150 of Obata\u2019s other works in a single-artist show at the Smithsonian American Art Museum.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "it was", "B": "they were", "C": "this was", "D": "some were"}, "correct": "B", "difficulty": "Hard", "skill": "Pronouns", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is pronoun\u2013antecedent agreement. The plural pronoun \u201cthey\u201d agrees in number with the plural antecedent \u201cwoodcuts\u201d and clearly identifies what was exhibited at the Smithsonian American Art Museum.", "tip": "Find the antecedent first, then check that the pronoun matches it in number \u2014 and make sure it is clear which noun the pronoun refers to.", "trap": "Because the singular pronoun \u201cit\u201d doesn\u2019t agree in number with the plural antecedent \u201cwoodcuts.\u201d", "poe": {"B": "The convention being tested is pronoun\u2013antecedent agreement. The plural pronoun \u201cthey\u201d agrees in number with the plural antecedent \u201cwoodcuts\u201d and clearly identifies what was exhibited at the Smithsonian American Art Museum.", "A": "Because the singular pronoun \u201cit\u201d doesn\u2019t agree in number with the plural antecedent \u201cwoodcuts.\u201d", "C": "Because the singular pronoun \u201cthis\u201d doesn\u2019t agree in number with the plural antecedent \u201cwoodcuts.\u201d", "D": "Because the plural pronoun \u201csome\u201d is illogical in this context (referring to \u201csome\u201d of two woodcuts)."}}, {"question": "Food and the sensation of taste are central to Monique Truong\u2019s novels. In The Book of Salt, for example, the exiled character of B\u00ecnh connects to his native Saigon through the food he prepares, while in Bitter in the Mouth, the character of Linda ______ a form of synesthesia whereby the words she hears evoke tastes.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "experienced", "B": "had experienced", "C": "experiences", "D": "will be experiencing"}, "correct": "C", "difficulty": "Medium", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense. In this choice, the present tense verb \u201cexperiences\u201d is consistent with the other present tense verbs (e.g., \u201cconnects\u201d and \u201cprepares\u201d) used to describe the events in Truong\u2019s novels. Furthermore, it\u2019s conventional to use the present tense when discussing a literary work.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the past tense verb \u201cexperienced\u201d isn\u2019t consistent with the other present tense verbs used to describe the events in Truong\u2019s novels.", "poe": {"C": "The convention being tested is the use of verbs to express tense. In this choice, the present tense verb \u201cexperiences\u201d is consistent with the other present tense verbs (e.g., \u201cconnects\u201d and \u201cprepares\u201d) used to describe the events in Truong\u2019s novels. Furthermore, it\u2019s conventional to use the present tense when discussing a literary work.", "A": "Because the past tense verb \u201cexperienced\u201d isn\u2019t consistent with the other present tense verbs used to describe the events in Truong\u2019s novels.", "B": "Because the past perfect tense verb \u201chad experienced\u201d isn\u2019t consistent with the other present tense verbs used to describe the events in Truong\u2019s novels.", "D": "Because the future progressive tense verb \u201cwill be experiencing\u201d isn\u2019t consistent with the other present tense verbs used to describe the events in Truong\u2019s novels."}}, {"question": "Professional American football player Fred Cox invented one of the world\u2019s most popular toys. In the 1970s, he came up with the idea for the Nerf football, which ______ of the harder and heavier regulation football.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "were a smaller, foam version", "B": "are smaller, foam versions", "C": "were smaller, foam versions", "D": "is a smaller, foam version"}, "correct": "D", "difficulty": "Hard", "skill": "Pronouns", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement and agreement between nouns. The singular verb \u201cis\u201d and the singular noun \u201cversion\u201d both agree in number with the relative pronoun \u201cwhich.\u201d In this context, \u201cwhich\u201d functions as a singular subject because it refers to the singular noun \u201cthe Nerf football.\u201d", "tip": "Find the antecedent first, then check that the pronoun matches it in number \u2014 and make sure it is clear which noun the pronoun refers to.", "trap": "Because the plural verb \u201cwere\u201d doesn\u2019t agree in number with the singular noun phrase \u201cthe Nerf football\u201d that it\u2019s modifying.", "poe": {"D": "The convention being tested is subject-verb agreement and agreement between nouns. The singular verb \u201cis\u201d and the singular noun \u201cversion\u201d both agree in number with the relative pronoun \u201cwhich.\u201d In this context, \u201cwhich\u201d functions as a singular subject because it refers to the singular noun \u201cthe Nerf football.\u201d", "A": "Because the plural verb \u201cwere\u201d doesn\u2019t agree in number with the singular noun phrase \u201cthe Nerf football\u201d that it\u2019s modifying.", "B": "Because the plural verb \u201care\u201d and the plural noun \u201cversions\u201d don\u2019t agree in number with the singular noun phrase \u201cthe Nerf football\u201d that they\u2019re modifying.", "C": "Because the plural verb \u201cwere\u201d and the plural noun \u201cversions\u201d don\u2019t agree in number with the singular noun phrase \u201cthe Nerf football\u201d that they\u2019re modifying."}}, {"question": "Researchers studying the \u201cterra-cotta army,\u201d the thousands of life-size statues of warriors found interred near the tomb of Emperor Qin Shi Huang of China, were shocked to realize that the shape of each statue\u2019s ears, like the shape of each person\u2019s ears, ______ unique.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "are", "B": "is", "C": "were", "D": "have been"}, "correct": "B", "difficulty": "Hard", "skill": "Subject-Verb Agreement", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement. The singular verb \"is\" agrees in number with the singular subject \"the shape.\"", "tip": "Find the true subject by mentally crossing out any phrase that sits between the subject and the verb, then check that the verb matches that subject in number.", "trap": "Because the plural verb \"are\" doesn\u2019t agree in number with the singular subject \"the shape.\"", "poe": {"B": "The convention being tested is subject-verb agreement. The singular verb \"is\" agrees in number with the singular subject \"the shape.\"", "A": "Because the plural verb \"are\" doesn\u2019t agree in number with the singular subject \"the shape.\"", "C": "Because the plural verb \"were\" doesn\u2019t agree in number with the singular subject \"the shape.\"", "D": "Because the plural verb \"have been\" doesn\u2019t agree in number with the singular subject \"the shape.\""}}, {"question": "Anthropologist L\u00edvia Barbosa, of the Universidade Federal Fluminense in Brazil, ______ food and sociability in contemporary Brazil\u2014specifically, how foods such as cabidela (a rice and rabbit dish) and churrasco (a barbeque dish) function as central mechanisms in building social relationships, values, and identities.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "studies", "B": "are studying", "C": "have studied", "D": "study"}, "correct": "A", "difficulty": "Medium", "skill": "Subject-Verb Agreement", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement. The singular verb \"studies\" agrees in number with the singular subject \"anthropologist L\u00edvia Barbosa.\"", "tip": "Find the true subject by mentally crossing out any phrase that sits between the subject and the verb, then check that the verb matches that subject in number.", "trap": "Because the plural verb \"are studying\" doesn\u2019t agree in number with the singular subject \"anthropologist L\u00edvia Barbosa.\"", "poe": {"A": "The convention being tested is subject-verb agreement. The singular verb \"studies\" agrees in number with the singular subject \"anthropologist L\u00edvia Barbosa.\"", "B": "Because the plural verb \"are studying\" doesn\u2019t agree in number with the singular subject \"anthropologist L\u00edvia Barbosa.\"", "C": "Because the plural verb \"have studied\" doesn\u2019t agree in number with the singular subject \"anthropologist L\u00edvia Barbosa.\"", "D": "Because the plural verb \"study\" doesn\u2019t agree in number with the singular subject \"anthropologist L\u00edvia Barbosa.\""}}, {"question": "A model created by biologist Luis Valente predicts that the rate of speciation\u2014the rate at which new species form\u2014on an isolated island located approximately 5,000 kilometers from the nearest mainland ______ triple the rate of speciation on an island only 500 kilometers from the mainland.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "being", "B": "to be", "C": "to have been", "D": "will be"}, "correct": "D", "difficulty": "Hard", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is finite and nonfinite verb forms within a sentence. Relative clauses, such as the one beginning with \u201cthat,\u201d require a finite verb, a verb that can function as the main verb of a clause. This choice correctly supplies the clause with the finite future tense verb \u201cwill be.\u201d", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the nonfinite participle \u201cbeing\u201d doesn\u2019t supply the clause with a finite verb.", "poe": {"D": "The convention being tested is finite and nonfinite verb forms within a sentence. Relative clauses, such as the one beginning with \u201cthat,\u201d require a finite verb, a verb that can function as the main verb of a clause. This choice correctly supplies the clause with the finite future tense verb \u201cwill be.\u201d", "A": "Because the nonfinite participle \u201cbeing\u201d doesn\u2019t supply the clause with a finite verb.", "B": "Because the nonfinite to-infinitive \u201cto be\u201d doesn\u2019t supply the clause with a finite verb.", "C": "Because the nonfinite to-infinitive \u201cto have been\u201d doesn\u2019t supply the clause with a finite verb."}}, {"question": "Former First Lady of the United States Eleanor Roosevelt and Indian activist and educator Hansa Mehta were instrumental in drafting the United Nations\u2019 Universal Declaration of Human Rights, a document that ______ the basic freedoms to which all people are entitled.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "have outlined", "B": "were outlining", "C": "outlines", "D": "outline"}, "correct": "C", "difficulty": "Medium", "skill": "Subject-Verb Agreement", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement. The singular verb \u201coutlines\u201d agrees in number with the singular subject \u201cdocument.\u201d", "tip": "Find the true subject by mentally crossing out any phrase that sits between the subject and the verb, then check that the verb matches that subject in number.", "trap": "Because the plural verb \u201chave outlined\u201d doesn\u2019t agree in number with the singular subject \u201cdocument.\u201d", "poe": {"C": "The convention being tested is subject-verb agreement. The singular verb \u201coutlines\u201d agrees in number with the singular subject \u201cdocument.\u201d", "A": "Because the plural verb \u201chave outlined\u201d doesn\u2019t agree in number with the singular subject \u201cdocument.\u201d", "B": "Because the plural verb \u201cwere outlining\u201d doesn\u2019t agree in number with the singular subject \u201cdocument.\u201d", "D": "Because the plural verb \u201coutline\u201d doesn\u2019t agree in number with the singular subject \u201cdocument.\u201d"}}, {"question": "The Proto-Nilotic language, common ancestor of fifty-five African languages with similar linguistic properties, ______ like all protolanguages, hypothetical: there\u2019s no direct evidence these ancestral languages actually existed.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "is,", "B": "are,", "C": "have been,", "D": "were,"}, "correct": "A", "difficulty": "Hard", "skill": "Subject-Verb Agreement", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is subject-verb agreement. The singular verb \"is\" agrees in number with the singular subject \"the Proto-Nilotic language.\"", "tip": "Find the true subject by mentally crossing out any phrase that sits between the subject and the verb, then check that the verb matches that subject in number.", "trap": "Because the plural verb \"are\" doesn\u2019t agree in number with the singular subject \"the Proto-Nilotic language.\"", "poe": {"A": "The convention being tested is subject-verb agreement. The singular verb \"is\" agrees in number with the singular subject \"the Proto-Nilotic language.\"", "B": "Because the plural verb \"are\" doesn\u2019t agree in number with the singular subject \"the Proto-Nilotic language.\"", "C": "Because the plural verb \"have been\" doesn\u2019t agree in number with the singular subject \"the Proto-Nilotic language.\"", "D": "Because the plural verb \"were\" doesn\u2019t agree in number with the singular subject \"the Proto-Nilotic language.\""}}]};
+
+const STATE = { idx:0, answers:{}, submitted:false, minutesChosen:0, secondsLeft:0, timerId:null };
+
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return document.querySelectorAll(sel); }
+
+function currentQuestions(){ return TEST.questions; }
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  function initIntro(){
+    $('#intro-title').textContent = TEST.label;
+    $('#intro-subtitle').textContent = TEST.description || '';
+    $('#intro-count').textContent = TEST.questions.length + ' questions. Choose your timing, then click Start when you\'re ready.';
+    const standard = Math.round(TEST.questions.length * 1.5);
+    const extended = Math.round(standard * 1.25);
+    $('#timing-options').innerHTML =
+      '<div class="timing-card selected" data-minutes="' + standard + '"><h3>Standard Time</h3><div class="mins">' + standard + ' min</div></div>' +
+      '<div class="timing-card" data-minutes="' + extended + '"><h3>Extended Time (+25%)</h3><div class="mins">' + extended + ' min</div></div>';
+    STATE.minutesChosen = standard;
+    $all('.timing-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        $all('.timing-card').forEach(c=>c.classList.remove('selected'));
+        card.classList.add('selected');
+        STATE.minutesChosen = parseFloat(card.dataset.minutes);
+      });
+    });
+  }
+
+  initIntro();
+
+  $('.start-btn').addEventListener('click', function(){
+    $('#intro-screen').classList.add('hidden');
+    $('#test-screen').classList.remove('hidden');
+    buildNav();
+    renderQuestion();
+    startTimer();
+  });
+
+  function startTimer(){
+    STATE.secondsLeft = Math.round(STATE.minutesChosen*60);
+    updateTimerDisplay();
+    STATE.timerId = setInterval(()=>{
+      STATE.secondsLeft--;
+      updateTimerDisplay();
+      if(STATE.secondsLeft<=0){
+        clearInterval(STATE.timerId);
+        STATE.submitted = true;
+        showResults();
+      }
+    }, 1000);
+  }
+  function updateTimerDisplay(){
+    const m = Math.floor(STATE.secondsLeft/60);
+    const s = STATE.secondsLeft%60;
+    const box = $('#timer-box');
+    if(!box) return;
+    box.textContent = 'Time Remaining: ' + m + ':' + (s<10?'0':'')+s;
+    box.classList.toggle('low-time', STATE.secondsLeft <= 120);
+  }
+
+  function buildNav(){
+    const nav = $('#nav-grid');
+    nav.innerHTML = '';
+    currentQuestions().forEach((q,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'nav-btn';
+      btn.textContent = (i+1);
+      btn.addEventListener('click', ()=>{ STATE.idx = i; renderQuestion(); });
+      nav.appendChild(btn);
+    });
+  }
+
+  function renderQuestion(){
+    const q = currentQuestions()[STATE.idx];
+    $('#q-text').innerHTML = q.question.replace(/\n/g,'<br>');
+    const choicesEl = $('#choices');
+    choicesEl.innerHTML = '';
+    ['A','B','C','D'].forEach(letter=>{
+      if(!q.choices[letter]) return;
+      const row = document.createElement('div');
+      row.className = 'choice-row' + (STATE.answers[STATE.idx]===letter ? ' selected':'');
+      row.innerHTML = '<span class="choice-letter">'+letter+'</span><span class="choice-text"></span>';
+      row.querySelector('.choice-text').textContent = q.choices[letter];
+      row.addEventListener('click', ()=>{
+        STATE.answers[STATE.idx] = letter;
+        renderQuestion();
+      });
+      choicesEl.appendChild(row);
+    });
+    updateNav();
+    $('#q-counter').textContent = 'Question ' + (STATE.idx+1) + ' of ' + currentQuestions().length;
+  }
+
+  function updateNav(){
+    $all('.nav-btn').forEach((btn,i)=>{
+      btn.classList.toggle('current', i===STATE.idx);
+      btn.classList.toggle('answered', STATE.answers[i] !== undefined);
+    });
+  }
+
+  $('#prev-btn').addEventListener('click', ()=>{
+    if(STATE.idx>0){ STATE.idx--; renderQuestion(); }
+  });
+  $('#next-btn').addEventListener('click', ()=>{
+    if(STATE.idx<currentQuestions().length-1){ STATE.idx++; renderQuestion(); }
+  });
+
+  $('#submit-btn').addEventListener('click', ()=>{
+    $('#confirm-box').classList.remove('hidden');
+  });
+  $('#cancel-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+  });
+  $('#confirm-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+    if(STATE.timerId) clearInterval(STATE.timerId);
+    STATE.submitted = true;
+    showResults();
+  });
+
+  function showResults(){
+    $('#test-screen').classList.add('hidden');
+    $('#results-screen').classList.remove('hidden');
+    $('#print-btn').classList.remove('hidden');
+    const qs = currentQuestions();
+    let correctCount = 0;
+    qs.forEach((q,i)=>{ if(STATE.answers[i]===q.correct) correctCount++; });
+    $('.score-big').textContent = correctCount + ' / ' + qs.length;
+    $('#results-title').textContent = TEST.label + ' \u2014 Results';
+
+    const container = $('#review-container');
+    container.innerHTML = '';
+    qs.forEach((q,i)=>{
+      const userAns = STATE.answers[i];
+      const isCorrect = userAns === q.correct;
+      const card = document.createElement('div');
+      card.className = 'review-card ' + (isCorrect ? 'correct':'incorrect');
+
+      let html = '<div class="review-q"></div><div class="review-choices"></div>';
+      html += '<div class="review-section"><div class="review-section-label">Rule</div><div class="review-rule"></div></div>';
+      html += '<div class="review-section"><div class="review-section-label">Tip</div><div class="review-tip"></div></div>';
+      if (q.trap) {
+        html += '<div class="review-section"><div class="review-section-label">Trap</div><div class="review-trap"></div></div>';
+      }
+      html += '<div class="review-section"><div class="review-section-label">Process of Elimination</div><ul class="review-poe-list"></ul></div>';
+      card.innerHTML = html;
+
+      card.querySelector('.review-q').textContent = 'Question ' + (i+1) + ': ' + q.question.replace(/<[^>]+>/g,' ');
+      const choicesDiv = card.querySelector('.review-choices');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.choices[letter]) return;
+        const row = document.createElement('div');
+        row.className = 'review-choice' +
+          (letter===q.correct ? ' right-answer' : '') +
+          (letter===userAns && letter!==q.correct ? ' user-wrong' : '');
+        row.innerHTML = '<span>'+letter+'.</span><span></span>';
+        row.querySelectorAll('span')[1].textContent = q.choices[letter];
+        choicesDiv.appendChild(row);
+      });
+
+      card.querySelector('.review-rule').textContent = q.rule || '';
+      card.querySelector('.review-tip').textContent = q.tip || '';
+      if (q.trap) card.querySelector('.review-trap').textContent = q.trap;
+
+      const poeList = card.querySelector('.review-poe-list');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.poe || !q.poe[letter]) return;
+        const li = document.createElement('li');
+        li.textContent = letter + '. ' + q.poe[letter];
+        if (letter === q.correct) li.classList.add('correct-letter');
+        poeList.appendChild(li);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  $('#print-btn').addEventListener('click', ()=> window.print());
+});
+})();
+</script>
+
+</body>
+</html>

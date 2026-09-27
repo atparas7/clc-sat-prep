@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLC — Sentence Boundaries &amp; Punctuation — Full Test 2 (Mixed)</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; margin:0; background:#f7f5f0; color:#241a12; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
+.card { background:#fff; border-radius: 10px; padding: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom:20px; }
+h1 { color:#A8002E; font-size: 1.6rem; margin-top:0; }
+.start-btn, #submit-btn, #confirm-submit { background:#A8002E; color:#fff; border:none; padding:12px 28px; border-radius:6px; font-size:1rem; cursor:pointer; }
+.start-btn:hover, #submit-btn:hover { background:#8a0026; }
+.timing-options { display:flex; gap:14px; margin:18px 0; }
+.timing-card { flex:1; border:2px solid #ddd; border-radius:8px; padding:16px; cursor:pointer; text-align:center; }
+.timing-card.selected { border-color:#A8002E; background:#FBF3E3; }
+.timing-card h3 { margin:0 0 6px 0; color:#A8002E; font-size:1.05rem; }
+.timing-card div.mins { font-size:1.5rem; font-weight:bold; color:#241a12; }
+.nav-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.nav-btn { width:38px; height:38px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.9rem; }
+.nav-btn.current { border-color:#A8002E; border-width:2px; }
+.nav-btn.answered { background:#F5EFE0; }
+#q-text{font-size:1.08rem;line-height:1.6;margin:14px 0 20px}
+.choice-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid #ddd; border-radius:6px; margin-bottom:10px; cursor:pointer; }
+.choice-row:hover { background:#faf6ee; }
+.choice-row.selected { border-color:#A8002E; background:#FBF3E3; }
+.choice-letter { font-weight:bold; color:#A8002E; }
+.timer-box { position:sticky; top:0; background:#241a12; color:#fff; padding:8px 16px; border-radius:6px; font-weight:bold; text-align:center; margin-bottom:14px; font-size:1.1rem; z-index:10; }
+.timer-box.low-time { background:#A8002E; }
+.review-card { border:1px solid #ddd; border-radius:8px; padding:18px; margin-bottom:16px; }
+.review-card.correct { border-left: 5px solid #1F7A3D; }
+.review-card.incorrect { border-left: 5px solid #A8002E; }
+.review-q { font-weight:600; margin-bottom:10px; }
+.review-choice { display:flex; gap:8px; padding:6px 0; }
+.review-choice.right-answer { color:#1F7A3D; font-weight:600; }
+.review-choice.user-wrong { color:#A8002E; font-weight:600; }
+.review-section { margin-top:12px; }
+.review-section-label { font-weight:bold; color:#B8882A; font-family: Georgia, serif; font-size:1rem; margin-bottom:4px; }
+.review-rule { background:#faf6ee; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; }
+.review-tip { background:#FBF3E3; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #B8882A; }
+.review-trap { background:#FCEDEE; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #A8002E; }
+.review-poe-list { margin:6px 0 0 0; padding-left:20px; font-size:.92rem; color:#3a3a3a; }
+.review-poe-list li { margin-bottom:5px; line-height:1.45; }
+.review-poe-list li.correct-letter { color:#1F7A3D; font-weight:600; }
+.score-big { font-size:2.4rem; color:#A8002E; font-weight:bold; }
+.hidden { display:none !important; }
+.subtitle { color:#5A5A5A; font-size:0.95rem; margin-bottom:20px; }
+#confirm-box { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
+#confirm-box .card { max-width:420px; text-align:center; }
+#print-btn { position:fixed; bottom:20px; right:20px; background:#B8882A; color:#fff; border:none; padding:12px 18px; border-radius:24px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.2); font-size:0.95rem; }
+@media print {
+  #print-btn, #intro-screen, #test-screen, #confirm-box { display:none !important; }
+  body { background:#fff; }
+  .card { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="intro-screen" class="card">
+    <h1 id="intro-title">Full Test 2 (Mixed)</h1>
+    <div id="intro-subtitle" class="subtitle">A second mixed 20-question test drawing from every skill in this category.</div>
+    <p id="intro-count"></p>
+    <div id="timing-options" class="timing-options"></div>
+    <button class="start-btn">Start Test</button>
+  </div>
+
+  <div id="test-screen" class="card hidden">
+    <div id="timer-box" class="timer-box"></div>
+    <div id="q-counter" style="font-weight:600;color:#5A5A5A;margin-bottom:8px;"></div>
+    <div id="q-text"></div>
+    <div id="choices"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+      <button id="prev-btn" style="width:auto;padding:8px 16px;">&larr; Back</button>
+      <button id="next-btn" style="width:auto;padding:8px 16px;">Next &rarr;</button>
+    </div>
+    <div id="nav-grid" class="nav-grid"></div>
+    <button id="submit-btn">Submit Test</button>
+  </div>
+
+  <div id="results-screen" class="card hidden">
+    <h1 id="results-title">Results</h1>
+    <div class="score-big"></div>
+    <div id="review-container"></div>
+  </div>
+
+  <button id="print-btn" class="hidden">Export / Print PDF</button>
+
+  <div id="confirm-box" class="hidden">
+    <div class="card">
+      <p>Submit your test? You won't be able to change your answers after this.</p>
+      <button id="confirm-submit">Yes, Submit</button>
+      <button id="cancel-submit" style="background:#ccc;color:#333;">Cancel</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+const TEST = {"label": "Full Test 2 (Mixed)", "description": "A second mixed 20-question test drawing from every skill in this category.", "questions": [{"question": "Po\u2019Pay was a Tewa leader from Ohkay Owingeh, a pueblo located about twenty-five miles north of present-day Santa Fe, New Mexico. He was instrumental in organizing the Pueblo Revolt of ______ as a result of his leadership, the Spanish colonizers were expelled from the region for a time.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "1680", "B": "1680 and", "C": "1680,", "D": "1680, and"}, "correct": "D", "difficulty": "Hard", "skill": "Run-ons & Comma Splices", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the coordination of main clauses within a sentence. This choice correctly uses a comma and the coordinating conjunction \u201cand\u201d to join the first main clause (\u201cHe\u20261680\u201d) and the second main clause (\u201cas\u2026time\u201d).", "tip": "If two complete sentences are joined with only a comma or with no punctuation at all, that is an error \u2014 fix it with a period, a semicolon, or a comma plus a FANBOYS word.", "trap": "Because it results in a run-on sentence. The two main clauses are fused without punctuation and/or a conjunction.", "poe": {"D": "The convention being tested is the coordination of main clauses within a sentence. This choice correctly uses a comma and the coordinating conjunction \u201cand\u201d to join the first main clause (\u201cHe\u20261680\u201d) and the second main clause (\u201cas\u2026time\u201d).", "A": "Because it results in a run-on sentence. The two main clauses are fused without punctuation and/or a conjunction.", "B": "Because when coordinating two longer main clauses such as these, it\u2019s conventional to use a comma before the coordinating conjunction.", "C": "Because it results in a comma splice. Without a conjunction following it, a comma can\u2019t be used in this way to join two main clauses."}}, {"question": "The Balkan nation of Bosnia and Herzegovina does not have one president but ______ as members of the office of the presidency, one representing the nation\u2019s Bosniaks, one its Serbs, and one its Croats, these elected officials take turns serving as the office\u2019s chairperson.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "three, known", "B": "three. Known", "C": "three who are known", "D": "three, who are known"}, "correct": "B", "difficulty": "Hard", "skill": "Run-ons & Comma Splices", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is punctuation use between sentences. In this choice, the period is used correctly to mark the boundary between one sentence (\u201cThe Balkan...three\u201d) and another (\u201cKnown...chairperson\u201d). While the supplementary element (\u201cknown...Croats\u201d) could logically be attached to either the first main clause (\u201cThe Balkan...three\u201d) or the second main clause (\u201cthese elected...chairperson\u201d), end-of-sentence punctuation is needed to indicate to which sentence the supplementary element belongs.", "tip": "If two complete sentences are joined with only a comma or with no punctuation at all, that is an error \u2014 fix it with a period, a semicolon, or a comma plus a FANBOYS word.", "trap": "Because it results in a comma splice. In this choice, the first sentence, consisting of a main clause (\u201cThe Balkan...three\u201d) and supplementary element (\u201cknown...Croats\u201d), is incorrectly joined with a second main clause (\u201cthese elected...chairperson\u201d) using a comma. A comma can\u2019t be used in this way to join two sentences.", "poe": {"B": "The convention being tested is punctuation use between sentences. In this choice, the period is used correctly to mark the boundary between one sentence (\u201cThe Balkan...three\u201d) and another (\u201cKnown...chairperson\u201d). While the supplementary element (\u201cknown...Croats\u201d) could logically be attached to either the first main clause (\u201cThe Balkan...three\u201d) or the second main clause (\u201cthese elected...chairperson\u201d), end-of-sentence punctuation is needed to indicate to which sentence the supplementary element belongs.", "A": "Because it results in a comma splice. In this choice, the first sentence, consisting of a main clause (\u201cThe Balkan...three\u201d) and supplementary element (\u201cknown...Croats\u201d), is incorrectly joined with a second main clause (\u201cthese elected...chairperson\u201d) using a comma. A comma can\u2019t be used in this way to join two sentences.", "C": "Because it results in a comma splice. In this choice, the first sentence, consisting of a main clause (\u201cThe Balkan...three\u201d) and a relative clause (\u201cwho are...Croats\u201d), is incorrectly joined with a second main clause (\u201cthese elected...chairperson\u201d) using a comma. A comma can\u2019t be used in this way to join two sentences. Additionally, this choice omits the comma needed after \u201cthree\u201d to mark the beginning of the supplementary relative clause (\u201cwho are known...Croats\u201d).", "D": "Because it results in a comma splice. In this choice, the first sentence, consisting of a main clause (\u201cThe Balkan...three\u201d) and a supplementary relative clause (\u201cwho are...Croats\u201d), is incorrectly joined with a second main clause (\u201cthese elected...chairperson\u201d) using a comma. A comma can\u2019t be used in this way to join two sentences."}}, {"question": "Winding through the ice atop Norway\u2019s Jotunheim Mountains is the Lendbreen pass, an ancient route that was used by hunters, farmers, traders, and travelers in the Middle Ages before eventually falling into disuse. Recently, archeologists have ______ knives, horseshoes, wool tunics, and thousands of other artifacts from the icy pass.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "unearthed:", "B": "unearthed,", "C": "unearthed\u2014", "D": "unearthed"}, "correct": "D", "difficulty": "Hard", "skill": "Colon", "domain": "Standard English Conventions", "tags": [], "rule": "No punctuation should separate the verb \"unearthed\" and its objects (i.e, what was \"unearthed\"): \"knives, horseshoes, wool tunics, and thousands of other artifacts.\"", "tip": "Cover everything after the colon \u2014 what remains before it must be a complete, independent sentence.", "trap": "This choice creates a punctuation error, separating the verb \"unearthed\" from its objects (i.e, what was \"unearthed\") with a colon.", "poe": {"D": "No punctuation should separate the verb \"unearthed\" and its objects (i.e, what was \"unearthed\"): \"knives, horseshoes, wool tunics, and thousands of other artifacts.\"", "A": "This choice creates a punctuation error, separating the verb \"unearthed\" from its objects (i.e, what was \"unearthed\") with a colon.", "B": "This choice creates a punctuation error, separating the verb \"unearthed\" from its objects (i.e, what was \"unearthed\") with a comma.", "C": "This choice creates a punctuation error, separating the verb \"unearthed\" from its objects (i.e, what was \"unearthed\") with a dash."}}, {"question": "In her large-scale sculpture Casa-Isla, artist Edra Soto included references to her childhood in Puerto Rico. For example, the sculpture\u2019s steel panels have a crisscrossing pattern inspired by the iron gates ______<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "Soto would see in her neighborhood?", "B": "Soto would see in her neighborhood.", "C": "would Soto see in her neighborhood.", "D": "would Soto see in her neighborhood?"}, "correct": "B", "difficulty": "Medium", "skill": "Comma", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is end-of-sentence punctuation. This choice correctly uses a period to punctuate a declarative sentence (\"For example...neighborhood\").", "tip": "Test non-essential phrases by removing them: if the sentence still makes complete sense, commas belong on both sides.", "trap": "It\u2019s unconventional to use a question mark in this way to punctuate a declarative sentence.", "poe": {"B": "The convention being tested is end-of-sentence punctuation. This choice correctly uses a period to punctuate a declarative sentence (\"For example...neighborhood\").", "A": "It\u2019s unconventional to use a question mark in this way to punctuate a declarative sentence.", "C": "The structure requires a declarative clause at the end of the sentence that states where Soto saw the steel panels, not an incomplete interrogative clause that asks a direct question, such as \"would Soto see in her neighborhood.\"", "D": "The structure requires a period and a declarative clause at the end of the sentence that states where Soto saw the steel panels, not an incomplete interrogative clause asking a direct question, such as \"would Soto see in her neighborhood?\""}}, {"question": "To illustrate Albert Einstein\u2019s special theory of relativity, picture two jugglers: one juggling on a steadily moving parade float, the other juggling while standing still on a sidewalk. The laws of physics are identical for both ______ motion relative to each other. But what, Einstein wondered, about the speed of light?<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "jugglers\u2019, regardless of they\u2019re", "B": "jugglers, regardless of there", "C": "juggler\u2019s, regardless of their", "D": "jugglers, regardless of their"}, "correct": "D", "difficulty": "Medium", "skill": "Nouns & Apostrophes", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of plural nouns and possessive determiners. The plural noun \"jugglers\" and the plural possessive determiner \"their\" correctly indicate that there are multiple jugglers whose motion is being discussed.", "tip": "Ask whether the word is showing simple plurality (no apostrophe) or ownership (apostrophe) \u2014 and for plural nouns already ending in \"s,\" the possessive apostrophe goes after the s.", "trap": "Because the context requires the plural noun \"jugglers\" and the plural possessive determiner \"their,\" not the plural possessive noun \"jugglers\u2019\" and the contraction \"they\u2019re.\"", "poe": {"D": "The convention being tested is the use of plural nouns and possessive determiners. The plural noun \"jugglers\" and the plural possessive determiner \"their\" correctly indicate that there are multiple jugglers whose motion is being discussed.", "A": "Because the context requires the plural noun \"jugglers\" and the plural possessive determiner \"their,\" not the plural possessive noun \"jugglers\u2019\" and the contraction \"they\u2019re.\"", "B": "Because the context requires the plural possessive determiner \"their,\" not the word \"there,\" which means \"in that place.\"", "C": "Because the context requires the plural noun \"jugglers,\" not the singular possessive noun \"juggler\u2019s.\""}}, {"question": "The Mesoamerican city of Teotihuacan featured a uniquely egalitarian urban housing infrastructure. Built between the first and seventh centuries CE, Teotihuacan housed its residents (as many as 200,000, by some ______ in a complex of comfortable apartments of comparable size.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "estimates)", "B": "estimates),", "C": "estimates\u2014", "D": "estimates"}, "correct": "A", "difficulty": "Medium", "skill": "Dash", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of punctuation within a sentence. This choice correctly completes the parenthetical element \"as many as 200,000, by some estimates\" with a closing parenthesis, pairing with the opening parenthesis that appears earlier in the sentence. This parenthetical element functions to specify the number of residents, and the use of parentheses indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "While this choice completes the parenthetical element with a closing parenthesis, no comma is needed before the prepositional phrases (\"in...size\") that provide essential information about where the residents were housed.", "poe": {"A": "The convention being tested is the use of punctuation within a sentence. This choice correctly completes the parenthetical element \"as many as 200,000, by some estimates\" with a closing parenthesis, pairing with the opening parenthesis that appears earlier in the sentence. This parenthetical element functions to specify the number of residents, and the use of parentheses indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "B": "While this choice completes the parenthetical element with a closing parenthesis, no comma is needed before the prepositional phrases (\"in...size\") that provide essential information about where the residents were housed.", "C": "Because a dash can\u2019t be paired with an opening parenthesis in this way to separate the parenthetical element from the rest of the sentence.", "D": "Because it doesn\u2019t close the parenthetical element that was opened earlier in the sentence."}}, {"question": "Between 322 and 184 BCE, the Maurya Empire established a complex economic system that, through trade and centralized ______ funded major infrastructure projects throughout the Indian subcontinent. This included the building of many roads, canals, and hospitals.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "taxation:", "B": "taxation,", "C": "taxation\u2014", "D": "taxation"}, "correct": "B", "difficulty": "Hard", "skill": "Colon", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of punctuation within a sentence. The comma after \"taxation\" pairs with the comma after \"that\" to separate the supplementary element \"through trade and centralized taxation\" from the rest of the sentence. This supplementary element functions to identify the funding source of the Mauryan economy, and the pair of commas indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "tip": "Cover everything after the colon \u2014 what remains before it must be a complete, independent sentence.", "trap": "Because a colon can\u2019t be paired with a comma in this way to separate the supplementary element from the rest of the sentence.", "poe": {"B": "The convention being tested is the use of punctuation within a sentence. The comma after \"taxation\" pairs with the comma after \"that\" to separate the supplementary element \"through trade and centralized taxation\" from the rest of the sentence. This supplementary element functions to identify the funding source of the Mauryan economy, and the pair of commas indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "A": "Because a colon can\u2019t be paired with a comma in this way to separate the supplementary element from the rest of the sentence.", "C": "Because a dash can\u2019t be paired with a comma in this way to separate the supplementary element from the rest of the sentence.", "D": "Because it fails to use appropriate punctuation to separate the supplementary element from the rest of the sentence."}}, {"question": "Julia Alvarez\u2019s 1994 novel In the Time of the Butterflies, a fictionalized account of the lives of the Mirabal ______ can serve as a starting point for those wanting to explore how the rule of dictator Rafael Trujillohas been represented in Dominican American literature.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "sisters, and", "B": "sisters and", "C": "sisters,", "D": "sisters"}, "correct": "C", "difficulty": "Hard", "skill": "Comma", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the punctuation of a supplementary element within a sentence. The comma after \"sisters\" pairs with the comma after \"Butterflies\" to separate the supplementary element \"a fictionalized account of the lives of the Mirabal sisters\" from the rest of the sentence. This supplementary element functions to describe the novel In the Time of the Butterflies, and the pair of commas indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "tip": "Test non-essential phrases by removing them: if the sentence still makes complete sense, commas belong on both sides.", "trap": "Because a comma and conjunction can\u2019t be used in this way to separate the supplementary element from the rest of the sentence.", "poe": {"C": "The convention being tested is the punctuation of a supplementary element within a sentence. The comma after \"sisters\" pairs with the comma after \"Butterflies\" to separate the supplementary element \"a fictionalized account of the lives of the Mirabal sisters\" from the rest of the sentence. This supplementary element functions to describe the novel In the Time of the Butterflies, and the pair of commas indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "A": "Because a comma and conjunction can\u2019t be used in this way to separate the supplementary element from the rest of the sentence.", "B": "Because it fails to use appropriate punctuation to separate the supplementary element from the rest of the sentence.", "D": "Because it fails to use appropriate punctuation to separate the supplementary element from the rest of the sentence."}}, {"question": "While constructing the Limyra Bridge, ancient Roman builders relied on temporary wooden beams to support the stone and brick structure. These temporary supports, a construction system known as ______ were removed when the bridge was completed.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "falsework;", "B": "falsework", "C": "falsework,", "D": "falsework:"}, "correct": "C", "difficulty": "Medium", "skill": "Semicolon", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of punctuation within a sentence. The comma after \"falsework\" pairs with the comma after \"supports\" to separate the supplementary element \"a construction system known as falsework\" from the rest of the sentence. This supplementary element functions to clarify the term \"these temporary supports,\" and the pair of commas indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "tip": "Check both sides of the punctuation mark: could each one stand alone as its own complete sentence? If yes, a semicolon can work.", "trap": "Because a semicolon can\u2019t be paired with a comma in this way to separate the supplementary element from the rest of the sentence.", "poe": {"C": "The convention being tested is the use of punctuation within a sentence. The comma after \"falsework\" pairs with the comma after \"supports\" to separate the supplementary element \"a construction system known as falsework\" from the rest of the sentence. This supplementary element functions to clarify the term \"these temporary supports,\" and the pair of commas indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "A": "Because a semicolon can\u2019t be paired with a comma in this way to separate the supplementary element from the rest of the sentence.", "B": "Because it fails to use appropriate punctuation to separate the supplemental element from the rest of the sentence.", "D": "Because a colon can\u2019t be paired with a comma in this way to separate the supplementary element from the rest of the sentence."}}, {"question": "Both Sona Charaipotra, an Indian American, and Dhonielle Clayton, an African American, grew up frustrated by the lack of diverse characters in books for young people. In 2011, these two writers joined forces to found CAKE Literary, a book packaging ______ specializes in the creation and promotion of stories told from diverse perspectives for children and young adults.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "company,", "B": "company that", "C": "company", "D": "company, that"}, "correct": "B", "difficulty": "Medium", "skill": "Comma", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use and punctuation of an integrated relative clause. This choice correctly uses the relative pronoun \u201cthat\u201d and no punctuation to create an integrated relative clause that provides essential information about the noun phrase (\u201ca book packaging company\u201d) that it modifies.", "tip": "Test non-essential phrases by removing them: if the sentence still makes complete sense, commas belong on both sides.", "trap": "Because it doesn\u2019t use a relative pronoun to link the verb phrase beginning with \u201cspecializes\u201d to the noun phrase that it modifies (\u201ca book packaging company\u201d).", "poe": {"B": "The convention being tested is the use and punctuation of an integrated relative clause. This choice correctly uses the relative pronoun \u201cthat\u201d and no punctuation to create an integrated relative clause that provides essential information about the noun phrase (\u201ca book packaging company\u201d) that it modifies.", "A": "Because it doesn\u2019t use a relative pronoun to link the verb phrase beginning with \u201cspecializes\u201d to the noun phrase that it modifies (\u201ca book packaging company\u201d).", "C": "Because it doesn\u2019t use a relative pronoun to link the verb phrase beginning with \u201cspecializes\u201d to the noun phrase that it modifies (\u201ca book packaging company\u201d).", "D": "Because no punctuation is needed between the integrated relative clause beginning with \u201cthat specializes\u201d and the noun phrase that it modifies (\u201ca book packaging company\u201d)."}}, {"question": "Photographer Ansel Adams\u2019s landscape portraits are iconic pieces of American art. However, many of the ______ of landscapes were intended not as art but as marketing; a concessions company at Yosemite National Park had hired Adams to take pictures of the park for restaurant menus and brochures.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "photographer\u2019s early photo\u2019s", "B": "photographers early photo\u2019s", "C": "photographer\u2019s early photos", "D": "photographers early photos"}, "correct": "C", "difficulty": "Medium", "skill": "Nouns & Apostrophes", "domain": "Standard English Conventions", "tags": [], "rule": "There\u2019s only one photographer (Adams), and the photos are his, so the singular possessive \"photographer\u2019s\" is correct. There\u2019s more than one photo, and nothing belongs to the photos, so the simple plural \"photos\" is correct.", "tip": "Ask whether the word is showing simple plurality (no apostrophe) or ownership (apostrophe) \u2014 and for plural nouns already ending in \"s,\" the possessive apostrophe goes after the s.", "trap": "This choice uses the singular possessive \"photo\u2019s,\" which isn\u2019t correct. There\u2019s more than one photo, and they don\u2019t possess anything, so the noun should be the simple plural \"photos.\"", "poe": {"C": "There\u2019s only one photographer (Adams), and the photos are his, so the singular possessive \"photographer\u2019s\" is correct. There\u2019s more than one photo, and nothing belongs to the photos, so the simple plural \"photos\" is correct.", "A": "This choice uses the singular possessive \"photo\u2019s,\" which isn\u2019t correct. There\u2019s more than one photo, and they don\u2019t possess anything, so the noun should be the simple plural \"photos.\"", "B": "This choice uses the simple plural \"photographers\" and the singular possessive \"photo\u2019s,\" which aren\u2019t correct. There\u2019s only one photographer (Adams) and there\u2019s more than one photo.", "D": "This choice uses the simple plural \"photographers,\" which isn\u2019t correct. There\u2019s only one photographer (Adams)."}}, {"question": "French philosopher Ren\u00e9 Descartes doubted whether he could prove his own existence. Eventually, he found proof in his famous phrase \u201cI think, therefore I am.\u201d The ______ complexity: only those who exist would be able to ponder their existence.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "phrases\u2019 simplicity masks its", "B": "phrases simplicity masks their", "C": "phrase\u2019s simplicity masks their", "D": "phrase\u2019s simplicity masks its"}, "correct": "D", "difficulty": "Medium", "skill": "Nouns & Apostrophes", "domain": "Standard English Conventions", "tags": [], "rule": "The conventions being tested are the use of possessive nouns and the use of possessive determiners. The singular possessive noun \"phrase\u2019s\" correctly indicates that there is only one simple phrase. The singular possessive determiner \"its\" agrees in number with the singular possessive noun \"phrase\u2019s,\" reinforcing the idea that there is only one simple yet complex phrase.", "tip": "Ask whether the word is showing simple plurality (no apostrophe) or ownership (apostrophe) \u2014 and for plural nouns already ending in \"s,\" the possessive apostrophe goes after the s.", "trap": "Because the context requires the singular possessive noun \"phrase\u2019s,\" not the plural possessive noun \"phrases\u2019.\"", "poe": {"D": "The conventions being tested are the use of possessive nouns and the use of possessive determiners. The singular possessive noun \"phrase\u2019s\" correctly indicates that there is only one simple phrase. The singular possessive determiner \"its\" agrees in number with the singular possessive noun \"phrase\u2019s,\" reinforcing the idea that there is only one simple yet complex phrase.", "A": "Because the context requires the singular possessive noun \"phrase\u2019s,\" not the plural possessive noun \"phrases\u2019.\"", "B": "Because the context requires the singular possessive noun \"phrase\u2019s\" and the corresponding singular possessive determiner \"its,\" not the plural noun \"phrases\" and the corresponding plural possessive determiner \"their.\"", "C": "Because the context requires the singular possessive determiner \"its,\" not the plural possessive determiner \"their.\""}}, {"question": "In the 1980s, Latino filmmakers Luis Valdez, Gregory Nava, and Ram\u00f3n Men\u00e9ndez helped expand on-screen representation of Latino Americans with the films Zoot Suit______ and Stand and Deliver (1988), respectively.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "(1981) El Norte (1983),", "B": "(1981)\u2014El Norte (1983)\u2014", "C": "(1981),El Norte (1983),", "D": "(1981) El Norte (1983)"}, "correct": "C", "difficulty": "Medium", "skill": "Dash", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the punctuation of items in a series. The comma after \u201c(1981)\u201d is used conventionally to separate the first and second items in the series, and the comma after \u201c(1983)\u201d is used conventionally to separate the second and third items in the series.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "Because it fails to use appropriate punctuation to separate the first and second items in the series.", "poe": {"C": "The convention being tested is the punctuation of items in a series. The comma after \u201c(1981)\u201d is used conventionally to separate the first and second items in the series, and the comma after \u201c(1983)\u201d is used conventionally to separate the second and third items in the series.", "A": "Because it fails to use appropriate punctuation to separate the first and second items in the series.", "B": "Because dashes can\u2019t be used in this way to separate items in a simple series.", "D": "Because it fails to use appropriate punctuation to separate the items in the series."}}, {"question": "After a spate of illnesses as a child, Wilma Rudolph was told she might never walk again. Defying all odds, Rudolph didn\u2019t just walk, she ______ the 1960 Summer Olympics in Rome, she won both the 100- and 200-meter dashes and clinched first place for her team in the 4x100-meter relay, becoming the first US woman to win three gold medals in a single Olympics.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "ran\u2014fast\u2014during", "B": "ran\u2014fast during", "C": "ran\u2014fast, during", "D": "ran\u2014fast. During"}, "correct": "D", "difficulty": "Hard", "skill": "Dash", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is punctuation use between sentences. In this choice, the period is used correctly to mark the boundary between one sentence (\u201cDefying\u2026fast\u201d) and another sentence that begins with a supplementary phrase (\u201cDuring\u2026Olympics\u201d).", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "When a dash is present in a sentence (\u201cran\u2014fast\u201d), it\u2019s not conventional to use another dash (\u201cfast\u2014during\u201d) to mark the boundary between sentences because it creates a potentially confusing sentence. In this context, a period, semicolon, or colon would be clear and more conventional.", "poe": {"D": "The convention being tested is punctuation use between sentences. In this choice, the period is used correctly to mark the boundary between one sentence (\u201cDefying\u2026fast\u201d) and another sentence that begins with a supplementary phrase (\u201cDuring\u2026Olympics\u201d).", "A": "When a dash is present in a sentence (\u201cran\u2014fast\u201d), it\u2019s not conventional to use another dash (\u201cfast\u2014during\u201d) to mark the boundary between sentences because it creates a potentially confusing sentence. In this context, a period, semicolon, or colon would be clear and more conventional.", "B": "Because it results in a run-on sentence. The sentences (\u201cDefying\u2026fast\u201d) and (\u201cduring\u2026Olympics\u201d) are fused without punctuation and/or a conjunction.", "C": "Because it results in a comma splice. A comma can\u2019t be used in this way to mark the boundary between sentences."}}, {"question": "In a 2023 study, researchers documented a fascinating behavior in the aquatic plant Elodea densa. When exposed to low levels of light, the plant\u2019s ______ the cellular organs that generate energy from light\u2014reshuffled to form a tightly packed, glass-like surface ideal for collecting more light.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "chloroplasts", "B": "chloroplasts;", "C": "chloroplasts,", "D": "chloroplasts\u2014"}, "correct": "D", "difficulty": "Medium", "skill": "Semicolon", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the punctuation of a supplementary element within a sentence. The dash after \"chloroplasts\" pairs with the dash after \"from light\" to separate the supplementary element \"the cellular organs that generate energy from light\" from the rest of the sentence. This supplementary element functions to define the term \"chloroplasts,\" and the pair of dashes indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "tip": "Check both sides of the punctuation mark: could each one stand alone as its own complete sentence? If yes, a semicolon can work.", "trap": "Because it fails to use appropriate punctuation to separate the supplementary element from the rest of the sentence.", "poe": {"D": "The convention being tested is the punctuation of a supplementary element within a sentence. The dash after \"chloroplasts\" pairs with the dash after \"from light\" to separate the supplementary element \"the cellular organs that generate energy from light\" from the rest of the sentence. This supplementary element functions to define the term \"chloroplasts,\" and the pair of dashes indicates that this element could be removed without affecting the grammatical coherence of the sentence.", "A": "Because it fails to use appropriate punctuation to separate the supplementary element from the rest of the sentence.", "B": "Because a semicolon can\u2019t be paired with a dash in this way to separate the supplementary element from the rest of the sentence.", "C": "Because a comma can\u2019t be paired with a dash in this way to separate the supplementary element from the rest of the sentence."}}, {"question": "In discussing Mary Shelley\u2019s 1818 epistolary novel Frankenstein, literary theorist Gayatri Spivak directs the reader\u2019s attention to the character of Margaret Saville. As Spivak points out, Saville is not the protagonist of Shelley\u2019s ______ as the recipient of the letters that frame the book\u2019s narrative, she\u2019s the \u201coccasion\u201d of it.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "novel", "B": "novel,", "C": "novel; rather,", "D": "novel, rather,"}, "correct": "C", "difficulty": "Hard", "skill": "Semicolon", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the coordination of main clauses within a sentence. This choice correctly uses a semicolon to join a main clause (\u201cSaville...novel\u201d) and a second main clause (\u201cshe\u2019s...it\u201d) preceded by supplementary elements (\u201crather...narrative\u201d).", "tip": "Check both sides of the punctuation mark: could each one stand alone as its own complete sentence? If yes, a semicolon can work.", "trap": "Because it results in a run-on sentence. The two main clauses are fused without punctuation and/or a conjunction.", "poe": {"C": "The convention being tested is the coordination of main clauses within a sentence. This choice correctly uses a semicolon to join a main clause (\u201cSaville...novel\u201d) and a second main clause (\u201cshe\u2019s...it\u201d) preceded by supplementary elements (\u201crather...narrative\u201d).", "A": "Because it results in a run-on sentence. The two main clauses are fused without punctuation and/or a conjunction.", "B": "Because it results in a comma splice. Without a conjunction following it, a comma can\u2019t be used in this way to join two main clauses.", "D": "Because it results in a comma splice. Without a conjunction following it, the comma after \u201cnovel\u201d can\u2019t be used in this way to join the two main clauses."}}, {"question": "To humans, it does not appear that the golden orb-weaver spider uses camouflage to capture its ______ the brightly colored arachnid seems to wait conspicuously in the center of its large circular web for insects to approach. Researcher Po Peng of the University of Melbourne has explained that the spider\u2019s distinctive coloration may in fact be part of its appeal.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "prey, rather,", "B": "prey rather,", "C": "prey, rather;", "D": "prey; rather,"}, "correct": "D", "difficulty": "Hard", "skill": "Semicolon", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the coordination of main clauses within a sentence. The semicolon is correctly used to join the first main clause (\u201cTo humans\u2026prey\u201d) and the second main clause (\u201crather\u2026approach\u201d). Further, the comma after the adverb \u201crather\u201d is correctly used to separate the adverb from the main clause (\u201cthe brightly\u2026approach\u201d) it modifies, logically indicating that the information in this clause (how the spider\u2019s behavior appears to humans) is contrary to the information in the previous clause (how the spider\u2019s behavior does not appear to humans).", "tip": "Check both sides of the punctuation mark: could each one stand alone as its own complete sentence? If yes, a semicolon can work.", "trap": "Because it results in a comma splice. Without a conjunction following it, a comma can\u2019t be used in this way to join two main clauses.", "poe": {"D": "The convention being tested is the coordination of main clauses within a sentence. The semicolon is correctly used to join the first main clause (\u201cTo humans\u2026prey\u201d) and the second main clause (\u201crather\u2026approach\u201d). Further, the comma after the adverb \u201crather\u201d is correctly used to separate the adverb from the main clause (\u201cthe brightly\u2026approach\u201d) it modifies, logically indicating that the information in this clause (how the spider\u2019s behavior appears to humans) is contrary to the information in the previous clause (how the spider\u2019s behavior does not appear to humans).", "A": "Because it results in a comma splice. Without a conjunction following it, a comma can\u2019t be used in this way to join two main clauses.", "B": "Because it results in a run-on sentence. The two main clauses are fused without appropriate punctuation and/or a conjunction.", "C": "Placing the comma between the first main clause \u201cTo humans\u2026prey\u201d and the adverb \u201crather\u201d illogically indicates that the information in the first main clause is contrary to what came before, which doesn\u2019t make sense in this context."}}, {"question": "Along with carbon dioxide concentration and temperature, light intensity affects the chemical reaction rate of ______ as light intensity increases, so does the rate at which the reactants (water and carbon dioxide) are converted into their products (glucose and oxygen).<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "photosynthesis and", "B": "photosynthesis,", "C": "photosynthesis:", "D": "photosynthesis"}, "correct": "C", "difficulty": "Hard", "skill": "Colon", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of punctuation in a sentence. In this choice, a colon is correctly used to mark the boundary between one main clause (\"Along with...photosynthesis\") and another main clause (\"as light...oxygen\") and to introduce the following explanation of how light intensity affects photosynthesis.", "tip": "Cover everything after the colon \u2014 what remains before it must be a complete, independent sentence.", "trap": "Because when coordinating two longer main clauses such as these, it\u2019s conventional to use a comma before the coordinating conjunction (\"and\").", "poe": {"C": "The convention being tested is the use of punctuation in a sentence. In this choice, a colon is correctly used to mark the boundary between one main clause (\"Along with...photosynthesis\") and another main clause (\"as light...oxygen\") and to introduce the following explanation of how light intensity affects photosynthesis.", "A": "Because when coordinating two longer main clauses such as these, it\u2019s conventional to use a comma before the coordinating conjunction (\"and\").", "B": "Because it results in a comma splice. Without a coordinating conjunction following it, a comma can\u2019t be used in this way to join two main clauses (\"Along with...photosynthesis\" and \"as light...oxygen\").", "D": "Because it results in a run-on sentence. The two main clauses (\"Along with...photosynthesis\" and \"as light...oxygen\") are fused without punctuation and/or a conjunction."}}, {"question": "In 2008, two years after the death of science fiction writer Octavia Butler, the Huntington Library in ______ received a collection of more than 8,000 items, including Butler\u2019s private notes, research materials, manuscripts, photos, and drawings. Today, the Octavia E. Butler Collection is one of the most researched archives at the library.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "California,", "B": "California:", "C": "California\u2014", "D": "California"}, "correct": "D", "difficulty": "Hard", "skill": "Colon", "domain": "Standard English Conventions", "tags": [], "rule": "No punctuation should separate the subject of the sentence (\u201cthe Huntington Library in California\u201d) from its verb (\u201creceived\u201d).", "tip": "Cover everything after the colon \u2014 what remains before it must be a complete, independent sentence.", "trap": "No punctuation should separate the subject of the sentence (\u201cthe Huntington Library in California\u201d) from its verb (\u201creceived\u201d).", "poe": {"D": "No punctuation should separate the subject of the sentence (\u201cthe Huntington Library in California\u201d) from its verb (\u201creceived\u201d).", "A": "No punctuation should separate the subject of the sentence (\u201cthe Huntington Library in California\u201d) from its verb (\u201creceived\u201d).", "B": "No punctuation should separate the subject of the sentence (\u201cthe Huntington Library in California\u201d) from its verb (\u201creceived\u201d).", "C": "No punctuation should separate the subject of the sentence (\u201cthe Huntington Library in California\u201d) from its verb (\u201creceived\u201d)."}}, {"question": "The archaeologists worked at the site for three summers ______ their findings reshaped understanding of the region's history.", "choices": {"B": " ", "C": ",", "D": ";", "A": ":"}, "correct": "D", "difficulty": "Easy", "skill": "Clauses", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "Both clauses are independent, correctly joined by a semicolon.", "tip": "Read each clause by itself: if it leaves you expecting more information, it is dependent, not independent.", "trap": "This choice provides no punctuation at all, which does not correctly separate the two parts of the sentence here.", "poe": {"B": "This choice provides no punctuation at all, which does not correctly separate the two parts of the sentence here.", "C": "This choice uses only a comma, which is too weak to join two independent clauses on its own \u2014 that creates a comma splice.", "D": "Both clauses are independent, correctly joined by a semicolon.", "A": "This choice uses a colon, which promises a specific explanation \u2014 but the second part here is simply a related, separate idea, which calls for a semicolon instead."}}]};
+
+const STATE = { idx:0, answers:{}, submitted:false, minutesChosen:0, secondsLeft:0, timerId:null };
+
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return document.querySelectorAll(sel); }
+
+function currentQuestions(){ return TEST.questions; }
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  function initIntro(){
+    $('#intro-title').textContent = TEST.label;
+    $('#intro-subtitle').textContent = TEST.description || '';
+    $('#intro-count').textContent = TEST.questions.length + ' questions. Choose your timing, then click Start when you\'re ready.';
+    const standard = Math.round(TEST.questions.length * 1.5);
+    const extended = Math.round(standard * 1.25);
+    $('#timing-options').innerHTML =
+      '<div class="timing-card selected" data-minutes="' + standard + '"><h3>Standard Time</h3><div class="mins">' + standard + ' min</div></div>' +
+      '<div class="timing-card" data-minutes="' + extended + '"><h3>Extended Time (+25%)</h3><div class="mins">' + extended + ' min</div></div>';
+    STATE.minutesChosen = standard;
+    $all('.timing-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        $all('.timing-card').forEach(c=>c.classList.remove('selected'));
+        card.classList.add('selected');
+        STATE.minutesChosen = parseFloat(card.dataset.minutes);
+      });
+    });
+  }
+
+  initIntro();
+
+  $('.start-btn').addEventListener('click', function(){
+    $('#intro-screen').classList.add('hidden');
+    $('#test-screen').classList.remove('hidden');
+    buildNav();
+    renderQuestion();
+    startTimer();
+  });
+
+  function startTimer(){
+    STATE.secondsLeft = Math.round(STATE.minutesChosen*60);
+    updateTimerDisplay();
+    STATE.timerId = setInterval(()=>{
+      STATE.secondsLeft--;
+      updateTimerDisplay();
+      if(STATE.secondsLeft<=0){
+        clearInterval(STATE.timerId);
+        STATE.submitted = true;
+        showResults();
+      }
+    }, 1000);
+  }
+  function updateTimerDisplay(){
+    const m = Math.floor(STATE.secondsLeft/60);
+    const s = STATE.secondsLeft%60;
+    const box = $('#timer-box');
+    if(!box) return;
+    box.textContent = 'Time Remaining: ' + m + ':' + (s<10?'0':'')+s;
+    box.classList.toggle('low-time', STATE.secondsLeft <= 120);
+  }
+
+  function buildNav(){
+    const nav = $('#nav-grid');
+    nav.innerHTML = '';
+    currentQuestions().forEach((q,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'nav-btn';
+      btn.textContent = (i+1);
+      btn.addEventListener('click', ()=>{ STATE.idx = i; renderQuestion(); });
+      nav.appendChild(btn);
+    });
+  }
+
+  function renderQuestion(){
+    const q = currentQuestions()[STATE.idx];
+    $('#q-text').innerHTML = q.question.replace(/\n/g,'<br>');
+    const choicesEl = $('#choices');
+    choicesEl.innerHTML = '';
+    ['A','B','C','D'].forEach(letter=>{
+      if(!q.choices[letter]) return;
+      const row = document.createElement('div');
+      row.className = 'choice-row' + (STATE.answers[STATE.idx]===letter ? ' selected':'');
+      row.innerHTML = '<span class="choice-letter">'+letter+'</span><span class="choice-text"></span>';
+      row.querySelector('.choice-text').textContent = q.choices[letter];
+      row.addEventListener('click', ()=>{
+        STATE.answers[STATE.idx] = letter;
+        renderQuestion();
+      });
+      choicesEl.appendChild(row);
+    });
+    updateNav();
+    $('#q-counter').textContent = 'Question ' + (STATE.idx+1) + ' of ' + currentQuestions().length;
+  }
+
+  function updateNav(){
+    $all('.nav-btn').forEach((btn,i)=>{
+      btn.classList.toggle('current', i===STATE.idx);
+      btn.classList.toggle('answered', STATE.answers[i] !== undefined);
+    });
+  }
+
+  $('#prev-btn').addEventListener('click', ()=>{
+    if(STATE.idx>0){ STATE.idx--; renderQuestion(); }
+  });
+  $('#next-btn').addEventListener('click', ()=>{
+    if(STATE.idx<currentQuestions().length-1){ STATE.idx++; renderQuestion(); }
+  });
+
+  $('#submit-btn').addEventListener('click', ()=>{
+    $('#confirm-box').classList.remove('hidden');
+  });
+  $('#cancel-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+  });
+  $('#confirm-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+    if(STATE.timerId) clearInterval(STATE.timerId);
+    STATE.submitted = true;
+    showResults();
+  });
+
+  function showResults(){
+    $('#test-screen').classList.add('hidden');
+    $('#results-screen').classList.remove('hidden');
+    $('#print-btn').classList.remove('hidden');
+    const qs = currentQuestions();
+    let correctCount = 0;
+    qs.forEach((q,i)=>{ if(STATE.answers[i]===q.correct) correctCount++; });
+    $('.score-big').textContent = correctCount + ' / ' + qs.length;
+    $('#results-title').textContent = TEST.label + ' \u2014 Results';
+
+    const container = $('#review-container');
+    container.innerHTML = '';
+    qs.forEach((q,i)=>{
+      const userAns = STATE.answers[i];
+      const isCorrect = userAns === q.correct;
+      const card = document.createElement('div');
+      card.className = 'review-card ' + (isCorrect ? 'correct':'incorrect');
+
+      let html = '<div class="review-q"></div><div class="review-choices"></div>';
+      html += '<div class="review-section"><div class="review-section-label">Rule</div><div class="review-rule"></div></div>';
+      html += '<div class="review-section"><div class="review-section-label">Tip</div><div class="review-tip"></div></div>';
+      if (q.trap) {
+        html += '<div class="review-section"><div class="review-section-label">Trap</div><div class="review-trap"></div></div>';
+      }
+      html += '<div class="review-section"><div class="review-section-label">Process of Elimination</div><ul class="review-poe-list"></ul></div>';
+      card.innerHTML = html;
+
+      card.querySelector('.review-q').textContent = 'Question ' + (i+1) + ': ' + q.question.replace(/<[^>]+>/g,' ');
+      const choicesDiv = card.querySelector('.review-choices');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.choices[letter]) return;
+        const row = document.createElement('div');
+        row.className = 'review-choice' +
+          (letter===q.correct ? ' right-answer' : '') +
+          (letter===userAns && letter!==q.correct ? ' user-wrong' : '');
+        row.innerHTML = '<span>'+letter+'.</span><span></span>';
+        row.querySelectorAll('span')[1].textContent = q.choices[letter];
+        choicesDiv.appendChild(row);
+      });
+
+      card.querySelector('.review-rule').textContent = q.rule || '';
+      card.querySelector('.review-tip').textContent = q.tip || '';
+      if (q.trap) card.querySelector('.review-trap').textContent = q.trap;
+
+      const poeList = card.querySelector('.review-poe-list');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.poe || !q.poe[letter]) return;
+        const li = document.createElement('li');
+        li.textContent = letter + '. ' + q.poe[letter];
+        if (letter === q.correct) li.classList.add('correct-letter');
+        poeList.appendChild(li);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  $('#print-btn').addEventListener('click', ()=> window.print());
+});
+})();
+</script>
+
+</body>
+</html>

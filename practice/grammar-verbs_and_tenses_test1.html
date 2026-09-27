@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLC — Grammar and Sentence Structure — Verbs &amp; Tenses — Test 1</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; margin:0; background:#f7f5f0; color:#241a12; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
+.card { background:#fff; border-radius: 10px; padding: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom:20px; }
+h1 { color:#A8002E; font-size: 1.6rem; margin-top:0; }
+.start-btn, #submit-btn, #confirm-submit { background:#A8002E; color:#fff; border:none; padding:12px 28px; border-radius:6px; font-size:1rem; cursor:pointer; }
+.start-btn:hover, #submit-btn:hover { background:#8a0026; }
+.timing-options { display:flex; gap:14px; margin:18px 0; }
+.timing-card { flex:1; border:2px solid #ddd; border-radius:8px; padding:16px; cursor:pointer; text-align:center; }
+.timing-card.selected { border-color:#A8002E; background:#FBF3E3; }
+.timing-card h3 { margin:0 0 6px 0; color:#A8002E; font-size:1.05rem; }
+.timing-card div.mins { font-size:1.5rem; font-weight:bold; color:#241a12; }
+.nav-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.nav-btn { width:38px; height:38px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.9rem; }
+.nav-btn.current { border-color:#A8002E; border-width:2px; }
+.nav-btn.answered { background:#F5EFE0; }
+#q-text{font-size:1.08rem;line-height:1.6;margin:14px 0 20px}
+.choice-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid #ddd; border-radius:6px; margin-bottom:10px; cursor:pointer; }
+.choice-row:hover { background:#faf6ee; }
+.choice-row.selected { border-color:#A8002E; background:#FBF3E3; }
+.choice-letter { font-weight:bold; color:#A8002E; }
+.timer-box { position:sticky; top:0; background:#241a12; color:#fff; padding:8px 16px; border-radius:6px; font-weight:bold; text-align:center; margin-bottom:14px; font-size:1.1rem; z-index:10; }
+.timer-box.low-time { background:#A8002E; }
+.review-card { border:1px solid #ddd; border-radius:8px; padding:18px; margin-bottom:16px; }
+.review-card.correct { border-left: 5px solid #1F7A3D; }
+.review-card.incorrect { border-left: 5px solid #A8002E; }
+.review-q { font-weight:600; margin-bottom:10px; }
+.review-choice { display:flex; gap:8px; padding:6px 0; }
+.review-choice.right-answer { color:#1F7A3D; font-weight:600; }
+.review-choice.user-wrong { color:#A8002E; font-weight:600; }
+.review-section { margin-top:12px; }
+.review-section-label { font-weight:bold; color:#B8882A; font-family: Georgia, serif; font-size:1rem; margin-bottom:4px; }
+.review-rule { background:#faf6ee; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; }
+.review-tip { background:#FBF3E3; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #B8882A; }
+.review-trap { background:#FCEDEE; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #A8002E; }
+.review-poe-list { margin:6px 0 0 0; padding-left:20px; font-size:.92rem; color:#3a3a3a; }
+.review-poe-list li { margin-bottom:5px; line-height:1.45; }
+.review-poe-list li.correct-letter { color:#1F7A3D; font-weight:600; }
+.score-big { font-size:2.4rem; color:#A8002E; font-weight:bold; }
+.hidden { display:none !important; }
+.subtitle { color:#5A5A5A; font-size:0.95rem; margin-bottom:20px; }
+#confirm-box { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
+#confirm-box .card { max-width:420px; text-align:center; }
+#print-btn { position:fixed; bottom:20px; right:20px; background:#B8882A; color:#fff; border:none; padding:12px 18px; border-radius:24px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.2); font-size:0.95rem; }
+@media print {
+  #print-btn, #intro-screen, #test-screen, #confirm-box { display:none !important; }
+  body { background:#fff; }
+  .card { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="intro-screen" class="card">
+    <h1 id="intro-title">Verbs &amp; Tenses — Test 1</h1>
+    <div id="intro-subtitle" class="subtitle">10-question practice test on verbs &amp; tenses.</div>
+    <p id="intro-count"></p>
+    <div id="timing-options" class="timing-options"></div>
+    <button class="start-btn">Start Test</button>
+  </div>
+
+  <div id="test-screen" class="card hidden">
+    <div id="timer-box" class="timer-box"></div>
+    <div id="q-counter" style="font-weight:600;color:#5A5A5A;margin-bottom:8px;"></div>
+    <div id="q-text"></div>
+    <div id="choices"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+      <button id="prev-btn" style="width:auto;padding:8px 16px;">&larr; Back</button>
+      <button id="next-btn" style="width:auto;padding:8px 16px;">Next &rarr;</button>
+    </div>
+    <div id="nav-grid" class="nav-grid"></div>
+    <button id="submit-btn">Submit Test</button>
+  </div>
+
+  <div id="results-screen" class="card hidden">
+    <h1 id="results-title">Results</h1>
+    <div class="score-big"></div>
+    <div id="review-container"></div>
+  </div>
+
+  <button id="print-btn" class="hidden">Export / Print PDF</button>
+
+  <div id="confirm-box" class="hidden">
+    <div class="card">
+      <p>Submit your test? You won't be able to change your answers after this.</p>
+      <button id="confirm-submit">Yes, Submit</button>
+      <button id="cancel-submit" style="background:#ccc;color:#333;">Cancel</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+const TEST = {"label": "Verbs & Tenses \u2014 Test 1", "description": "10-question practice test on verbs & tenses.", "questions": [{"question": "Following her debut album release in 2002, Mexican singer-songwriter Natalia Lafourcade quickly shot to fame. By 2023, she ______ one of the most celebrated musicians in Latin America, having released twelve albums and won seventeen Latin Grammy awards\u2014more than any other female artist in history.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "will become", "B": "becomes", "C": "will have become", "D": "had become"}, "correct": "D", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense in a sentence. The past perfect tense indicates an action that was completed before another past action. In this choice, the past perfect verb \u201chad become,\u201d together with the supplemental phrase \u201cby 2023,\u201d indicates that Lafourcade earned her status as one of the most celebrated musicians in Latin America before 2023.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the future tense \u201cwill become\u201d doesn\u2019t indicate that Lafourcade earned her celebrated status before 2023.", "poe": {"D": "The convention being tested is the use of verbs to express tense in a sentence. The past perfect tense indicates an action that was completed before another past action. In this choice, the past perfect verb \u201chad become,\u201d together with the supplemental phrase \u201cby 2023,\u201d indicates that Lafourcade earned her status as one of the most celebrated musicians in Latin America before 2023.", "A": "Because the future tense \u201cwill become\u201d doesn\u2019t indicate that Lafourcade earned her celebrated status before 2023.", "B": "Because the present tense \u201cbecomes\u201d doesn\u2019t indicate that Lafourcade earned her celebrated status before 2023.", "C": "Because the future perfect tense \u201cwill have become\u201d doesn\u2019t indicate that Lafourcade earned her celebrated status by 2023."}}, {"question": "The sun never sets during the Arctic summer in the Far North. In response, reindeer in this region must change their sleep habits. Instead of resting when it gets dark, they rest when they need ______ their food.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "digest", "B": "will digest", "C": "to digest", "D": "digesting"}, "correct": "C", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of nonfinite verb forms within a sentence. Working together with the finite verb \"need,\" the nonfinite to-infinitive verb \"to digest\" is correctly used to form a subordinate clause that describes what the reindeer need.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the verb \"digest\" (in either its finite or nonfinite form) can\u2019t be used in this way with the finite verb \"need.\"", "poe": {"C": "The convention being tested is the use of nonfinite verb forms within a sentence. Working together with the finite verb \"need,\" the nonfinite to-infinitive verb \"to digest\" is correctly used to form a subordinate clause that describes what the reindeer need.", "A": "Because the verb \"digest\" (in either its finite or nonfinite form) can\u2019t be used in this way with the finite verb \"need.\"", "B": "Because the finite verb \"will digest\" can\u2019t be used in this way with the finite verb \"need.\"", "D": "Because the nonfinite participle \"digesting\" can\u2019t be used in this way with the finite verb \"need.\""}}, {"question": "In recent years, economists around the world have created new tools that quantify the overall well-being of a country\u2019s citizens. Economists in India, for example, use an Ease of Living Index. This tool ______ economic potential, sustainability, and citizens\u2019 quality of life.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "measures", "B": "had measured", "C": "would have measured", "D": "will have been measuring"}, "correct": "A", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The previous sentence tells us how economists in India \"use\" a certain tool, while this sentence describes general facts about that tool. To express general facts (and also to match the simple present tense of \"use\"), we should use the simple present tense form \"measures.\"", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "This choice uses the past perfect tense, but the previous sentence tells us that the tool is currently used to measure things, so the past tense doesn\u2019t make sense for this verb.", "poe": {"A": "The previous sentence tells us how economists in India \"use\" a certain tool, while this sentence describes general facts about that tool. To express general facts (and also to match the simple present tense of \"use\"), we should use the simple present tense form \"measures.\"", "B": "This choice uses the past perfect tense, but the previous sentence tells us that the tool is currently used to measure things, so the past tense doesn\u2019t make sense for this verb.", "C": "This choice uses the future perfect conditional tense, but the previous sentence tells us that the tool is currently used to measure things, so the future tense doesn\u2019t make sense for this verb.", "D": "This choice uses the future perfect continuous tense, but the previous sentence tells us that the tool is currently used to measure things, so the future tense doesn\u2019t make sense for this verb."}}, {"question": "For decades after World War II, the women who had worked for the US military as wartime codebreakers ______ their vital efforts a secret.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "to keep", "B": "having kept", "C": "keeping", "D": "kept"}, "correct": "D", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The sentence describes a completed past action during a specific historical period (\"for decades after World War II\"), so the simple past tense \"kept\" is correct.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "This choice uses an infinitive (\"to \" + verb) (\"to keep\"), which does not match the tense or verb structure the sentence actually requires here.", "poe": {"A": "This choice uses an infinitive (\"to \" + verb) (\"to keep\"), which does not match the tense or verb structure the sentence actually requires here.", "B": "This choice uses a perfect participle (\"having\" + past participle) (\"having kept\"), which does not match the tense or verb structure the sentence actually requires here.", "C": "This choice uses a present participle / gerund (\"-ing\" form) (\"keeping\"), which does not match the tense or verb structure the sentence actually requires here.", "D": "The sentence describes a completed past action during a specific historical period (\"for decades after World War II\"), so the simple past tense \"kept\" is correct."}}, {"question": "The Globe Theatre in London is a reconstruction of the famed venue where many of Shakespeare\u2019s plays were first performed. In 1613, a prop cannon ______ during a performance and ignited the Globe\u2019s thatched roof. No one was hurt, but in two hours the original Globe was gone.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "malfunctions", "B": "will malfunction", "C": "has malfunctioned", "D": "malfunctioned"}, "correct": "D", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense. In this choice, the past tense verb \"malfunctioned\" is consistent with the other past tense verbs (\"ignited\" and \"was\") used to describe the destruction of the original Globe Theatre.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the present tense verb \"malfunctions\" isn\u2019t consistent with the other past tense verbs used to describe the destruction of the original Globe Theatre.", "poe": {"D": "The convention being tested is the use of verbs to express tense. In this choice, the past tense verb \"malfunctioned\" is consistent with the other past tense verbs (\"ignited\" and \"was\") used to describe the destruction of the original Globe Theatre.", "A": "Because the present tense verb \"malfunctions\" isn\u2019t consistent with the other past tense verbs used to describe the destruction of the original Globe Theatre.", "B": "Because the future tense verb \"will malfunction\" isn\u2019t consistent with the other past tense verbs used to describe the destruction of the original Globe Theatre.", "C": "Because the present perfect tense verb \"has malfunctioned\" isn\u2019t consistent with the other past tense verbs used to describe the destruction of the original Globe Theatre."}}, {"question": "During a 2022 expedition led by research zoologist Andrea Quattrini, scientists discovered a new species of black coral off the coast of Puerto Rico. Like other black corals, the newly discovered species, which they named Aphanipathes puertoricoensis, has coiled branching structures that ______ it survive in the deep sea.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "has helped", "B": "helps", "C": "helping", "D": "help"}, "correct": "D", "difficulty": "Hard", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The subject is \"structures\" (plural, from \"coiled branching structures\"), requiring the plural verb \"help.\"", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "This choice uses a perfect-tense verb form (\"has helped\"), which does not match the tense or verb structure the sentence actually requires here.", "poe": {"A": "This choice uses a perfect-tense verb form (\"has helped\"), which does not match the tense or verb structure the sentence actually requires here.", "B": "This choice, \"helps,\" is not in the verb tense that matches the timeline established elsewhere in the sentence.", "C": "This choice uses a present participle / gerund (\"-ing\" form) (\"helping\"), which does not match the tense or verb structure the sentence actually requires here.", "D": "The subject is \"structures\" (plural, from \"coiled branching structures\"), requiring the plural verb \"help.\""}}, {"question": "The alga species Chlorella vulgaris is very efficient at making oxygen. For this reason, scientists are currently exploring ways to use this species in space. C. vulgaris might be used, for example, to build future biological air exchange systems that ______ oxygen for astronauts.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"C": "produce", "A": "are producing", "B": "produced", "D": "have produced"}, "correct": "C", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense. Simple present tense verbs can be used to describe actions that tend to occur, including in a hypothetical or future scenario. In this case, the simple present tense verb \u201cproduce\u201d indicates what the air exchange systems might be able to do in the future (produce oxygen for astronauts).", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "The present progressive tense verb \u201care producing\u201d suggests that the oxygen is currently being produced, not that it might be produced in the future.", "poe": {"C": "The convention being tested is the use of verbs to express tense. Simple present tense verbs can be used to describe actions that tend to occur, including in a hypothetical or future scenario. In this case, the simple present tense verb \u201cproduce\u201d indicates what the air exchange systems might be able to do in the future (produce oxygen for astronauts).", "A": "The present progressive tense verb \u201care producing\u201d suggests that the oxygen is currently being produced, not that it might be produced in the future.", "B": "Because the past tense verb \u201cproduced\u201d suggests that the oxygen was produced in the past, not that it might be produced in the future.", "D": "Because the present perfect tense verb \u201chave produced\u201d suggests that the oxygen has been produced from a point in the past up to the present, not that it might be produced in the future."}}, {"question": "In 1903, environmentalist John Muir guided President Theodore Roosevelt on a scenic, sprawling trip through California\u2019s Yosemite Valley. Upon returning from the three-day excursion, Roosevelt ______ to conserve the nation\u2019s wilderness areas, a vow he upheld for his remaining six years in office.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "is vowing", "B": "vowed", "C": "will vow", "D": "vows"}, "correct": "B", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense in a sentence. In this choice, the past tense verb \u201cvowed\u201d is consistent with the other past tense verbs (\u201cguided\u201d and \u201cupheld\u201d) used to narrate the events surrounding President Roosevelt\u2019s decision to conserve the nation\u2019s wilderness areas.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the present progressive tense verb \u201cis vowing\u201d isn\u2019t consistent with the past tense verbs used to narrate the events surrounding President Roosevelt\u2019s decision to conserve the nation\u2019s wilderness areas.", "poe": {"B": "The convention being tested is the use of verbs to express tense in a sentence. In this choice, the past tense verb \u201cvowed\u201d is consistent with the other past tense verbs (\u201cguided\u201d and \u201cupheld\u201d) used to narrate the events surrounding President Roosevelt\u2019s decision to conserve the nation\u2019s wilderness areas.", "A": "Because the present progressive tense verb \u201cis vowing\u201d isn\u2019t consistent with the past tense verbs used to narrate the events surrounding President Roosevelt\u2019s decision to conserve the nation\u2019s wilderness areas.", "C": "Because the future tense verb \u201cwill vow\u201d isn\u2019t consistent with the past tense verbs used to narrate the events surrounding President Roosevelt\u2019s decision to conserve the nation\u2019s wilderness areas.", "D": "Because the simple present tense verb \u201cvows\u201d isn\u2019t consistent with the past tense verbs used to narrate the events surrounding President Roosevelt\u2019s decision to conserve the nation\u2019s wilderness areas."}}, {"question": "Occupying a significant part of modern-day Nigeria, the Kingdom of Benin was one of the major powers in West Africa between the thirteenth and nineteenth centuries. It ______ ruled by Oba Ewuare I from 1440 to 1473.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "is", "B": "will be", "C": "has been", "D": "was"}, "correct": "D", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense in a sentence. In this choice, the past tense verb \u201cwas ruled\u201d correctly indicates that Oba Ewuare I ruled the Kingdom of Benin in the distant past (from 1440 to 1473). This past tense verb choice is consistent with the other past tense verb (\u201cwas\u201d) used to describe the Kingdom of Benin.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the present tense verb \u201cis ruled\u201d doesn\u2019t indicate that Oba Ewuare I ruled the Kingdom of Benin in the distant past.", "poe": {"D": "The convention being tested is the use of verbs to express tense in a sentence. In this choice, the past tense verb \u201cwas ruled\u201d correctly indicates that Oba Ewuare I ruled the Kingdom of Benin in the distant past (from 1440 to 1473). This past tense verb choice is consistent with the other past tense verb (\u201cwas\u201d) used to describe the Kingdom of Benin.", "A": "Because the present tense verb \u201cis ruled\u201d doesn\u2019t indicate that Oba Ewuare I ruled the Kingdom of Benin in the distant past.", "B": "Because the future tense verb \u201cwill be ruled\u201d doesn\u2019t indicate that Oba Ewuare I ruled the Kingdom of Benin in the distant past.", "C": "Because the present perfect tense verb \u201chas been ruled\u201d doesn\u2019t indicate that Oba Ewuare I ruled the Kingdom of Benin in the distant past."}}, {"question": "In 2019, New Zealand produced 88,465 hectograms per hectare (hg/ha) of wheat, and Portugal produced 23,298 hg/ha. This is the type of information on global food production that the United Nations\u2019 Food and Agriculture Organization ______ since 1945.<br><br><b>Which choice completes the text so that it conforms to the conventions of Standard English?</b>", "choices": {"A": "is collecting", "B": "has collected", "C": "will collect", "D": "collects"}, "correct": "B", "difficulty": "Easy", "skill": "Verbs & Tenses", "domain": "Standard English Conventions", "tags": [], "rule": "The convention being tested is the use of verbs to express tense in a sentence. In this choice, the present perfect tense verb \u201chas collected,\u201d used in conjunction with the phrase \u201csince 1945,\u201d correctly indicates that the Food and Agriculture Organization has collected this type of information in the past and continues to do so in the present.", "tip": "Find the \"anchor\" tense established elsewhere in the sentence or passage, then make sure every verb matches it unless there is a clear reason for a shift in time.", "trap": "Because the present progressive tense verb \u201cis collecting\u201d is inconsistent with the phrase \u201csince 1945,\u201d which indicates that the action occurred in the past and continues into the present.", "poe": {"B": "The convention being tested is the use of verbs to express tense in a sentence. In this choice, the present perfect tense verb \u201chas collected,\u201d used in conjunction with the phrase \u201csince 1945,\u201d correctly indicates that the Food and Agriculture Organization has collected this type of information in the past and continues to do so in the present.", "A": "Because the present progressive tense verb \u201cis collecting\u201d is inconsistent with the phrase \u201csince 1945,\u201d which indicates that the action occurred in the past and continues into the present.", "C": "Because the future tense verb \u201cwill collect\u201d is inconsistent with the phrase \u201csince 1945,\u201d which indicates that the action occurred in the past and continues into the present.", "D": "Because the present tense verb \u201ccollects\u201d is inconsistent with the phrase \u201csince 1945,\u201d which indicates that the action occurred in the past and continues into the present."}}]};
+
+const STATE = { idx:0, answers:{}, submitted:false, minutesChosen:0, secondsLeft:0, timerId:null };
+
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return document.querySelectorAll(sel); }
+
+function currentQuestions(){ return TEST.questions; }
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  function initIntro(){
+    $('#intro-title').textContent = TEST.label;
+    $('#intro-subtitle').textContent = TEST.description || '';
+    $('#intro-count').textContent = TEST.questions.length + ' questions. Choose your timing, then click Start when you\'re ready.';
+    const standard = Math.round(TEST.questions.length * 1.5);
+    const extended = Math.round(standard * 1.25);
+    $('#timing-options').innerHTML =
+      '<div class="timing-card selected" data-minutes="' + standard + '"><h3>Standard Time</h3><div class="mins">' + standard + ' min</div></div>' +
+      '<div class="timing-card" data-minutes="' + extended + '"><h3>Extended Time (+25%)</h3><div class="mins">' + extended + ' min</div></div>';
+    STATE.minutesChosen = standard;
+    $all('.timing-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        $all('.timing-card').forEach(c=>c.classList.remove('selected'));
+        card.classList.add('selected');
+        STATE.minutesChosen = parseFloat(card.dataset.minutes);
+      });
+    });
+  }
+
+  initIntro();
+
+  $('.start-btn').addEventListener('click', function(){
+    $('#intro-screen').classList.add('hidden');
+    $('#test-screen').classList.remove('hidden');
+    buildNav();
+    renderQuestion();
+    startTimer();
+  });
+
+  function startTimer(){
+    STATE.secondsLeft = Math.round(STATE.minutesChosen*60);
+    updateTimerDisplay();
+    STATE.timerId = setInterval(()=>{
+      STATE.secondsLeft--;
+      updateTimerDisplay();
+      if(STATE.secondsLeft<=0){
+        clearInterval(STATE.timerId);
+        STATE.submitted = true;
+        showResults();
+      }
+    }, 1000);
+  }
+  function updateTimerDisplay(){
+    const m = Math.floor(STATE.secondsLeft/60);
+    const s = STATE.secondsLeft%60;
+    const box = $('#timer-box');
+    if(!box) return;
+    box.textContent = 'Time Remaining: ' + m + ':' + (s<10?'0':'')+s;
+    box.classList.toggle('low-time', STATE.secondsLeft <= 120);
+  }
+
+  function buildNav(){
+    const nav = $('#nav-grid');
+    nav.innerHTML = '';
+    currentQuestions().forEach((q,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'nav-btn';
+      btn.textContent = (i+1);
+      btn.addEventListener('click', ()=>{ STATE.idx = i; renderQuestion(); });
+      nav.appendChild(btn);
+    });
+  }
+
+  function renderQuestion(){
+    const q = currentQuestions()[STATE.idx];
+    $('#q-text').innerHTML = q.question.replace(/\n/g,'<br>');
+    const choicesEl = $('#choices');
+    choicesEl.innerHTML = '';
+    ['A','B','C','D'].forEach(letter=>{
+      if(!q.choices[letter]) return;
+      const row = document.createElement('div');
+      row.className = 'choice-row' + (STATE.answers[STATE.idx]===letter ? ' selected':'');
+      row.innerHTML = '<span class="choice-letter">'+letter+'</span><span class="choice-text"></span>';
+      row.querySelector('.choice-text').textContent = q.choices[letter];
+      row.addEventListener('click', ()=>{
+        STATE.answers[STATE.idx] = letter;
+        renderQuestion();
+      });
+      choicesEl.appendChild(row);
+    });
+    updateNav();
+    $('#q-counter').textContent = 'Question ' + (STATE.idx+1) + ' of ' + currentQuestions().length;
+  }
+
+  function updateNav(){
+    $all('.nav-btn').forEach((btn,i)=>{
+      btn.classList.toggle('current', i===STATE.idx);
+      btn.classList.toggle('answered', STATE.answers[i] !== undefined);
+    });
+  }
+
+  $('#prev-btn').addEventListener('click', ()=>{
+    if(STATE.idx>0){ STATE.idx--; renderQuestion(); }
+  });
+  $('#next-btn').addEventListener('click', ()=>{
+    if(STATE.idx<currentQuestions().length-1){ STATE.idx++; renderQuestion(); }
+  });
+
+  $('#submit-btn').addEventListener('click', ()=>{
+    $('#confirm-box').classList.remove('hidden');
+  });
+  $('#cancel-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+  });
+  $('#confirm-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+    if(STATE.timerId) clearInterval(STATE.timerId);
+    STATE.submitted = true;
+    showResults();
+  });
+
+  function showResults(){
+    $('#test-screen').classList.add('hidden');
+    $('#results-screen').classList.remove('hidden');
+    $('#print-btn').classList.remove('hidden');
+    const qs = currentQuestions();
+    let correctCount = 0;
+    qs.forEach((q,i)=>{ if(STATE.answers[i]===q.correct) correctCount++; });
+    $('.score-big').textContent = correctCount + ' / ' + qs.length;
+    $('#results-title').textContent = TEST.label + ' \u2014 Results';
+
+    const container = $('#review-container');
+    container.innerHTML = '';
+    qs.forEach((q,i)=>{
+      const userAns = STATE.answers[i];
+      const isCorrect = userAns === q.correct;
+      const card = document.createElement('div');
+      card.className = 'review-card ' + (isCorrect ? 'correct':'incorrect');
+
+      let html = '<div class="review-q"></div><div class="review-choices"></div>';
+      html += '<div class="review-section"><div class="review-section-label">Rule</div><div class="review-rule"></div></div>';
+      html += '<div class="review-section"><div class="review-section-label">Tip</div><div class="review-tip"></div></div>';
+      if (q.trap) {
+        html += '<div class="review-section"><div class="review-section-label">Trap</div><div class="review-trap"></div></div>';
+      }
+      html += '<div class="review-section"><div class="review-section-label">Process of Elimination</div><ul class="review-poe-list"></ul></div>';
+      card.innerHTML = html;
+
+      card.querySelector('.review-q').textContent = 'Question ' + (i+1) + ': ' + q.question.replace(/<[^>]+>/g,' ');
+      const choicesDiv = card.querySelector('.review-choices');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.choices[letter]) return;
+        const row = document.createElement('div');
+        row.className = 'review-choice' +
+          (letter===q.correct ? ' right-answer' : '') +
+          (letter===userAns && letter!==q.correct ? ' user-wrong' : '');
+        row.innerHTML = '<span>'+letter+'.</span><span></span>';
+        row.querySelectorAll('span')[1].textContent = q.choices[letter];
+        choicesDiv.appendChild(row);
+      });
+
+      card.querySelector('.review-rule').textContent = q.rule || '';
+      card.querySelector('.review-tip').textContent = q.tip || '';
+      if (q.trap) card.querySelector('.review-trap').textContent = q.trap;
+
+      const poeList = card.querySelector('.review-poe-list');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.poe || !q.poe[letter]) return;
+        const li = document.createElement('li');
+        li.textContent = letter + '. ' + q.poe[letter];
+        if (letter === q.correct) li.classList.add('correct-letter');
+        poeList.appendChild(li);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  $('#print-btn').addEventListener('click', ()=> window.print());
+});
+})();
+</script>
+
+</body>
+</html>

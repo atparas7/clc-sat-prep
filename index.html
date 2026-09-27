@@ -256,6 +256,31 @@
     {key:"data-analysis-2", label:"Problem-Solving & Data Analysis", icon:"📊", count:19, href:"practice/data-analysis-bank2.html"}
   ];
 
+  var ENGLISH_GRAMMAR_CHAPTERS = [
+    {"key":"full-mixed-tests","label":"Full Mixed Tests","icon":"🧪","tests":[{"label":"Full Test 1 (Mixed)","count":20,"href":"practice/grammar-full_test_1.html"},{"label":"Full Test 2 (Mixed)","count":20,"href":"practice/grammar-full_test_2.html"}]},
+    {"key":"parts-of-speech","label":"Parts of Speech","icon":"🔤","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-parts_of_speech_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-parts_of_speech_test2.html"}]},
+    {"key":"verbs-and-tenses","label":"Verbs & Tenses","icon":"⏱️","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-verbs_and_tenses_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-verbs_and_tenses_test2.html"}]},
+    {"key":"subject-verb-agreement","label":"Subject-Verb Agreement","icon":"🤝","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-subject_verb_agreement_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-subject_verb_agreement_test2.html"}]},
+    {"key":"pronouns","label":"Pronouns","icon":"👤","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-pronouns_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-pronouns_test2.html"}]},
+    {"key":"adjectives-and-adverbs","label":"Adjectives & Adverbs","icon":"🎨","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-adjectives_and_adverbs_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-adjectives_and_adverbs_test2.html"}]},
+    {"key":"modifiers","label":"Modifiers","icon":"🔧","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-modifiers_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-modifiers_test2.html"}]},
+    {"key":"parallel-structure","label":"Parallel Structure","icon":"⚖️","tests":[{"label":"Test 1","count":10,"href":"practice/grammar-parallel_structure_test1.html"},{"label":"Test 2","count":10,"href":"practice/grammar-parallel_structure_test2.html"}]}
+  ];
+
+  var ENGLISH_BOUNDARIES_CHAPTERS = [
+    {"key":"full-mixed-tests","label":"Full Mixed Tests","icon":"🧪","tests":[{"label":"Full Test 1 (Mixed)","count":20,"href":"practice/boundaries-full_test_1.html"},{"label":"Full Test 2 (Mixed)","count":20,"href":"practice/boundaries-full_test_2.html"}]},
+    {"key":"the-comma","label":"The Comma","icon":",","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-comma_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-comma_test2.html"}]},
+    {"key":"the-semicolon","label":"The Semicolon","icon":";","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-semicolon_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-semicolon_test2.html"}]},
+    {"key":"the-colon","label":"The Colon","icon":":","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-colon_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-colon_test2.html"}]},
+    {"key":"the-dash","label":"The Dash","icon":"—","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-dash_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-dash_test2.html"}]},
+    {"key":"the-period","label":"The Period","icon":".","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-period_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-period_test2.html"}]},
+    {"key":"independent-vs-dependent-clauses","label":"Independent vs. Dependent Clauses","icon":"🔗","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-clauses_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-clauses_test2.html"}]},
+    {"key":"run-ons-and-comma-splices","label":"Run-ons & Comma Splices","icon":"🚫","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-run-ons_and_comma_splices_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-run-ons_and_comma_splices_test2.html"}]},
+    {"key":"fragments","label":"Fragments","icon":"🧩","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-fragments_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-fragments_test2.html"}]},
+    {"key":"logical-separation-of-ideas","label":"Logical Separation of Ideas","icon":"🧠","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-logical_separation_of_ideas_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-logical_separation_of_ideas_test2.html"}]},
+    {"key":"nouns-and-apostrophes","label":"Nouns & Apostrophes","icon":"’","tests":[{"label":"Test 1","count":10,"href":"practice/boundaries-nouns_and_apostrophes_test1.html"},{"label":"Test 2","count":10,"href":"practice/boundaries-nouns_and_apostrophes_test2.html"}]}
+  ];
+
   var MATH_ALGEBRA_CHAPTERS = [
     {key:"inequalities", label:"Linear Inequalities", icon:"≤", tests:[{label:"In-Class Test", count:15, href:"practice/algebra-inequalities-class.html"},{label:"Homework Test", count:15, href:"practice/algebra-inequalities-homework15.html"},{label:"Homework", count:30, href:"practice/algebra-inequalities-homework30.html"}]},
     {key:"lineq1var", label:"Linear Equations in One Variable", icon:"🔢", tests:[{label:"In-Class Test", count:15, href:"practice/algebra-lineq1var-class.html"},{label:"Homework Test", count:15, href:"practice/algebra-lineq1var-homework15.html"},{label:"Homework", count:30, href:"practice/algebra-lineq1var-homework30.html"}]},
@@ -510,6 +535,24 @@ function screenSignin(){
           "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+topic.icon+"</div>"+
           "<div class=\"body\"><strong>"+escapeHtml(topic.label)+"</strong><span>"+qs.length+" questions</span></div>"+
           "<div class=\"chev\">→</div></button>";
+      });
+      html += "<p class=\"eyebrow\" style=\"margin-top:18px;\">Grammar & Sentence Structure — by skill</p>";
+      ENGLISH_GRAMMAR_CHAPTERS.forEach(function(ch){
+        html += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ch.tests.forEach(function(t){
+          html += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        });
+        html += "</div></div>";
+      });
+      html += "<p class=\"eyebrow\" style=\"margin-top:18px;\">Sentence Boundaries & Punctuation — by skill</p>";
+      ENGLISH_BOUNDARIES_CHAPTERS.forEach(function(ch){
+        html += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ch.tests.forEach(function(t){
+          html += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        });
+        html += "</div></div>";
       });
       return html;
     }

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLC — Sentence Boundaries &amp; Punctuation — The Dash — Test 1</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; margin:0; background:#f7f5f0; color:#241a12; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
+.card { background:#fff; border-radius: 10px; padding: 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom:20px; }
+h1 { color:#A8002E; font-size: 1.6rem; margin-top:0; }
+.start-btn, #submit-btn, #confirm-submit { background:#A8002E; color:#fff; border:none; padding:12px 28px; border-radius:6px; font-size:1rem; cursor:pointer; }
+.start-btn:hover, #submit-btn:hover { background:#8a0026; }
+.timing-options { display:flex; gap:14px; margin:18px 0; }
+.timing-card { flex:1; border:2px solid #ddd; border-radius:8px; padding:16px; cursor:pointer; text-align:center; }
+.timing-card.selected { border-color:#A8002E; background:#FBF3E3; }
+.timing-card h3 { margin:0 0 6px 0; color:#A8002E; font-size:1.05rem; }
+.timing-card div.mins { font-size:1.5rem; font-weight:bold; color:#241a12; }
+.nav-grid { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0; }
+.nav-btn { width:38px; height:38px; border-radius:6px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.9rem; }
+.nav-btn.current { border-color:#A8002E; border-width:2px; }
+.nav-btn.answered { background:#F5EFE0; }
+#q-text{font-size:1.08rem;line-height:1.6;margin:14px 0 20px}
+.choice-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid #ddd; border-radius:6px; margin-bottom:10px; cursor:pointer; }
+.choice-row:hover { background:#faf6ee; }
+.choice-row.selected { border-color:#A8002E; background:#FBF3E3; }
+.choice-letter { font-weight:bold; color:#A8002E; }
+.timer-box { position:sticky; top:0; background:#241a12; color:#fff; padding:8px 16px; border-radius:6px; font-weight:bold; text-align:center; margin-bottom:14px; font-size:1.1rem; z-index:10; }
+.timer-box.low-time { background:#A8002E; }
+.review-card { border:1px solid #ddd; border-radius:8px; padding:18px; margin-bottom:16px; }
+.review-card.correct { border-left: 5px solid #1F7A3D; }
+.review-card.incorrect { border-left: 5px solid #A8002E; }
+.review-q { font-weight:600; margin-bottom:10px; }
+.review-choice { display:flex; gap:8px; padding:6px 0; }
+.review-choice.right-answer { color:#1F7A3D; font-weight:600; }
+.review-choice.user-wrong { color:#A8002E; font-weight:600; }
+.review-section { margin-top:12px; }
+.review-section-label { font-weight:bold; color:#B8882A; font-family: Georgia, serif; font-size:1rem; margin-bottom:4px; }
+.review-rule { background:#faf6ee; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; }
+.review-tip { background:#FBF3E3; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #B8882A; }
+.review-trap { background:#FCEDEE; padding:10px 12px; border-radius:6px; font-size:.92rem; color:#3a3a3a; border-left:3px solid #A8002E; }
+.review-poe-list { margin:6px 0 0 0; padding-left:20px; font-size:.92rem; color:#3a3a3a; }
+.review-poe-list li { margin-bottom:5px; line-height:1.45; }
+.review-poe-list li.correct-letter { color:#1F7A3D; font-weight:600; }
+.score-big { font-size:2.4rem; color:#A8002E; font-weight:bold; }
+.hidden { display:none !important; }
+.subtitle { color:#5A5A5A; font-size:0.95rem; margin-bottom:20px; }
+#confirm-box { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center; }
+#confirm-box .card { max-width:420px; text-align:center; }
+#print-btn { position:fixed; bottom:20px; right:20px; background:#B8882A; color:#fff; border:none; padding:12px 18px; border-radius:24px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.2); font-size:0.95rem; }
+@media print {
+  #print-btn, #intro-screen, #test-screen, #confirm-box { display:none !important; }
+  body { background:#fff; }
+  .card { box-shadow:none; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="intro-screen" class="card">
+    <h1 id="intro-title">The Dash — Test 1</h1>
+    <div id="intro-subtitle" class="subtitle">10-question practice test on the dash.</div>
+    <p id="intro-count"></p>
+    <div id="timing-options" class="timing-options"></div>
+    <button class="start-btn">Start Test</button>
+  </div>
+
+  <div id="test-screen" class="card hidden">
+    <div id="timer-box" class="timer-box"></div>
+    <div id="q-counter" style="font-weight:600;color:#5A5A5A;margin-bottom:8px;"></div>
+    <div id="q-text"></div>
+    <div id="choices"></div>
+    <div style="display:flex; justify-content:space-between; margin-top:16px;">
+      <button id="prev-btn" style="width:auto;padding:8px 16px;">&larr; Back</button>
+      <button id="next-btn" style="width:auto;padding:8px 16px;">Next &rarr;</button>
+    </div>
+    <div id="nav-grid" class="nav-grid"></div>
+    <button id="submit-btn">Submit Test</button>
+  </div>
+
+  <div id="results-screen" class="card hidden">
+    <h1 id="results-title">Results</h1>
+    <div class="score-big"></div>
+    <div id="review-container"></div>
+  </div>
+
+  <button id="print-btn" class="hidden">Export / Print PDF</button>
+
+  <div id="confirm-box" class="hidden">
+    <div class="card">
+      <p>Submit your test? You won't be able to change your answers after this.</p>
+      <button id="confirm-submit">Yes, Submit</button>
+      <button id="cancel-submit" style="background:#ccc;color:#333;">Cancel</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+const TEST = {"label": "The Dash \u2014 Test 1", "description": "10-question practice test on the dash.", "questions": [{"question": "The committee ______ after hours of heated debate ______ finally reached a decision.", "choices": {"A": ", / \u2014", "B": ", / ,", "C": "\u2014 / \u2014", "D": "; / ;"}, "correct": "B", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A pair of commas correctly encloses the non-essential phrase, matching on both sides.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma on one side and a dash on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "poe": {"A": "This choice uses a comma on one side and a dash on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "B": "A pair of commas correctly encloses the non-essential phrase, matching on both sides.", "C": "This choice uses a dash on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "D": "This choice uses a semicolon on both sides, which does not correctly fit the punctuation pattern required by this sentence."}}, {"question": "The festival ______ despite the heavy rain ______ drew a record crowd.", "choices": {"D": ", / ,", "A": "\u2014 / \u2014", "B": "; / ,", "C": ": / :"}, "correct": "A", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A pair of dashes correctly sets off the non-essential phrase \"despite the heavy rain.\"", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "poe": {"D": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "A": "A pair of dashes correctly sets off the non-essential phrase \"despite the heavy rain.\"", "B": "This choice uses a semicolon on one side and a comma on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "C": "This choice uses a colon on both sides, which does not correctly fit the punctuation pattern required by this sentence."}}, {"question": "The scientist ______ working alone for over a year ______ finally published her findings.", "choices": {"C": "\u2014 / \u2014", "D": ", / \u2014", "A": "\u2014 / ,", "B": "; / ;"}, "correct": "C", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A pair of dashes correctly encloses the phrase \"working alone for over a year,\" matching on both sides.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma on one side and a dash on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "poe": {"C": "A pair of dashes correctly encloses the phrase \"working alone for over a year,\" matching on both sides.", "D": "This choice uses a comma on one side and a dash on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "A": "This choice uses a dash on one side and a comma on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "B": "This choice uses a semicolon on both sides, which does not correctly fit the punctuation pattern required by this sentence."}}, {"question": "The museum acquired a rare piece ______ a sculpture believed to be over 500 years old.", "choices": {"C": ",", "D": ";", "A": ":", "B": "\u2014"}, "correct": "B", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A single dash can introduce an explanation of \"a rare piece,\" similar to how a colon would function here.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "poe": {"C": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "D": "This choice uses a semicolon, which does not correctly fit the punctuation pattern required by this sentence.", "A": "This choice uses a colon, which does not correctly fit the punctuation pattern required by this sentence.", "B": "A single dash can introduce an explanation of \"a rare piece,\" similar to how a colon would function here."}}, {"question": "The hikers ______ exhausted but triumphant ______ finally reached the summit.", "choices": {"D": ", / ,", "A": "\u2014 / \u2014", "B": "; / ;", "C": " / "}, "correct": "A", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A pair of dashes correctly encloses the non-essential descriptive phrase \"exhausted but triumphant.\"", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "poe": {"D": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "A": "A pair of dashes correctly encloses the non-essential descriptive phrase \"exhausted but triumphant.\"", "B": "This choice uses a semicolon on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "C": "This choice uses no punctuation on both sides, which does not correctly fit the punctuation pattern required by this sentence."}}, {"question": "The team had one advantage over their rivals ______ experience.", "choices": {"D": ",", "A": ";", "B": ":", "C": "\u2014"}, "correct": "C", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A single dash introduces the explanation of the advantage, similar to a colon.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "poe": {"D": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "A": "This choice uses a semicolon, which does not correctly fit the punctuation pattern required by this sentence.", "B": "This choice uses a colon, which does not correctly fit the punctuation pattern required by this sentence.", "C": "A single dash introduces the explanation of the advantage, similar to a colon."}}, {"question": "The article made one claim clearly ______ the policy had failed.", "choices": {"D": ",", "A": ";", "B": ":", "C": "\u2014"}, "correct": "C", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A single dash introduces the explanation of the claim, functioning like a colon for emphasis.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "poe": {"D": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "A": "This choice uses a semicolon, which does not correctly fit the punctuation pattern required by this sentence.", "B": "This choice uses a colon, which does not correctly fit the punctuation pattern required by this sentence.", "C": "A single dash introduces the explanation of the claim, functioning like a colon for emphasis."}}, {"question": "The bridge had a single flaw ______ its foundation was never properly inspected.", "choices": {"A": ",", "B": ";", "C": ":", "D": "\u2014"}, "correct": "D", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A single dash introduces the explanation of the flaw, functioning similarly to a colon.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "poe": {"A": "This choice uses a comma where the sentence needs a dash to match the punctuation already used on the other side of the phrase.", "B": "This choice uses a semicolon, which does not correctly fit the punctuation pattern required by this sentence.", "C": "This choice uses a colon, which does not correctly fit the punctuation pattern required by this sentence.", "D": "A single dash introduces the explanation of the flaw, functioning similarly to a colon."}}, {"question": "The architect's design ______ bold and unconventional ______ divided public opinion.", "choices": {"D": "\u2014 / \u2014", "A": ", / ,", "B": "\u2014 / ,", "C": ", / \u2014"}, "correct": "D", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A pair of dashes correctly encloses the descriptive phrase \"bold and unconventional,\" matching consistently.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "poe": {"D": "A pair of dashes correctly encloses the descriptive phrase \"bold and unconventional,\" matching consistently.", "A": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "B": "This choice uses a dash on one side and a comma on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "C": "This choice uses a comma on one side and a dash on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here."}}, {"question": "The negotiations ______ tense from the very first meeting ______ finally concluded after months.", "choices": {"D": "\u2014 / ,", "A": ", / ,", "B": "\u2014 / \u2014", "C": "; / ;"}, "correct": "B", "difficulty": "Easy", "skill": "Dash", "domain": "Standard English Conventions", "tags": ["clc-original"], "rule": "A pair of dashes correctly encloses the descriptive phrase, and both dashes must match.", "tip": "If you open a phrase with one dash, you must close it with a second dash \u2014 never mix a dash with a comma around the same phrase.", "trap": "This choice uses a dash on one side and a comma on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "poe": {"D": "This choice uses a dash on one side and a comma on the other around the same phrase \u2014 the punctuation must match on both sides, so this inconsistent pairing is incorrect here.", "A": "This choice uses a comma on both sides, which does not correctly fit the punctuation pattern required by this sentence.", "B": "A pair of dashes correctly encloses the descriptive phrase, and both dashes must match.", "C": "This choice uses a semicolon on both sides, which does not correctly fit the punctuation pattern required by this sentence."}}]};
+
+const STATE = { idx:0, answers:{}, submitted:false, minutesChosen:0, secondsLeft:0, timerId:null };
+
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return document.querySelectorAll(sel); }
+
+function currentQuestions(){ return TEST.questions; }
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  function initIntro(){
+    $('#intro-title').textContent = TEST.label;
+    $('#intro-subtitle').textContent = TEST.description || '';
+    $('#intro-count').textContent = TEST.questions.length + ' questions. Choose your timing, then click Start when you\'re ready.';
+    const standard = Math.round(TEST.questions.length * 1.5);
+    const extended = Math.round(standard * 1.25);
+    $('#timing-options').innerHTML =
+      '<div class="timing-card selected" data-minutes="' + standard + '"><h3>Standard Time</h3><div class="mins">' + standard + ' min</div></div>' +
+      '<div class="timing-card" data-minutes="' + extended + '"><h3>Extended Time (+25%)</h3><div class="mins">' + extended + ' min</div></div>';
+    STATE.minutesChosen = standard;
+    $all('.timing-card').forEach(card=>{
+      card.addEventListener('click', ()=>{
+        $all('.timing-card').forEach(c=>c.classList.remove('selected'));
+        card.classList.add('selected');
+        STATE.minutesChosen = parseFloat(card.dataset.minutes);
+      });
+    });
+  }
+
+  initIntro();
+
+  $('.start-btn').addEventListener('click', function(){
+    $('#intro-screen').classList.add('hidden');
+    $('#test-screen').classList.remove('hidden');
+    buildNav();
+    renderQuestion();
+    startTimer();
+  });
+
+  function startTimer(){
+    STATE.secondsLeft = Math.round(STATE.minutesChosen*60);
+    updateTimerDisplay();
+    STATE.timerId = setInterval(()=>{
+      STATE.secondsLeft--;
+      updateTimerDisplay();
+      if(STATE.secondsLeft<=0){
+        clearInterval(STATE.timerId);
+        STATE.submitted = true;
+        showResults();
+      }
+    }, 1000);
+  }
+  function updateTimerDisplay(){
+    const m = Math.floor(STATE.secondsLeft/60);
+    const s = STATE.secondsLeft%60;
+    const box = $('#timer-box');
+    if(!box) return;
+    box.textContent = 'Time Remaining: ' + m + ':' + (s<10?'0':'')+s;
+    box.classList.toggle('low-time', STATE.secondsLeft <= 120);
+  }
+
+  function buildNav(){
+    const nav = $('#nav-grid');
+    nav.innerHTML = '';
+    currentQuestions().forEach((q,i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'nav-btn';
+      btn.textContent = (i+1);
+      btn.addEventListener('click', ()=>{ STATE.idx = i; renderQuestion(); });
+      nav.appendChild(btn);
+    });
+  }
+
+  function renderQuestion(){
+    const q = currentQuestions()[STATE.idx];
+    $('#q-text').innerHTML = q.question.replace(/\n/g,'<br>');
+    const choicesEl = $('#choices');
+    choicesEl.innerHTML = '';
+    ['A','B','C','D'].forEach(letter=>{
+      if(!q.choices[letter]) return;
+      const row = document.createElement('div');
+      row.className = 'choice-row' + (STATE.answers[STATE.idx]===letter ? ' selected':'');
+      row.innerHTML = '<span class="choice-letter">'+letter+'</span><span class="choice-text"></span>';
+      row.querySelector('.choice-text').textContent = q.choices[letter];
+      row.addEventListener('click', ()=>{
+        STATE.answers[STATE.idx] = letter;
+        renderQuestion();
+      });
+      choicesEl.appendChild(row);
+    });
+    updateNav();
+    $('#q-counter').textContent = 'Question ' + (STATE.idx+1) + ' of ' + currentQuestions().length;
+  }
+
+  function updateNav(){
+    $all('.nav-btn').forEach((btn,i)=>{
+      btn.classList.toggle('current', i===STATE.idx);
+      btn.classList.toggle('answered', STATE.answers[i] !== undefined);
+    });
+  }
+
+  $('#prev-btn').addEventListener('click', ()=>{
+    if(STATE.idx>0){ STATE.idx--; renderQuestion(); }
+  });
+  $('#next-btn').addEventListener('click', ()=>{
+    if(STATE.idx<currentQuestions().length-1){ STATE.idx++; renderQuestion(); }
+  });
+
+  $('#submit-btn').addEventListener('click', ()=>{
+    $('#confirm-box').classList.remove('hidden');
+  });
+  $('#cancel-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+  });
+  $('#confirm-submit').addEventListener('click', ()=>{
+    $('#confirm-box').classList.add('hidden');
+    if(STATE.timerId) clearInterval(STATE.timerId);
+    STATE.submitted = true;
+    showResults();
+  });
+
+  function showResults(){
+    $('#test-screen').classList.add('hidden');
+    $('#results-screen').classList.remove('hidden');
+    $('#print-btn').classList.remove('hidden');
+    const qs = currentQuestions();
+    let correctCount = 0;
+    qs.forEach((q,i)=>{ if(STATE.answers[i]===q.correct) correctCount++; });
+    $('.score-big').textContent = correctCount + ' / ' + qs.length;
+    $('#results-title').textContent = TEST.label + ' \u2014 Results';
+
+    const container = $('#review-container');
+    container.innerHTML = '';
+    qs.forEach((q,i)=>{
+      const userAns = STATE.answers[i];
+      const isCorrect = userAns === q.correct;
+      const card = document.createElement('div');
+      card.className = 'review-card ' + (isCorrect ? 'correct':'incorrect');
+
+      let html = '<div class="review-q"></div><div class="review-choices"></div>';
+      html += '<div class="review-section"><div class="review-section-label">Rule</div><div class="review-rule"></div></div>';
+      html += '<div class="review-section"><div class="review-section-label">Tip</div><div class="review-tip"></div></div>';
+      if (q.trap) {
+        html += '<div class="review-section"><div class="review-section-label">Trap</div><div class="review-trap"></div></div>';
+      }
+      html += '<div class="review-section"><div class="review-section-label">Process of Elimination</div><ul class="review-poe-list"></ul></div>';
+      card.innerHTML = html;
+
+      card.querySelector('.review-q').textContent = 'Question ' + (i+1) + ': ' + q.question.replace(/<[^>]+>/g,' ');
+      const choicesDiv = card.querySelector('.review-choices');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.choices[letter]) return;
+        const row = document.createElement('div');
+        row.className = 'review-choice' +
+          (letter===q.correct ? ' right-answer' : '') +
+          (letter===userAns && letter!==q.correct ? ' user-wrong' : '');
+        row.innerHTML = '<span>'+letter+'.</span><span></span>';
+        row.querySelectorAll('span')[1].textContent = q.choices[letter];
+        choicesDiv.appendChild(row);
+      });
+
+      card.querySelector('.review-rule').textContent = q.rule || '';
+      card.querySelector('.review-tip').textContent = q.tip || '';
+      if (q.trap) card.querySelector('.review-trap').textContent = q.trap;
+
+      const poeList = card.querySelector('.review-poe-list');
+      ['A','B','C','D'].forEach(letter=>{
+        if(!q.poe || !q.poe[letter]) return;
+        const li = document.createElement('li');
+        li.textContent = letter + '. ' + q.poe[letter];
+        if (letter === q.correct) li.classList.add('correct-letter');
+        poeList.appendChild(li);
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  $('#print-btn').addEventListener('click', ()=> window.print());
+});
+})();
+</script>
+
+</body>
+</html>
