@@ -536,6 +536,24 @@ function screenSignin(){
           "<div class=\"body\"><strong>"+escapeHtml(topic.label)+"</strong><span>"+qs.length+" questions</span></div>"+
           "<div class=\"chev\">→</div></button>";
       });
+      html += "<p class=\"eyebrow\" style=\"margin-top:18px;\">Grammar & Sentence Structure — by skill</p>";
+      ENGLISH_GRAMMAR_CHAPTERS.forEach(function(ch){
+        html += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ch.tests.forEach(function(t){
+          html += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        });
+        html += "</div></div>";
+      });
+      html += "<p class=\"eyebrow\" style=\"margin-top:18px;\">Sentence Boundaries & Punctuation — by skill</p>";
+      ENGLISH_BOUNDARIES_CHAPTERS.forEach(function(ch){
+        html += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ch.tests.forEach(function(t){
+          html += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        });
+        html += "</div></div>";
+      });
       return html;
     }
     if(key==="vocabulary"){
@@ -593,24 +611,6 @@ function screenSignin(){
           "</a>";
       });
       html3 += "</div>";
-      html3 += "<p class=\"eyebrow\" style=\"margin-top:18px;\">Grammar & Sentence Structure — by skill</p>";
-      ENGLISH_GRAMMAR_CHAPTERS.forEach(function(ch){
-        html3 += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
-          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
-        ch.tests.forEach(function(t){
-          html3 += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
-        });
-        html3 += "</div></div>";
-      });
-      html3 += "<p class=\"eyebrow\" style=\"margin-top:18px;\">Sentence Boundaries & Punctuation — by skill</p>";
-      ENGLISH_BOUNDARIES_CHAPTERS.forEach(function(ch){
-        html3 += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
-          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
-        ch.tests.forEach(function(t){
-          html3 += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
-        });
-        html3 += "</div></div>";
-      });
       return html3;
     }
     return "<div class=\"card\" style=\"position:relative;\">"+
