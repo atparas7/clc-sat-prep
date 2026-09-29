@@ -217,7 +217,7 @@ function submitTest(){
   let correctCount=0;
   QUESTIONS.forEach((q,i)=>{
     if(q.type==='mc'){ if(answers[i]===q.correct) correctCount++; }
-    else { if(answers[i]!==null && normalizeSpr(answers[i])===normalizeSpr(q.answer)) correctCount++; }
+    else { if(answers[i]!==null && sprMatch(answers[i], q.answer, q.alts)) correctCount++; }
   });
   let html = `<div class="scorebox"><div style="font-family:'Jost',sans-serif;color:#666;font-size:14px;letter-spacing:1px;text-transform:uppercase;">Your Score</div>
     <div class="big">${correctCount} / ${QUESTIONS.length}</div>
@@ -233,7 +233,7 @@ function submitTest(){
       isCorrect = answers[i]===q.correct;
       yourAnsText = answers[i]===null?'No answer selected':('('+String.fromCharCode(65+answers[i])+') '+q.choices[answers[i]]);
     } else {
-      isCorrect = answers[i]!==null && normalizeSpr(answers[i])===normalizeSpr(q.answer);
+      isCorrect = answers[i]!==null && sprMatch(answers[i], q.answer, q.alts);
       yourAnsText = answers[i]===null || answers[i]===''? 'No answer entered' : answers[i];
     }
     const flagBox = q.flag ? `<div class="explain-box box-flag"><h4>For CLC Team &mdash; Please Verify</h4><p>${q.flag}</p></div>` : '';
@@ -296,6 +296,20 @@ function openCalc(i){
     calcInstances[i] = Desmos.GraphingCalculator(document.getElementById('calc-'+i), {expressions:true});
   }
 }
+
+/* SAT-style grading for student-produced responses: equivalent forms (1/2 = .5 = 0.5),
+   truncated/rounded decimals that fill the answer box, unicode minus, π and √ answers, "a or b" keys */
+function sprClean(s){return String(s==null?'':s).replace(/&minus;/g,'-').replace(/[−–]/g,'-').replace(/&pi;/g,'π').replace(/&radic;/g,'√').replace(/\s+/g,'').toLowerCase().replace(/pi/g,'π').replace(/sqrt\(?(\d+(?:\.\d+)?)\)?/g,'√$1');}
+function sprNum(s){if(!s)return null;var m=s.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);if(m){var b=+m[2];return b===0?null:(+m[1])/b;}if(/^-?\d*\.?\d+$/.test(s)||/^-?\d+\.$/.test(s))return Number(s);return null;}
+function sprDec(s,t){var v=sprNum(s);if(v===null||t===null||isNaN(t))return false;if(Math.abs(v-t)<1e-9)return true;if(s.indexOf('/')>=0)return false;
+ var neg=s.charAt(0)==='-',body=neg?s.slice(1):s,parts=body.split('.');if(parts.length<2)return false;
+ var ip=parts[0].replace(/^0+/,''),dec=parts[1],need=Math.max(0,5-ip.length-1);if(dec.length<need)return false;
+ var p=Math.pow(10,dec.length);return Math.abs(v-Math.trunc(t*p)/p)<1e-9||Math.abs(v-Math.round(t*p)/p)<1e-9;}
+function sprOne(input,key){var s=sprClean(input),k=sprClean(key);if(!s)return false;if(s===k)return true;
+ if(k.indexOf('π')>=0){var c=k.replace('π','');c=(c===''?1:(c==='-'?-1:sprNum(c)));if(s.indexOf('π')<0)return sprDec(s,c*Math.PI);var cs=s.replace('π','');return sprDec(cs===''?'1':cs,c);}
+ var r=k.match(/^(-?\d*)√(\d+(?:\.\d+)?)$/);if(r){var co=r[1]===''?1:(r[1]==='-'?-1:+r[1]);var t=co*Math.sqrt(+r[2]);if(s===k)return true;return sprDec(s,t);}
+ return sprDec(s,sprNum(k));}
+function sprMatch(input,key,alts){var keys=String(key).split(/\s+or\s+/i).concat(alts||[]);for(var i=0;i<keys.length;i++){if(sprOne(input,keys[i]))return true;}return false;}
 function normalizeSpr(v){
   if(v===null||v===undefined) return null;
   v = String(v).trim();
