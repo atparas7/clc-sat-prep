@@ -451,7 +451,7 @@ function screenSignin(){
         "<h1 class=\"display signin-title\">Sign in to continue</h1>"+
         "<p class=\"signin-sub\">Digital SAT prep program \u2014 English, Math.</p>"+
         "<div class=\"signin-row2\">"+
-          "<input class=\"field\" id=\"nameField\" placeholder=\"Full name\" maxlength=\"40\">"+
+          "<input class=\"field\" id=\"nameField\" placeholder=\"\u038c\u03bd\u03bf\u03bc\u03b1 \u0395\u03c0\u03ce\u03bd\u03c5\u03bc\u03bf\" maxlength=\"60\" autocomplete=\"name\">"+
           "<input class=\"field\" id=\"classField\" placeholder=\"Class / \u03a4\u03bc\u03ae\u03bc\u03b1\" maxlength=\"24\">"+
         "</div>"+
         "<input class=\"field\" id=\"passField\" type=\"password\" placeholder=\"Password\" onkeydown=\"if(event.key==='Enter')submitSignin()\">"+
@@ -541,15 +541,53 @@ function screenSignin(){
       "<button class=\"btn ghost\" onclick=\"location.search=''\">← Πίσω στο Sign In</button>";
   }
 
+  /* ---------------- NAME VALIDATION ----------------
+     A real full name: first name + surname (2–4 words), letters only
+     (Greek or Latin, accents allowed), each word 2–20 letters with a vowel,
+     optional hyphen/apostrophe inside a word (e.g. Παπαδοπούλου-Νίκου, O'Neil).
+     Rejects digits, symbols, one-word names and junk like "aaaa" or "xxx yyy". */
+  function validateFullName(raw){
+    var msg = "\u0393\u03c1\u03ac\u03c8\u03b5 \u03c4\u03bf \u03c0\u03c1\u03b1\u03b3\u03bc\u03b1\u03c4\u03b9\u03ba\u03cc \u03c3\u03bf\u03c5 \u03cc\u03bd\u03bf\u03bc\u03b1 \u03ba\u03b1\u03b9 \u03b5\u03c0\u03ce\u03bd\u03c5\u03bc\u03bf (\u03c0.\u03c7. \u039c\u03b1\u03c1\u03af\u03b1 \u03a0\u03b1\u03c0\u03b1\u03b4\u03bf\u03c0\u03bf\u03cd\u03bb\u03bf\u03c5).";
+    var s = String(raw||"").normalize("NFC").replace(/\s+/g," ").trim();
+    if(!s) return {ok:false, msg:msg};
+    var parts = s.split(" ");
+    if(parts.length < 2 || parts.length > 4) return {ok:false, msg:msg};
+    var word = /^[A-Za-z\u00C0-\u024F\u0370-\u03FF\u1F00-\u1FFF]+(?:['\u2019-][A-Za-z\u00C0-\u024F\u0370-\u03FF\u1F00-\u1FFF]+)*$/;
+    var vowel = /[aeiouyAEIOUY\u00C0-\u00C6\u00C8-\u00CF\u00D2-\u00D6\u00D9-\u00DD\u00E0-\u00E6\u00E8-\u00EF\u00F2-\u00F6\u00F9-\u00FD\u00FF\u0391\u0395\u0397\u0399\u039F\u03A5\u03A9\u03B1\u03B5\u03B7\u03B9\u03BF\u03C5\u03C9\u0386\u0388-\u038A\u038C\u038E\u038F\u03AC-\u03AF\u03CA-\u03CE\u0390\u03B0\u03AA\u03AB\u1F00-\u1FFF]/;
+    var out = [];
+    for(var i=0;i<parts.length;i++){
+      var w = parts[i], letters = w.replace(/['\u2019-]/g,"");
+      if(!word.test(w)) return {ok:false, msg:msg};
+      if(letters.length < 2 || letters.length > 20) return {ok:false, msg:msg};
+      if(!vowel.test(letters)) return {ok:false, msg:msg};
+      if(/(.)\1\1/i.test(letters)) return {ok:false, msg:msg};
+      if(new Set(letters.toLowerCase().split("")).size < 2) return {ok:false, msg:msg};
+      out.push(w.split(/(['\u2019-])/).map(function(seg){
+        if(/^['\u2019-]$/.test(seg) || !seg) return seg;
+        var low = seg.toLocaleLowerCase("el").replace(/\u03c3$/,"\u03c2");
+        return low.charAt(0).toLocaleUpperCase("el") + low.slice(1);
+      }).join(""));
+    }
+    return {ok:true, name:out.join(" ")};
+  }
+  window.validateFullName = validateFullName;
+
   window.submitSignin = function(){
-    var v = document.getElementById("nameField").value.trim();
+    var nameEl = document.getElementById("nameField");
     var pass = document.getElementById("passField").value.trim();
     var errEl = document.getElementById("signinError");
-    if(normCode(pass) !== normCode(currentWeeklyCode())){
-      if(errEl) errEl.hidden = false;
+    var nameCheck = validateFullName(nameEl.value);
+    if(!nameCheck.ok){
+      if(errEl){ errEl.textContent = nameCheck.msg; errEl.hidden = false; }
+      nameEl.focus();
       return;
     }
-    if(!v){ v = "Student"; }
+    nameEl.value = nameCheck.name;
+    if(normCode(pass) !== normCode(currentWeeklyCode())){
+      if(errEl){ errEl.textContent = "\u039b\u03ac\u03b8\u03bf\u03c2 \u03ba\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2. \u0394\u03bf\u03ba\u03af\u03bc\u03b1\u03c3\u03b5 \u03be\u03b1\u03bd\u03ac."; errEl.hidden = false; }
+      return;
+    }
+    var v = nameCheck.name;
     setUser(v);
     state.nav = [{screen:"welcome"}];
     render();
