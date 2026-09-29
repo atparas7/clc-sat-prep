@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CLC SAT Practice</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
@@ -186,7 +188,7 @@
   var SECTIONS = {
     english: { title:"English", icon:"📖", color:"english", tests:[], blurb:"Vocabulary · Boundaries & Form practice" },
     math: { title:"Math", icon:"📐", color:"practice", tests:[], blurb:"Theory guides · Extra practice · Desmos" },
-    full: { title:"Full Test", icon:"🎯", color:"full", tests:[], blurb:"" }
+    full: { title:"Full Test", icon:"🎯", color:"full", tests:[{title:"Full Practice Test 1", desc:"Reading & Writing + Math · 4 modules · 98 questions · timed, scored 400–1600", href:"practice/full-test-1.html"}], blurb:"" }
   };
   var SECTION_ORDER = ["english","math","full"];
 
@@ -624,15 +626,16 @@ function screenSignin(){
     if(key==="math"){ return screenMathHome(); }
     var html = "<div class=\"card\" style=\"position:relative;\">"+
       "<div class=\"subject-strip\" style=\"background:var(--"+s.color+");\"></div>"+
-      "<p class=\"eyebrow\" style=\"color:var(--"+s.color+");\">"+s.icon+" "+escapeHtml(s.title)+"</p>";
+      "<p class=\"eyebrow\" style=\"color:var(--"+s.color+");\">"+s.icon+" "+escapeHtml(s.title)+"</p>"+
+      (s.tests.length?"<p style=\"font-size:14px; color:var(--muted); margin:0 0 12px;\">Each test opens in a new tab as its own complete testing environment — your timer and answers stay there until you finish.</p>":"");
     if(s.tests.length===0){
       html += "<div class=\"empty\"><div class=\"big\">📂</div>This section is empty for now.<br>Practice tests and material will appear here soon.</div>";
     } else {
       s.tests.forEach(function(test){
-        html += "<button class=\"tile\" onclick=\"\">"+
+        html += "<a class=\"tile\" href=\""+test.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
           "<div class=\"icon\" style=\"background:var(--"+s.color+"-soft); color:var(--"+s.color+");\">"+s.icon+"</div>"+
-          "<div class=\"body\"><strong>"+escapeHtml(test.title)+"</strong></div>"+
-          "<div class=\"chev\">→</div></button>";
+          "<div class=\"body\"><strong>"+escapeHtml(test.title)+"</strong>"+(test.desc?"<span>"+escapeHtml(test.desc)+"</span>":"")+"</div>"+
+          "<div class=\"chev\">→</div></a>";
       });
     }
     html += "</div>";
