@@ -293,6 +293,14 @@
     {key:"systems", label:"Systems of Equations", icon:"🔀", tests:[{label:"In-Class Test", count:15, href:"practice/algebra-systems-class.html"},{label:"Homework Test", count:15, href:"practice/algebra-systems-homework15.html"},{label:"Homework", count:30, href:"practice/algebra-systems-homework30.html"}]}
   ];
 
+  var MATH_ALGEBRA_SET2 = {
+    "inequalities": [{label:"Class Quiz", count:12, href:"practice/algebra-inequalities-quiz12.html"}, {label:"Review", count:15, href:"practice/algebra-inequalities-review15.html"}, {label:"Homework", count:30, href:"practice/algebra-inequalities-hw30.html"}],
+    "lineq1var": [{label:"Class Quiz", count:12, href:"practice/algebra-lineq1var-quiz12.html"}, {label:"Review", count:15, href:"practice/algebra-lineq1var-review15.html"}, {label:"Homework", count:30, href:"practice/algebra-lineq1var-hw30.html"}],
+    "lineq2var": [{label:"Class Quiz", count:12, href:"practice/algebra-lineq2var-quiz12.html"}, {label:"Review", count:15, href:"practice/algebra-lineq2var-review15.html"}, {label:"Homework", count:30, href:"practice/algebra-lineq2var-hw30.html"}],
+    "linfunctions": [{label:"Class Quiz", count:12, href:"practice/algebra-linfunctions-quiz12.html"}, {label:"Review", count:15, href:"practice/algebra-linfunctions-review15.html"}, {label:"Homework", count:30, href:"practice/algebra-linfunctions-hw30.html"}, {label:"Extra HW + Review", count:45, href:"practice/algebra-linfunctions-extra45.html"}],
+    "systems": [{label:"Class Quiz", count:12, href:"practice/algebra-systems-quiz12.html"}, {label:"Review", count:15, href:"practice/algebra-systems-review15.html"}, {label:"Homework", count:30, href:"practice/algebra-systems-hw30.html"}]
+  };
+
   var MATH_PRACTICE_CHAPTERS = [
     {key:"ratios", label:"Ratios, Rates & Units", icon:"⚖️", count:20, tests:[{label:"Test 1", href:"practice/psda-ratios-rates-units-test1.html"},{label:"Test 2", href:"practice/psda-ratios-rates-units-test2.html"}]},
     {key:"percentages", label:"Percentages", icon:"💯", count:20, tests:[{label:"Test 1", href:"practice/psda-percentages-test1.html"},{label:"Test 2", href:"practice/psda-percentages-test2.html"}]},
@@ -335,7 +343,7 @@
   ]);
 
   var MATH_PRACTICE_DOMAINS = [
-    {key:"algebra", label:"Algebra", icon:"🔢", desc:"5 chapters · In-Class Test, Homework Test and Homework 30 for each."},
+    {key:"algebra", label:"Algebra", icon:"🔢", desc:"5 chapters · CLC tests + SAT question sets (Class Quiz, Review, Homework) for each."},
     {key:"psda", label:"Problem Solving", icon:"📊", desc:"Problem-Solving & Data Analysis — coming soon."},
     {key:"advanced", label:"Advanced Math", icon:"ƒ(x)", desc:"Coming soon."},
     {key:"geotrig", label:"Geometry & Trigonometry", icon:"📐", desc:"Coming soon."}
@@ -787,7 +795,7 @@ function screenSignin(){
       var htmlP = "<div class=\"card\" style=\"position:relative;\">"+
         "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
         "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+d.icon+" Algebra</p>"+
-        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Timed practice tests grouped by chapter — an In-Class Test, a Homework Test, and a longer 30-question Homework set for each. Each opens in a new tab as its own complete testing environment.</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Practice tests grouped by chapter — the CLC tests (In-Class, Homework Test, Homework 30) and an SAT Question Set (Class Quiz, Review, Homework) for each. Each opens in a new tab as its own complete testing environment.</p>"+
         "</div>";
       MATH_ALGEBRA_CHAPTERS.forEach(function(ch){
         htmlP += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
@@ -795,7 +803,17 @@ function screenSignin(){
         ch.tests.forEach(function(t){
           htmlP += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
         });
-        htmlP += "</div></div>";
+        htmlP += "</div>";
+        var set2 = MATH_ALGEBRA_SET2[ch.key];
+        if(set2){
+          htmlP += "<p style=\"font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:14px 0 8px;\">SAT Question Set</p>"+
+            "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+          set2.forEach(function(t){
+            htmlP += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+          });
+          htmlP += "</div>";
+        }
+        htmlP += "</div>";
       });
       return htmlP;
     }
