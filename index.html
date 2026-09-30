@@ -372,12 +372,27 @@
     {key:"geotrig", label:"Geometry & Trigonometry", icon:"📐", desc:"4 chapters · Class Quiz, Review and Homework for each."}
   ];
 
+  var MATH_FULL_TESTS = [
+    {label:"Practice Test 01", href:"practice/math-full-test-01.html"},
+    {label:"Practice Test 02", href:"practice/math-full-test-02.html"},
+    {label:"Practice Test 03", href:"practice/math-full-test-03.html"},
+    {label:"Practice Test 04", href:"practice/math-full-test-04.html"},
+    {label:"Practice Test 05", href:"practice/math-full-test-05.html"},
+    {label:"Practice Test 06", href:"practice/math-full-test-06.html"},
+    {label:"Practice Test 07", href:"practice/math-full-test-07.html"},
+    {label:"Practice Test 08", href:"practice/math-full-test-08.html"},
+    {label:"Practice Test 09", href:"practice/math-full-test-09.html"},
+    {label:"Practice Test 10", href:"practice/math-full-test-10.html"},
+    {label:"Practice Test 11", href:"practice/math-full-test-11.html"}
+  ];
+
   var MATH_SUBCATS = [
     {key:"theory", label:"Theory", icon:"📚", desc:"Full theory guides (PDF) — Algebra, Geometry & Trigonometry, Advanced Math, Problem-Solving & Data Analysis."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"Algebra · Problem Solving & Data Analysis · Advanced Math · Geometry & Trigonometry — timed tests by chapter."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"4 timed practice sets (90 questions), the 5-chapter Problem-Solving & Data Analysis tests (99 questions), 8 Module 1 mixed-domain tests (196 questions), plus 5 Module 2 tests up to question 17 (85 questions)."},
     {key:"desmos", label:"Desmos", icon:"🧮", desc:"Desmos Made Simple + full guide (PDF) to the built-in Desmos graphing calculator."},
-    {key:"revision", label:"Revision Maths", icon:"🔁", desc:"2 full-length practice tests (54 questions each) mixing all Math domains."}
+    {key:"revision", label:"Revision Maths", icon:"🔁", desc:"2 full-length practice tests (54 questions each) mixing all Math domains."},
+    {key:"fulltests", label:"Full Tests", icon:"🎯", desc:"11 full-length Digital SAT Math practice tests — Module 1 + Module 2, 44 questions each."}
   ];
 
   var ENGLISH_DOMAIN_CHAPTERS = {
@@ -992,6 +1007,18 @@ function screenSignin(){
       });
       html3 += "</div>";
       return html3;
+    }
+    if(key==="fulltests"){
+      var htmlF = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+sc.icon+" Full Tests</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Full-length Digital SAT Math practice tests: Module 1 and Module 2 (22 questions each, 35 minutes each, extra-time options), a 10-minute break, and a 200–800 practice score with a full explanation for every question. Each test opens in a new tab.</p>"+
+        "</div><div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+      MATH_FULL_TESTS.forEach(function(t){
+        htmlF += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(44q)</span></a>";
+      });
+      htmlF += "</div></div>";
+      return htmlF;
     }
     if(key==="revision"){
       var html4 = "<div class=\"card\" style=\"position:relative;\">"+
