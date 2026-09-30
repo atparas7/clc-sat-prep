@@ -77,6 +77,8 @@
   .tile .chev{color:var(--muted); font-size:18px; flex-shrink:0;}
   .section-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px;}
   @media (max-width:480px){.section-grid{grid-template-columns:1fr 1fr 1fr; gap:8px;}}
+  .section-grid.grid-4{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:720px){.section-grid.grid-4{grid-template-columns:1fr 1fr;}}
   .tile-col{
     display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;
     background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:20px 10px;
@@ -332,9 +334,16 @@
     {key:"module2", label:"Module 2 (till q.17)", icon:"🎯", tests:MATH_MODULE2_TESTS.map(function(t){return {label:t.label, count:t.count, href:t.href};})}
   ]);
 
+  var MATH_PRACTICE_DOMAINS = [
+    {key:"algebra", label:"Algebra", icon:"🔢", desc:"5 chapters · In-Class Test, Homework Test and Homework 30 for each."},
+    {key:"psda", label:"Problem Solving", icon:"📊", desc:"Problem-Solving & Data Analysis — coming soon."},
+    {key:"advanced", label:"Advanced Math", icon:"ƒ(x)", desc:"Coming soon."},
+    {key:"geotrig", label:"Geometry & Trigonometry", icon:"📐", desc:"Coming soon."}
+  ];
+
   var MATH_SUBCATS = [
     {key:"theory", label:"Theory", icon:"📚", desc:"Full theory guides (PDF) — Algebra, Geometry & Trigonometry, Advanced Math, Problem-Solving & Data Analysis."},
-    {key:"practice", label:"Practice", icon:"✏️", desc:"Algebra — 5 chapters, 3 timed tests each (In-Class, Homework, Homework 30)."},
+    {key:"practice", label:"Practice", icon:"✏️", desc:"Algebra · Problem Solving · Advanced Math · Geometry & Trigonometry — timed tests by chapter."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"4 timed practice sets (90 questions), the 5-chapter Problem-Solving & Data Analysis tests (99 questions), 8 Module 1 mixed-domain tests (196 questions), plus 5 Module 2 tests up to question 17 (85 questions)."},
     {key:"desmos", label:"Desmos", icon:"🧮", desc:"Desmos Made Simple + full guide (PDF) to the built-in Desmos graphing calculator."},
     {key:"revision", label:"Revision Maths", icon:"🔁", desc:"2 full-length practice tests (54 questions each) mixing all Math domains."}
@@ -409,6 +418,7 @@
       case "section": return SECTIONS[t.params.key].title;
       case "englishsub": return ENGLISH_SUBCATS.filter(function(x){return x.key===t.params.key;})[0].label;
       case "mathsub": return MATH_SUBCATS.filter(function(x){return x.key===t.params.key;})[0].label;
+      case "mathPractice": return MATH_PRACTICE_DOMAINS.filter(function(x){return x.key===t.params.key;})[0].label;
       case "mathTheoryTopic": return t.params.topic.label;
       case "mathExtraTopic": return t.params.topic.label;
       case "workedBrowser": return t.params.domain;
@@ -431,6 +441,7 @@
       case "section": return screenSection(t.params.key);
       case "englishsub": return screenEnglishSub(t.params.key);
       case "mathsub": return screenMathSub(t.params.key);
+      case "mathPractice": return screenMathPractice(t.params.key);
       case "mathTheoryTopic": return screenMathTheoryTopic(t.params.topic);
       case "mathExtraTopic": return screenMathExtraTopic(t.params.topic);
       case "workedBrowser": return screenWorkedBrowser(t.params);
@@ -770,12 +781,12 @@ function screenSignin(){
     return html;
   }
 
-  function screenMathSub(key){
-    var sc = MATH_SUBCATS.filter(function(x){return x.key===key;})[0];
-    if(key==="practice"){
+  function screenMathPractice(key){
+    var d = MATH_PRACTICE_DOMAINS.filter(function(x){return x.key===key;})[0];
+    if(key==="algebra"){
       var htmlP = "<div class=\"card\" style=\"position:relative;\">"+
         "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
-        "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+sc.icon+" Algebra</p>"+
+        "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+d.icon+" Algebra</p>"+
         "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Timed practice tests grouped by chapter — an In-Class Test, a Homework Test, and a longer 30-question Homework set for each. Each opens in a new tab as its own complete testing environment.</p>"+
         "</div>";
       MATH_ALGEBRA_CHAPTERS.forEach(function(ch){
@@ -787,6 +798,27 @@ function screenSignin(){
         htmlP += "</div></div>";
       });
       return htmlP;
+    }
+    return "<div class=\"card\" style=\"position:relative;\">"+
+      "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
+      "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+d.icon+" "+escapeHtml(d.label)+"</p>"+
+      "<div class=\"empty\"><div class=\"big\">📂</div>This domain is empty for now.<br>Practice tests will appear here soon.</div>"+
+      "</div>";
+  }
+
+  function screenMathSub(key){
+    var sc = MATH_SUBCATS.filter(function(x){return x.key===key;})[0];
+    if(key==="practice"){
+      var htmlT = "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+sc.icon+" Practice — choose a domain</p><div class=\"section-grid grid-4\">";
+      MATH_PRACTICE_DOMAINS.forEach(function(d){
+        htmlT += "<button class=\"tile-col\" onclick=\"go('mathPractice',{key:'"+d.key+"'})\">"+
+          "<div class=\"icon\" style=\"background:var(--practice-soft); color:var(--practice);\">"+d.icon+"</div>"+
+          "<strong>"+escapeHtml(d.label)+"</strong>"+
+          "<span>"+escapeHtml(d.desc)+"</span>"+
+          "</button>";
+      });
+      htmlT += "</div>";
+      return htmlT;
     }
     if(key==="desmos"){
       return "<div class=\"card\" style=\"position:relative;\">"+
