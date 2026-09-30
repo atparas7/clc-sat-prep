@@ -380,11 +380,31 @@
     {key:"revision", label:"Revision Maths", icon:"🔁", desc:"2 full-length practice tests (54 questions each) mixing all Math domains."}
   ];
 
+  var ENGLISH_DOMAIN_CHAPTERS = {
+    "craft-structure": [
+    {label:"Words in Context", icon:"🔤", tests:[{label:"Test 1", count:20, href:"practice/eng-craft-wic_test1.html"}, {label:"Test 2", count:20, href:"practice/eng-craft-wic_test2.html"}]},
+    {label:"Text Structure and Purpose", icon:"🏗️", tests:[{label:"Test 1", count:20, href:"practice/eng-craft-tsp_test1.html"}, {label:"Test 2", count:20, href:"practice/eng-craft-tsp_test2.html"}]},
+    {label:"Cross-Text Connections", icon:"🔗", tests:[{label:"Test 1", count:20, href:"practice/eng-craft-ctx_test1.html"}, {label:"Test 2", count:20, href:"practice/eng-craft-ctx_test2.html"}]}
+  ],
+    "expression": [
+    {label:"Rhetorical Synthesis", icon:"📝", tests:[{label:"Test 1", count:20, href:"practice/eng-expr-rs_test1.html"}, {label:"Test 2", count:20, href:"practice/eng-expr-rs_test2.html"}]},
+    {label:"Transitions", icon:"➡️", tests:[{label:"Test 1", count:20, href:"practice/eng-expr-tr_test1.html"}, {label:"Test 2", count:20, href:"practice/eng-expr-tr_test2.html"}]}
+  ],
+    "info-ideas": [
+    {label:"Full Mixed Tests", icon:"🧪", tests:[{label:"Full Test 1 (Mixed)", count:18, href:"practice/eng-info-full_test_1.html"}, {label:"Full Test 2 (Mixed)", count:20, href:"practice/eng-info-full_test_2.html"}]},
+    {label:"Central Ideas and Details", icon:"🎯", tests:[{label:"Test 1", count:10, href:"practice/eng-info-central_ideas_test1.html"}, {label:"Test 2", count:10, href:"practice/eng-info-central_ideas_test2.html"}]},
+    {label:"Inferences", icon:"🧩", tests:[{label:"Test 1", count:10, href:"practice/eng-info-inferences_test1.html"}, {label:"Test 2", count:10, href:"practice/eng-info-inferences_test2.html"}]},
+    {label:"Command of Evidence (Textual)", icon:"📜", tests:[{label:"Test 1", count:10, href:"practice/eng-info-coe_textual_test1.html"}, {label:"Test 2", count:10, href:"practice/eng-info-coe_textual_test2.html"}]},
+    {label:"Command of Evidence (Quantitative)", icon:"📊", tests:[{label:"Test 1", count:8, href:"practice/eng-info-coe_quant_test1.html"}, {label:"Test 2", count:9, href:"practice/eng-info-coe_quant_test2.html"}]},
+    {label:"Paradox / Discrepancy", icon:"⚖️", tests:[{label:"Test 1", count:20, href:"practice/eng-info-paradox_test1.html"}, {label:"Test 2", count:20, href:"practice/eng-info-paradox_test2.html"}]}
+  ]
+  };
+
   var ENGLISH_PRACTICE_DOMAINS = [
     {key:"conventions", label:"Standard English Conventions", icon:"✔️", desc:"Boundaries · Form, Structure & Sense — worked quizzes and skill tests."},
-    {key:"expression", label:"Expression of Ideas", icon:"💬", desc:"Transitions · Rhetorical Synthesis — coming soon."},
-    {key:"info-ideas", label:"Information and Ideas", icon:"🔎", desc:"Central Ideas · Command of Evidence · Inferences — coming soon."},
-    {key:"craft-structure", label:"Craft and Structure", icon:"🏛️", desc:"Words in Context · Text Structure · Cross-Text — coming soon."}
+    {key:"expression", label:"Expression of Ideas", icon:"💬", desc:"Transitions · Rhetorical Synthesis — 4 tests, 80 questions."},
+    {key:"info-ideas", label:"Information and Ideas", icon:"🔎", desc:"Central Ideas · Inferences · Command of Evidence · Paradox — 12 tests."},
+    {key:"craft-structure", label:"Craft and Structure", icon:"🏛️", desc:"Words in Context · Text Structure · Cross-Text — 6 tests, 120 questions."}
   ];
 
   var ENGLISH_SUBCATS = [
@@ -744,6 +764,23 @@ function screenSignin(){
       html += "<p class=\"eyebrow\" style=\"margin-top:14px;\">Skill tests</p>";
       chapterCards(ENGLISH_GRAMMAR_CHAPTERS);
       return html;
+    }
+    var chs = ENGLISH_DOMAIN_CHAPTERS[key];
+    if(chs){
+      var htmlD = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--english);\">"+d.icon+" "+escapeHtml(d.label)+"</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Timed practice tests by skill. Every question comes with the full CLC review — Rule, Tip, Trap and Process of Elimination. Each test opens in a new tab as its own complete testing environment.</p>"+
+        "</div>";
+      chs.forEach(function(ch){
+        htmlD += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ch.tests.forEach(function(t){
+          htmlD += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        });
+        htmlD += "</div></div>";
+      });
+      return htmlD;
     }
     return "<div class=\"card\" style=\"position:relative;\">"+
       "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
