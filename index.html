@@ -301,6 +301,12 @@
     "systems": [{label:"Class Quiz", count:12, href:"practice/algebra-systems-quiz12.html"}, {label:"Review", count:15, href:"practice/algebra-systems-review15.html"}, {label:"Homework", count:30, href:"practice/algebra-systems-hw30.html"}]
   };
 
+  var MATH_ADVANCED_CHAPTERS = [
+    {key:"equiv", label:"Equivalent Expressions", icon:"≡", tests:[{label:"Class Quiz", count:12, href:"practice/advmath-equiv-quiz12.html"}, {label:"Review", count:15, href:"practice/advmath-equiv-review15.html"}, {label:"Homework", count:30, href:"practice/advmath-equiv-hw30.html"}]},
+    {key:"nleq", label:"Nonlinear Equations in One Variable & Systems in Two Variables", icon:"🔀", tests:[{label:"Class Quiz", count:12, href:"practice/advmath-nleq-quiz12.html"}, {label:"Review", count:15, href:"practice/advmath-nleq-review15.html"}, {label:"Homework", count:30, href:"practice/advmath-nleq-hw30.html"}, {label:"Extra HW + Review", count:45, href:"practice/advmath-nleq-extra45.html"}]},
+    {key:"nlfun", label:"Nonlinear Functions", icon:"📈", tests:[{label:"Class Quiz", count:12, href:"practice/advmath-nlfun-quiz12.html"}, {label:"Review", count:15, href:"practice/advmath-nlfun-review15.html"}, {label:"Homework", count:30, href:"practice/advmath-nlfun-hw30.html"}, {label:"Extra HW + Review", count:45, href:"practice/advmath-nlfun-extra45.html"}]}
+  ];
+
   var MATH_PRACTICE_CHAPTERS = [
     {key:"ratios", label:"Ratios, Rates & Units", icon:"⚖️", count:20, tests:[{label:"Test 1", href:"practice/psda-ratios-rates-units-test1.html"},{label:"Test 2", href:"practice/psda-ratios-rates-units-test2.html"}]},
     {key:"percentages", label:"Percentages", icon:"💯", count:20, tests:[{label:"Test 1", href:"practice/psda-percentages-test1.html"},{label:"Test 2", href:"practice/psda-percentages-test2.html"}]},
@@ -345,7 +351,7 @@
   var MATH_PRACTICE_DOMAINS = [
     {key:"algebra", label:"Algebra", icon:"🔢", desc:"5 chapters · CLC tests + SAT question sets (Class Quiz, Review, Homework) for each."},
     {key:"psda", label:"Problem Solving", icon:"📊", desc:"Problem-Solving & Data Analysis — coming soon."},
-    {key:"advanced", label:"Advanced Math", icon:"ƒ(x)", desc:"Coming soon."},
+    {key:"advanced", label:"Advanced Math", icon:"ƒ(x)", desc:"3 chapters · Class Quiz, Review, Homework + Extra sets."},
     {key:"geotrig", label:"Geometry & Trigonometry", icon:"📐", desc:"Coming soon."}
   ];
 
@@ -816,6 +822,22 @@ function screenSignin(){
         htmlP += "</div>";
       });
       return htmlP;
+    }
+    if(key==="advanced"){
+      var htmlA = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+d.icon+" Advanced Math</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">SAT question sets grouped by chapter — a Class Quiz, a Review and a Homework set for each, plus Extra Homework + Review sets. Each opens in a new tab as its own complete testing environment.</p>"+
+        "</div>";
+      MATH_ADVANCED_CHAPTERS.forEach(function(ch){
+        htmlA += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
+          "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ch.tests.forEach(function(t){
+          htmlA += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        });
+        htmlA += "</div></div>";
+      });
+      return htmlA;
     }
     return "<div class=\"card\" style=\"position:relative;\">"+
       "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
