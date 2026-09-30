@@ -427,8 +427,11 @@
     {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"SAT Vocabulary Vol. 1 — word bank and words-in-context practice."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"By SAT domain · Standard English Conventions · Expression of Ideas · Information and Ideas · Craft and Structure."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"5 full domain tests (Information & Ideas, Conventions, Expression of Ideas, Craft & Structure, Transitions) — 180 questions total."},
-    {key:"revision", label:"Revision English", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."}
+    {key:"revision", label:"Revision English", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."},
+    {key:"fulltests", label:"Full Tests", icon:"🎯", desc:"12 full-length Digital SAT Reading & Writing practice tests — Module 1 + Module 2, 54 questions each."}
   ];
+  var ENGLISH_FULL_TESTS = [];
+  for(var eft=1; eft<=12; eft++){ var nn=(eft<10?"0":"")+eft; ENGLISH_FULL_TESTS.push({label:"Practice Test "+nn, href:"practice/english-full-test-"+nn+".html"}); }
 
   var ENGLISH_TOPICS = [
     {key:"boundaries", domain:"Boundaries", label:"Boundaries", icon:"\u2702\ufe0f", desc:"Commas, semicolons, colons, dashes \u2014 where a sentence should (and shouldn't) pause or break."},
@@ -806,6 +809,18 @@ function screenSignin(){
 
   function screenEnglishSub(key){
     var sc = ENGLISH_SUBCATS.filter(function(x){return x.key===key;})[0];
+    if(key==="fulltests"){
+      var htmlEF = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Full Tests</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Full-length Digital SAT Reading &amp; Writing practice tests: Module 1 and Module 2 (27 questions each, 35 minutes each, extended-time options), a 10-minute break, and a 200–800 practice score with the official College Board explanation for every question. Each test opens in a new tab.</p>"+
+        "</div><div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+      ENGLISH_FULL_TESTS.forEach(function(t){
+        htmlEF += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(54q)</span></a>";
+      });
+      htmlEF += "</div></div>";
+      return htmlEF;
+    }
     if(key==="practice"){
       var htmlT = "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Practice — choose a domain</p><div class=\"section-grid grid-4\">";
       ENGLISH_PRACTICE_DOMAINS.forEach(function(d){
