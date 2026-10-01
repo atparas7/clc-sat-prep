@@ -249,7 +249,14 @@ lines.splice(6,0,'Skill,Correct,Total,Percent');Object.keys(sk).forEach((k,j)=>l
 QS.forEach((q,i)=>lines.push([i+1,SKILLS[q.skill],DN[q.d],q.id,ans[i]||'',q.a,RES.c[i]?'Correct':(ans[i]?'Incorrect':'Omitted')].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')));
 const blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv'});const a=$('dl');a.href=URL.createObjectURL(blob);
 a.download='CLC_Results_'+student.replace(/\W+/g,'_')+'_'+document.title.split('|')[0].trim().replace(/\W+/g,'_')+'.csv';a.click()}
-</script><!--CLC-XO-START-->
+</script><!--CLC-CREDIT-START-->
+<div class="clc-credit" style="max-width:960px;margin:28px auto 18px;padding:12px 16px;text-align:center;font:400 13px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif;color:#9a958d;border-top:1px solid rgba(0,0,0,.06)">
+<div>Developed by Athanasios Paraskevopoulos · Tested by Athanasios Paraskevopoulos &amp; Stavros Tsalapatis</div>
+<div>© 2026 CLC Educational Institute. All rights reserved. Unauthorized reproduction or distribution is prohibited.</div>
+</div>
+<style>@media print{.clc-credit{display:none!important}}</style>
+<!--CLC-CREDIT-END-->
+<!--CLC-XO-START-->
 <style>
 .xo-host{position:relative!important;padding-right:44px!important}
 .choices.abcd .xo-host{padding-right:30px!important}
