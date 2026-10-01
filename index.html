@@ -430,6 +430,9 @@
     {key:"revision", label:"Revision English", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."},
     {key:"fulltests", label:"Full Tests", icon:"🎯", desc:"12 full-length Digital SAT Reading & Writing practice tests — Module 1 + Module 2, 54 questions each."}
   ];
+  var ENGLISH_CB_SETS = {
+    "info-ideas": {skills:[["cid","Central Ideas and Details","🎯"],["coe","Command of Evidence","📊"],["inf","Inferences","🔍"]], bank:"practice/eng-cb-info-bank.html", bankN:555, bankDesc:"555 official College Board questions (Command of Evidence, Inferences, Central Ideas and Details) — filter by skill and difficulty, instant check with the official explanation."}
+  };
   var ENGLISH_FULL_TESTS = [];
   for(var eft=1; eft<=12; eft++){ var nn=(eft<10?"0":"")+eft; ENGLISH_FULL_TESTS.push({label:"Practice Test "+nn, href:"practice/english-full-test-"+nn+".html"}); }
 
@@ -809,6 +812,20 @@ function screenSignin(){
         });
         htmlD += "</div></div>";
       });
+      var CB = ENGLISH_CB_SETS[key];
+      if(CB){
+        htmlD += "<h3 class=\"display\" style=\"font-size:20px; margin:28px 0 4px; color:var(--english);\">🏛️ Official College Board questions</h3>"+
+          "<p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">Real College Board SAT questions with the official explanation for every question.</p>";
+        CB.skills.forEach(function(sk){
+          htmlD += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+sk[2]+" "+escapeHtml(sk[1])+" · College Board sets</p><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+          [["quiz12","Class Quiz",12],["review15","Review",15],["hw30","Homework",30]].forEach(function(k){
+            htmlD += "<a class=\"btn ghost\" href=\"practice/eng-cb-"+sk[0]+"-"+k[0]+".html\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+k[1]+" <span style=\"opacity:.65;\">("+k[2]+"q)</span></a>";
+          });
+          htmlD += "</div></div>";
+        });
+        htmlD += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">🏛️ College Board Question Bank</p><p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">"+CB.bankDesc+"</p>"+
+          "<a class=\"btn\" href=\""+CB.bank+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">Open the question bank ("+CB.bankN+"q)</a></div>";
+      }
       return htmlD;
     }
     return "<div class=\"card\" style=\"position:relative;\">"+
