@@ -451,9 +451,32 @@
   function getUser(){ try{ return localStorage.getItem("clc_sat_user"); }catch(e){ return null; } }
   function setUser(n){ try{ localStorage.setItem("clc_sat_user", n); }catch(e){} }
 
-  function go(screen, params){ state.nav.push({screen:screen, params:params||{}}); render(); window.scrollTo(0,0); }
-  function replace(screen, params){ state.nav[state.nav.length-1] = {screen:screen, params:params||{}}; render(); window.scrollTo(0,0); }
-  function back(){ state.nav.pop(); render(); window.scrollTo(0,0); }
+  /* Browser history: every screen is a real history entry, so the browser's back / forward
+     arrows move between screens, and coming back from a test page returns to the same screen. */
+  function navSnap(){ try{ return JSON.parse(JSON.stringify(state.nav)); }catch(e){ return null; } }
+  function histIdx(){ var h = history.state; return (h && h.clc && typeof h.idx==="number") ? h.idx : 0; }
+  function histSave(push){
+    var snap = navSnap(); if(!snap) return;
+    try{
+      if(push) history.pushState({clc:1, nav:snap, idx:histIdx()+1}, "");
+      else history.replaceState({clc:1, nav:snap, idx:histIdx()}, "");
+    }catch(e){}
+  }
+  function safeRender(){
+    try{ render(); }
+    catch(e){ state.nav = [{screen: getUser() ? "home" : "signin"}]; render(); histSave(false); }
+  }
+  function go(screen, params){ state.nav.push({screen:screen, params:params||{}}); safeRender(); histSave(true); window.scrollTo(0,0); }
+  function replace(screen, params){ state.nav[state.nav.length-1] = {screen:screen, params:params||{}}; safeRender(); histSave(false); window.scrollTo(0,0); }
+  function back(){
+    if(histIdx() > 0){ history.back(); return; }
+    if(state.nav.length > 1) state.nav.pop();
+    safeRender(); histSave(false); window.scrollTo(0,0);
+  }
+  window.addEventListener("popstate", function(e){
+    var h = e.state;
+    if(h && h.clc && h.nav && h.nav.length){ state.nav = h.nav; safeRender(); window.scrollTo(0,0); }
+  });
   function top(){ return state.nav[state.nav.length-1]; }
 
   window.go = go; window.back = back; window.replace = replace;
@@ -685,8 +708,10 @@ function screenSignin(){
     }
     var v = nameCheck.name;
     setUser(v);
+    try{ sessionStorage.setItem("clc_signed", currentWeeklyCode()); }catch(e){}
     state.nav = [{screen:"welcome"}];
     render();
+    histSave(false);
   };
 
   function screenWelcome(){
@@ -726,7 +751,7 @@ function screenSignin(){
       html += "<div class=\"empty\"><div class=\"big\">📂</div>This section is empty for now.<br>Practice tests and material will appear here soon.</div>";
     } else {
       s.tests.forEach(function(test){
-        html += "<a class=\"tile\" href=\""+test.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+        html += "<a class=\"tile\" href=\""+test.href+"\" style=\"text-decoration:none; color:inherit;\">"+
           "<div class=\"icon\" style=\"background:var(--"+s.color+"-soft); color:var(--"+s.color+");\">"+s.icon+"</div>"+
           "<div class=\"body\"><strong>"+escapeHtml(test.title)+"</strong>"+(test.desc?"<span>"+escapeHtml(test.desc)+"</span>":"")+"</div>"+
           "<div class=\"chev\">→</div></a>";
@@ -769,7 +794,7 @@ function screenSignin(){
           html += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
             "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
           ch.tests.forEach(function(t){
-            html += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+            html += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
           });
           html += "</div></div>";
         });
@@ -777,7 +802,7 @@ function screenSignin(){
       var cbSets = function(sk, label){
         var ks=[["quiz12","Class Quiz",12],["review15","Review",15],["hw30","Homework",30]];
         html += "<p class=\"eyebrow\" style=\"margin-top:14px;\">Official College Board questions</p><div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">🏛️ "+label+" · College Board sets</p><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
-        ks.forEach(function(k){ html += "<a class=\"btn ghost\" href=\"practice/eng-cb-"+sk+"-"+k[0]+".html\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+k[1]+" <span style=\"opacity:.65;\">("+k[2]+"q)</span></a>"; });
+        ks.forEach(function(k){ html += "<a class=\"btn ghost\" href=\"practice/eng-cb-"+sk+"-"+k[0]+".html\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+k[1]+" <span style=\"opacity:.65;\">("+k[2]+"q)</span></a>"; });
         html += "</div></div>";
       };
       html += "<h3 class=\"display\" style=\"font-size:20px; margin:22px 0 4px; color:var(--english);\">✂️ Boundaries</h3>"+
@@ -796,7 +821,7 @@ function screenSignin(){
       cbSets("form","Form, Structure &amp; Sense");
       html += "<h3 class=\"display\" style=\"font-size:20px; margin:28px 0 4px; color:var(--english);\">🏛️ College Board Question Bank</h3>"+
         "<p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">421 official College Board questions (Boundaries + Form, Structure &amp; Sense) — filter by skill and difficulty, instant check with the official explanation.</p>"+
-        "<a class=\"btn\" href=\"practice/eng-cb-conventions-bank.html\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">Open the question bank (421q)</a>";
+        "<a class=\"btn\" href=\"practice/eng-cb-conventions-bank.html\" style=\"text-decoration:none;\">Open the question bank (421q)</a>";
       return html;
     }
     var chs = ENGLISH_DOMAIN_CHAPTERS[key];
@@ -810,7 +835,7 @@ function screenSignin(){
         htmlD += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
           "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
         ch.tests.forEach(function(t){
-          htmlD += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+          htmlD += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
         });
         htmlD += "</div></div>";
       });
@@ -821,12 +846,12 @@ function screenSignin(){
         CB.skills.forEach(function(sk){
           htmlD += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+sk[2]+" "+escapeHtml(sk[1])+" · College Board sets</p><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
           [["quiz12","Class Quiz",12],["review15","Review",15],["hw30","Homework",30]].forEach(function(k){
-            htmlD += "<a class=\"btn ghost\" href=\"practice/eng-cb-"+sk[0]+"-"+k[0]+".html\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+k[1]+" <span style=\"opacity:.65;\">("+k[2]+"q)</span></a>";
+            htmlD += "<a class=\"btn ghost\" href=\"practice/eng-cb-"+sk[0]+"-"+k[0]+".html\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+k[1]+" <span style=\"opacity:.65;\">("+k[2]+"q)</span></a>";
           });
           htmlD += "</div></div>";
         });
         htmlD += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">🏛️ College Board Question Bank</p><p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">"+CB.bankDesc+"</p>"+
-          "<a class=\"btn\" href=\""+CB.bank+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">Open the question bank ("+CB.bankN+"q)</a></div>";
+          "<a class=\"btn\" href=\""+CB.bank+"\" style=\"text-decoration:none;\">Open the question bank ("+CB.bankN+"q)</a></div>";
       }
       return htmlD;
     }
@@ -846,7 +871,7 @@ function screenSignin(){
         "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Full-length Digital SAT Reading &amp; Writing practice tests: Module 1 and Module 2 (27 questions each, 35 minutes each, extended-time options), a 10-minute break, and a 200–800 practice score with the official College Board explanation for every question. Each test opens in a new tab.</p>"+
         "</div><div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
       ENGLISH_FULL_TESTS.forEach(function(t){
-        htmlEF += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(54q)</span></a>";
+        htmlEF += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(54q)</span></a>";
       });
       htmlEF += "</div></div>";
       return htmlEF;
@@ -870,7 +895,7 @@ function screenSignin(){
         "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Word bank and words-in-context practice. Opens in a new tab as its own complete practice lab.</p>"+
         "</div><div class=\"section-grid\">";
       ENGLISH_VOCAB_BANKS.forEach(function(b){
-        html2 += "<a class=\"tile-col\" href=\""+b.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+        html2 += "<a class=\"tile-col\" href=\""+b.href+"\" style=\"text-decoration:none; color:inherit;\">"+
           "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+b.icon+"</div>"+
           "<strong>"+escapeHtml(b.label)+"</strong>"+
           "</a>";
@@ -885,7 +910,7 @@ function screenSignin(){
         "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Eight guides covering all four Reading & Writing domains — rules, patterns, and fully worked examples. Each opens as a PDF in a new tab.</p>"+
         "</div><div class=\"section-grid\">";
       ENGLISH_THEORY_TOPICS.forEach(function(topic){
-        html4 += "<a class=\"tile-col\" href=\""+topic.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+        html4 += "<a class=\"tile-col\" href=\""+topic.href+"\" style=\"text-decoration:none; color:inherit;\">"+
           "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+topic.icon+"</div>"+
           "<strong>"+escapeHtml(topic.label)+"</strong>"+
           "</a>";
@@ -895,10 +920,10 @@ function screenSignin(){
         html4 += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+escapeHtml(t.label)+" — extra resource</p>"+
           "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
         if(t.extraHref){
-          html4 += "<a class=\"btn ghost\" href=\""+t.extraHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.extraLabel)+" ↓</a>";
+          html4 += "<a class=\"btn ghost\" href=\""+t.extraHref+"\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.extraLabel)+" ↓</a>";
         }
         if(t.testHref){
-          html4 += "<a class=\"btn gold\" href=\""+t.testHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.testLabel)+" ↗</a>";
+          html4 += "<a class=\"btn gold\" href=\""+t.testHref+"\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.testLabel)+" ↗</a>";
         }
         html4 += "</div></div>";
       });
@@ -911,7 +936,7 @@ function screenSignin(){
         "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Five full domain tests built from real College Board Question Bank items, each with a full Rule / Tip / Trap / Vocabulary breakdown. Each opens in a new tab as its own complete testing environment.</p>"+
         "</div><div class=\"section-grid\">";
       ENGLISH_EXTRA_TESTS.forEach(function(t){
-        html3 += "<a class=\"tile-col\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+        html3 += "<a class=\"tile-col\" href=\""+t.href+"\" style=\"text-decoration:none; color:inherit;\">"+
           "<div class=\"icon\" style=\"background:var(--english-soft); color:var(--english);\">"+t.icon+"</div>"+
           "<strong>"+escapeHtml(t.label)+"</strong>"+
           "<span>"+t.count+" questions</span>"+
@@ -954,7 +979,7 @@ function screenSignin(){
         htmlP += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
           "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
         ch.tests.forEach(function(t){
-          htmlP += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+          htmlP += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
         });
         htmlP += "</div>";
         var set2 = MATH_ALGEBRA_SET2[ch.key];
@@ -962,7 +987,7 @@ function screenSignin(){
           htmlP += "<p style=\"font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:14px 0 8px;\">SAT Question Set</p>"+
             "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
           set2.forEach(function(t){
-            htmlP += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+            htmlP += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
           });
           htmlP += "</div>";
         }
@@ -981,7 +1006,7 @@ function screenSignin(){
         htmlA += "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">"+ch.icon+" "+escapeHtml(ch.label)+"</p>"+
           "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
         ch.tests.forEach(function(t){
-          htmlA += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+          htmlA += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
         });
         htmlA += "</div></div>";
       });
@@ -1013,14 +1038,14 @@ function screenSignin(){
         "<div class=\"subject-strip\" style=\"background:var(--practice);\"></div>"+
         "<p class=\"eyebrow\" style=\"color:var(--practice);\">"+sc.icon+" Desmos</p>"+
         "<p style=\"font-size:14px; line-height:1.6; margin:0 0 16px;\">The Digital SAT gives every student a built-in Desmos graphing calculator for the entire Math section — for plotting functions, solving equations, and checking answers quickly. Start with <b>Desmos Made Simple</b> (14 short slides), go deeper with the full guide, then practice with the real tool so it feels familiar on test day.</p>"+
-        "<a class=\"btn gold\" href=\"desmos-made-simple.pdf\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; margin-bottom:10px;\">⭐ Desmos Made Simple — start here (PDF) ↗</a>"+
-        "<a class=\"btn ghost\" href=\"desmos-guide.pdf\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; margin-bottom:10px;\">📑 Open Full Desmos Guide (PDF) ↗</a>"+
+        "<a class=\"btn gold\" href=\"desmos-made-simple.pdf\" style=\"text-decoration:none; margin-bottom:10px;\">⭐ Desmos Made Simple — start here (PDF) ↗</a>"+
+        "<a class=\"btn ghost\" href=\"desmos-guide.pdf\" style=\"text-decoration:none; margin-bottom:10px;\">📑 Open Full Desmos Guide (PDF) ↗</a>"+
         "<a class=\"btn ghost\" href=\"https://www.desmos.com/calculator\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">Open Desmos Calculator ↗</a>"+
         "</div>"+
         "<div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">Desmos Lab — guided lessons</p>"+
         "<div style=\"display:flex; gap:10px; flex-wrap:wrap;\">"+
-        "<a class=\"btn ghost\" href=\"media/desmos-lesson-1.pdf\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">Lesson 1 ↓</a>"+
-        "<a class=\"btn ghost\" href=\"media/desmos-lesson-2.pdf\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">Lesson 2 ↓</a>"+
+        "<a class=\"btn ghost\" href=\"media/desmos-lesson-1.pdf\" style=\"text-decoration:none; flex:1; min-width:130px;\">Lesson 1 ↓</a>"+
+        "<a class=\"btn ghost\" href=\"media/desmos-lesson-2.pdf\" style=\"text-decoration:none; flex:1; min-width:130px;\">Lesson 2 ↓</a>"+
         "</div></div>";
     }
     if(key==="theory"){
@@ -1028,7 +1053,7 @@ function screenSignin(){
       MATH_THEORY_TOPICS.forEach(function(topic){
         var deckHref = MATH_THEORY_DECKS[topic.key];
         if(deckHref){
-          html += "<a class=\"tile-col\" href=\""+deckHref+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; color:inherit;\">"+
+          html += "<a class=\"tile-col\" href=\""+deckHref+"\" style=\"text-decoration:none; color:inherit;\">"+
             "<div class=\"icon\" style=\"background:var(--practice-soft); color:var(--practice);\">"+topic.icon+"</div>"+
             "<strong>"+escapeHtml(topic.label)+"</strong>"+
             "</a>";
@@ -1060,7 +1085,7 @@ function screenSignin(){
         "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Full-length Digital SAT Math practice tests: Module 1 and Module 2 (22 questions each, 35 minutes each, extra-time options), a 10-minute break, and a 200–800 practice score with a full explanation for every question. Each test opens in a new tab.</p>"+
         "</div><div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
       MATH_FULL_TESTS.forEach(function(t){
-        htmlF += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(44q)</span></a>";
+        htmlF += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:150px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(44q)</span></a>";
       });
       htmlF += "</div></div>";
       return htmlF;
@@ -1073,7 +1098,7 @@ function screenSignin(){
         "</div>";
       html4 += "<div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
       MATH_REVISION_TESTS.forEach(function(t){
-        html4 += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+        html4 += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
       });
       html4 += "</div></div>";
       return html4;
@@ -1103,7 +1128,7 @@ function screenSignin(){
       "</div>";
     html += "<div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
     topic.tests.forEach(function(t){
-      html += "<a class=\"btn ghost\" href=\""+t.href+"\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
+      html += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">("+t.count+"q)</span></a>";
     });
     html += "</div></div>";
     return html;
@@ -1206,7 +1231,7 @@ function screenSignin(){
     var n = p.i + delta;
     if(n<0) n=0; if(n>p.qs.length-1) n=p.qs.length-1;
     p.i = n;
-    render();
+    render(); histSave(false);
   };
 
   window.openGeoDomain = function(key){
@@ -1300,7 +1325,7 @@ function screenSignin(){
     if(p.picked!==null) return;
     p.picked = letter;
     if(normalizeAns(letter)===normalizeAns(p.qs[p.i].correct)) p.correct++;
-    render();
+    render(); histSave(false);
   };
   window.geoSubmitGridin = function(){
     var p = top().params;
@@ -1310,7 +1335,7 @@ function screenSignin(){
     p.gridval = val;
     p.picked = val;
     if(ansMatch(val,p.qs[p.i].correct)) p.correct++;
-    render();
+    render(); histSave(false);
   };
   window.geoNext = function(){
     var p = top().params;
@@ -1319,7 +1344,7 @@ function screenSignin(){
       return;
     }
     p.i++; p.picked=null; p.gridval="";
-    render();
+    render(); histSave(false);
   };
 
   function screenGeoQuizResult(p){
@@ -1401,7 +1426,7 @@ function screenSignin(){
     if(p.picked!==null) return;
     p.picked = idx;
     if(idx===p.qs[p.i].correct) p.correct++;
-    render();
+    render(); histSave(false);
   };
   window.quizNext = function(){
     var p = top().params;
@@ -1410,7 +1435,7 @@ function screenSignin(){
       return;
     }
     p.i++; p.picked = null;
-    render();
+    render(); histSave(false);
   };
 
   function screenQuizResult(p){
@@ -1430,8 +1455,14 @@ function screenSignin(){
       state.nav = [{screen:"admincodes"}];
     } else {
       state.nav = [{screen:"signin"}];
+      var signed = null; try{ signed = sessionStorage.getItem("clc_signed"); }catch(e){}
+      var h = history.state;
+      if(signed && getUser() && normCode(signed) === normCode(currentWeeklyCode()) && h && h.clc && h.nav && h.nav.length){
+        state.nav = h.nav;
+      }
     }
-    render();
+    safeRender();
+    histSave(false);
   }
 
   if(window.claude && window.claude.hot){
