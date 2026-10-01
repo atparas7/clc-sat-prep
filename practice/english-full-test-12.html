@@ -257,7 +257,7 @@ function renderReview(f){const out=[];QS.forEach((q,i)=>{const ok=RES.c[i];if(f=
  '<div class="rvch"><div class="c"><b>Correct answer:</b> '+q.a+' ✔</div>'+(ans[i]&&!ok?'<div class="w"><b>Your answer:</b> '+ans[i]+' ✘</div>':'')+'</div>'+
  '<div class="rat"><b>Official College Board explanation</b>'+imgs(q.r,'Explanation')+'</div></div>')});
  $('review').innerHTML=out.join('')||'<p style="color:var(--mut)">No questions in this view.</p>'}
-const A='../assets/';
+const A='../';
 function imgs(L,alt){return L.map(p=>'<img class="qimg" alt="'+alt+'" src="'+A+p+'" loading="lazy" onclick="zoomImg(this.src)" onerror="imgFail(this)">').join('')}
 function imgFail(el){const d=document.createElement('div');d.className='imgmiss';d.textContent='Image not found: the “assets” folder has not been uploaded next to the “practice” folder yet.';el.replaceWith(d)}
 function zoomImg(src){$('zoomimg').src=src;$('zoom').style.display='block'}
