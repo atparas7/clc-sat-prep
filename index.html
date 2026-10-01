@@ -769,18 +769,29 @@ function screenSignin(){
           html += "</div></div>";
         });
       };
+      var cbSets = function(sk, label){
+        var ks=[["quiz12","Class Quiz",12],["review15","Review",15],["hw30","Homework",30]];
+        html += "<p class=\"eyebrow\" style=\"margin-top:14px;\">Official College Board questions</p><div class=\"card\"><p class=\"eyebrow\" style=\"margin-bottom:10px;\">🏛️ "+label+" · College Board sets</p><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+        ks.forEach(function(k){ html += "<a class=\"btn ghost\" href=\"practice/eng-cb-"+sk+"-"+k[0]+".html\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none; flex:1; min-width:130px;\">"+k[1]+" <span style=\"opacity:.65;\">("+k[2]+"q)</span></a>"; });
+        html += "</div></div>";
+      };
       html += "<h3 class=\"display\" style=\"font-size:20px; margin:22px 0 4px; color:var(--english);\">✂️ Boundaries</h3>"+
         "<p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">Punctuation and sentence boundaries — commas, semicolons, colons, dashes, periods.</p>"+
         "<p class=\"eyebrow\" style=\"margin-top:6px;\">Worked quiz</p>";
       topicTile(ENGLISH_TOPICS[0]);
       html += "<p class=\"eyebrow\" style=\"margin-top:14px;\">Skill tests</p>";
       chapterCards(ENGLISH_BOUNDARIES_CHAPTERS);
+      cbSets("boundaries","Boundaries");
       html += "<h3 class=\"display\" style=\"font-size:20px; margin:28px 0 4px; color:var(--english);\">🧩 Form, Structure & Sense</h3>"+
         "<p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">Grammar — verb tense, agreement, pronouns, modifiers, parallel structure.</p>"+
         "<p class=\"eyebrow\" style=\"margin-top:6px;\">Worked quiz</p>";
       topicTile(ENGLISH_TOPICS[1]);
       html += "<p class=\"eyebrow\" style=\"margin-top:14px;\">Skill tests</p>";
       chapterCards(ENGLISH_GRAMMAR_CHAPTERS);
+      cbSets("form","Form, Structure &amp; Sense");
+      html += "<h3 class=\"display\" style=\"font-size:20px; margin:28px 0 4px; color:var(--english);\">🏛️ College Board Question Bank</h3>"+
+        "<p style=\"font-size:13.5px; color:var(--muted); margin:0 0 10px;\">421 official College Board questions (Boundaries + Form, Structure &amp; Sense) — filter by skill and difficulty, instant check with the official explanation.</p>"+
+        "<a class=\"btn\" href=\"practice/eng-cb-conventions-bank.html\" target=\"_blank\" rel=\"noopener\" style=\"text-decoration:none;\">Open the question bank (421q)</a>";
       return html;
     }
     var chs = ENGLISH_DOMAIN_CHAPTERS[key];
