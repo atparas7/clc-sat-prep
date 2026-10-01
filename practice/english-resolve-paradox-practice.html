@@ -1534,4 +1534,68 @@ render();
 </script>
 
 
+<!--CLC-XO-START-->
+<style>
+.xo-host{position:relative!important;padding-right:44px!important}
+.choices.abcd .xo-host{padding-right:30px!important}
+.xo-btn{position:absolute;top:50%;right:8px;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;border:1.5px solid #9a8f80;background:#fff;color:#6b6157;font:700 13px/1 system-ui,sans-serif;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:3;opacity:.8}
+.xo-btn:hover{opacity:1;border-color:#b3261e;color:#b3261e}
+.choices.abcd .xo-btn{width:22px;height:22px;font-size:11px;right:5px}
+.xo-line{display:none;position:absolute;left:8px;right:40px;top:50%;height:2px;background:#3a3530;pointer-events:none;z-index:2}
+.choices.abcd .xo-line{right:30px}
+.xo-out{opacity:.55}
+.xo-out .xo-line{display:block}
+.xo-out .xo-btn{opacity:1;font-size:10px;width:auto;padding:0 7px;border-radius:12px;border-color:#3a3530;color:#3a3530}
+.choices.abcd .xo-out .xo-btn{width:22px;padding:0;border-radius:50%;font-size:14px}
+.xo-host:disabled .xo-btn,.xo-host.xo-locked .xo-btn{display:none}
+</style>
+<script>
+(function(){
+  var store={}, SEL='.choices > .ch, .choices > .choice, .choices > label.choice';
+  function hash(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
+  function qkey(el){
+    var box=el.closest('.choices'); var q=document.getElementById('qbody');
+    var src=(q&&q.offsetParent!==null)?q.innerHTML:(box&&box.parentElement?box.parentElement.innerText:'');
+    var kids=box?Array.prototype.indexOf.call(box.children,el):0;
+    var L=el.getAttribute('data-l')||el.getAttribute('data-letter')||String.fromCharCode(65+kids);
+    return hash(String(src).slice(0,4000))+':'+L;
+  }
+  function locked(el){return el.disabled||el.classList.contains('locked')||el.closest('.revealed,.answered-locked')}
+  function paint(el){
+    var on=!!store[el.getAttribute('data-xo')];
+    el.classList.toggle('xo-out',on);
+    var b=el.querySelector(':scope > .xo-btn'); if(b){b.textContent=on?(el.closest('.choices.abcd')?'↺':'Undo'):'✕';b.title=on?'Undo cross-out':'Cross out this choice';b.setAttribute('aria-pressed',on?'true':'false');}
+  }
+  function decorate(){
+    var list=document.querySelectorAll(SEL);
+    for(var i=0;i<list.length;i++){
+      var el=list[i]; if(el.hasAttribute('data-xo')) {continue;}
+      if(el.closest('#review,.rv,.review,.solution,#results')) continue;
+      el.setAttribute('data-xo',qkey(el)); el.classList.add('xo-host');
+      var line=document.createElement('span'); line.className='xo-line'; el.appendChild(line);
+      var b=document.createElement('span'); b.className='xo-btn'; b.setAttribute('role','button'); b.tabIndex=0; el.appendChild(b);
+      paint(el);
+    }
+  }
+  function toggle(el){
+    var k=el.getAttribute('data-xo'); store[k]=!store[k];
+    if(store[k] && el.classList.contains('ch') && el.classList.contains('sel')){ el.click(); return; }
+    var inp=el.querySelector('input[type=radio]'); if(store[k]&&inp&&inp.checked&&!inp.disabled){ inp.checked=false; }
+    paint(el);
+  }
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.xo-btn');
+    if(b){ e.preventDefault(); e.stopPropagation(); var el=b.closest('.xo-host'); if(el&&!el.disabled) toggle(el); return; }
+    var host=e.target.closest&&e.target.closest('.xo-host.xo-out');
+    if(host){ store[host.getAttribute('data-xo')]=false; host.classList.remove('xo-out'); paint(host); }
+    var t=e.target.closest&&e.target.closest('button');
+    if(t && /start the test|retake|begin/i.test(t.textContent||'')) store={};
+  },true);
+  document.addEventListener('keydown',function(e){var b=e.target.closest&&e.target.closest('.xo-btn');if(b&&(e.key==='Enter'||e.key===' ')){e.preventDefault();b.click();}},true);
+  var pending=false;
+  new MutationObserver(function(){ if(pending) return; pending=true; requestAnimationFrame(function(){pending=false; decorate(); var all=document.querySelectorAll('.xo-host'); for(var i=0;i<all.length;i++) paint(all[i]);}); }).observe(document.documentElement,{childList:true,subtree:true});
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',decorate); else decorate();
+})();
+</script>
+<!--CLC-XO-END-->
 </body></html>
