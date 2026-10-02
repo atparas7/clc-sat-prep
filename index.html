@@ -578,10 +578,10 @@ function screenSignin(){
         "<h1 class=\"display signin-title\">Sign in to continue</h1>"+
         "<p class=\"signin-sub\">Digital SAT prep program \u2014 English, Math.</p>"+
         "<div class=\"signin-row2\">"+
-          "<input class=\"field\" id=\"nameField\" placeholder=\"\u038c\u03bd\u03bf\u03bc\u03b1 \u0395\u03c0\u03ce\u03bd\u03c5\u03bc\u03bf\" maxlength=\"60\" autocomplete=\"name\">"+
+          "<input class=\"field\" id=\"nameField\" autocapitalize=\"words\" autocorrect=\"off\" spellcheck=\"false\" placeholder=\"\u038c\u03bd\u03bf\u03bc\u03b1 \u0395\u03c0\u03ce\u03bd\u03c5\u03bc\u03bf\" maxlength=\"60\" autocomplete=\"name\">"+
           "<input class=\"field\" id=\"classField\" placeholder=\"Class / \u03a4\u03bc\u03ae\u03bc\u03b1\" maxlength=\"24\">"+
         "</div>"+
-        "<input class=\"field\" id=\"passField\" type=\"password\" placeholder=\"Password\" onkeydown=\"if(event.key==='Enter')submitSignin()\">"+
+        "<input class=\"field\" id=\"passField\" type=\"text\" placeholder=\"Password (π.χ. CLC-ABC-123)\" autocapitalize=\"characters\" autocorrect=\"off\" autocomplete=\"off\" spellcheck=\"false\" onkeydown=\"if(event.key==='Enter')submitSignin()\">"+
         "<p id=\"signinError\" class=\"signin-error\" hidden>Λάθος κωδικός. Δοκίμασε ξανά.</p>"+
         "<button class=\"btn signin-btn\" onclick=\"submitSignin()\">Sign In</button>"+
       "</div>";
@@ -643,6 +643,20 @@ function screenSignin(){
     return weeklyCodeForKey(currentWeekInfo().key);
   }
   function normCode(s){ return String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+  /* Phones often type the code with a Greek keyboard. Accept Greek letters that look like the
+     Latin ones (Α→A, Κ→K …) and also Greek letters typed on the same key as the Latin one (Ψ→C, Λ→L …). */
+  var GR_LOOK = {"Α":"A","Β":"B","Ε":"E","Ζ":"Z","Η":"H","Ι":"I","Κ":"K","Μ":"M","Ν":"N","Ο":"O","Ρ":"P","Τ":"T","Υ":"Y","Χ":"X"};
+  var GR_KEYS = {"Α":"A","Β":"B","Ψ":"C","Δ":"D","Ε":"E","Φ":"F","Γ":"G","Η":"H","Ι":"I","Ξ":"J","Κ":"K","Λ":"L","Μ":"M","Ν":"N","Ο":"O","Π":"P","Ρ":"R","Σ":"S","Τ":"T","Θ":"U","Ω":"V","Χ":"X","Υ":"Y","Ζ":"Z"};
+  function normCodeWith(s, map){
+    var t = String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().replace(/Σ|ς/g,"Σ");
+    var out = "";
+    for(var i=0;i<t.length;i++){ var c = t.charAt(i); out += (map[c] || c); }
+    return normCode(out);
+  }
+  function codeMatches(input, code){
+    var target = normCode(code);
+    return normCode(input) === target || normCodeWith(input, GR_LOOK) === target || normCodeWith(input, GR_KEYS) === target;
+  }
   function fmtDate(d){
     return d.toLocaleDateString('el-GR', {timeZone:'UTC', day:'2-digit', month:'2-digit', year:'numeric'});
   }
@@ -710,7 +724,7 @@ function screenSignin(){
       return;
     }
     nameEl.value = nameCheck.name;
-    if(normCode(pass) !== normCode(currentWeeklyCode())){
+    if(!codeMatches(pass, currentWeeklyCode())){
       if(errEl){ errEl.textContent = "\u039b\u03ac\u03b8\u03bf\u03c2 \u03ba\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2. \u0394\u03bf\u03ba\u03af\u03bc\u03b1\u03c3\u03b5 \u03be\u03b1\u03bd\u03ac."; errEl.hidden = false; }
       return;
     }
