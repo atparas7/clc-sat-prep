@@ -384,6 +384,7 @@ $('#closeCalc').onclick=closeSide;$('#closeRef').onclick=closeSide;
 // ---------- scoring
 function clean(s){return String(s==null?'':s).replace(/[−–—]/g,'-').replace(/,/g,'.').replace(/\s/g,'')}
 function num(s){s=clean(s);if(!s)return NaN;if(/^-?\d*\.?\d+\/-?\d*\.?\d+$/.test(s)){const[a,b]=s.split('/');return +b===0?NaN:+a/+b}if(/^-?\d*\.?\d+$/.test(s))return +s;return NaN}
+function clcSf2v(a,t){var s=String(a==null?'':a).replace(/&minus;/g,'-').replace(/[−–—]/g,'-').replace(/,/g,'.').replace(/\s+/g,'');if(!/^-?(\d+\.\d+|\.\d+)$/.test(s)||t===null||isNaN(t))return false;var v=Number(s);if(isNaN(v))return false;if(v!==0&&t!==0&&((v<0)!==(t<0)))return false;var b=s.replace(/^-/,''),d=b.length-b.indexOf('.')-1,sig=b.replace('.','').replace(/^0+/,'').length;if(sig<2)return false;var p=Math.pow(10,d),r=Math.round(Math.abs(t)*p+1e-7)/p;return Math.abs(Math.abs(v)-r)<1e-9;}function clcSf2(a,k){var kk=String(k==null?'':k).replace(/&minus;/g,'-').replace(/[−–—]/g,'-').replace(/\s+/g,'');var m=kk.match(/^(-?\d+)\/(-?\d+)$/);if(!m||+m[2]===0)return false;return clcSf2v(a,(+m[1])/(+m[2]));}
 function sprOK(a,t){const s=clean(a),v=num(s);if(isNaN(v))return false;if(Math.abs(v-t)<1e-9)return true;if(s.indexOf('/')>=0)return false;
  const p=s.replace(/^-/,'').split('.');if(p.length<2||p[1].length<Math.max(0,4-p[0].length))return false;
  const f=Math.pow(10,p[1].length);const T=Math.abs(t),V=Math.abs(v);if((v<0)!==(t<0))return false;return Math.abs(V-Math.trunc(T*f)/f)<1e-9||Math.abs(V-Math.round(T*f)/f)<1e-9}
@@ -391,6 +392,7 @@ function isRight(m,i){
  const q=TEST.mods[MODS[m].key][i],a=S.ans[qid(m,i)];if(a==null||a==='')return null;
  if(q.mc!==false)return a===q.ca;
  const v=num(a);if(isNaN(v))return false;
+ if(/\//.test(String(q.cadisp||''))&&q.vals.some(t=>clcSf2v(a,t)))return true;
  return q.vals.some(t=>sprOK(a,t));
 }
 const CURVE={RW:[[0,200],[5,240],[10,300],[15,350],[20,410],[25,460],[30,510],[35,560],[40,620],[44,670],[47,710],[50,750],[52,780],[54,800]],

@@ -203,7 +203,8 @@ const un=QS.length-Object.keys(ans).filter(k=>ans[k]!=='').length;const fl=Objec
 $('confirmtxt').innerHTML='Ready to submit? <b>'+un+'</b> unanswered, <b>'+fl+'</b> flagged. Use the question grid below to go back, or submit now.';$('confirm').style.display='flex'}
 function parseNum(s){s=String(s).replace(/−/g,'-').replace(/\s/g,'');if(!s)return null;if(/^-?\d*\.?\d+\/-?\d*\.?\d+$/.test(s)){const [a,b]=s.split('/').map(Number);return b===0?null:a/b}
 if(/^-?\d*\.?\d+$/.test(s)||/^-?\d+\.$/.test(s))return Number(s);return null}
-function sprCorrect(input,key){const t=parseNum(key);const s=String(input||'').replace(/−/g,'-').replace(/\s/g,'');const v=parseNum(s);if(v===null||t===null)return false;
+function clcSf2v(a,t){var s=String(a==null?'':a).replace(/&minus;/g,'-').replace(/[−–—]/g,'-').replace(/,/g,'.').replace(/\s+/g,'');if(!/^-?(\d+\.\d+|\.\d+)$/.test(s)||t===null||isNaN(t))return false;var v=Number(s);if(isNaN(v))return false;if(v!==0&&t!==0&&((v<0)!==(t<0)))return false;var b=s.replace(/^-/,''),d=b.length-b.indexOf('.')-1,sig=b.replace('.','').replace(/^0+/,'').length;if(sig<2)return false;var p=Math.pow(10,d),r=Math.round(Math.abs(t)*p+1e-7)/p;return Math.abs(Math.abs(v)-r)<1e-9;}function clcSf2(a,k){var kk=String(k==null?'':k).replace(/&minus;/g,'-').replace(/[−–—]/g,'-').replace(/\s+/g,'');var m=kk.match(/^(-?\d+)\/(-?\d+)$/);if(!m||+m[2]===0)return false;return clcSf2v(a,(+m[1])/(+m[2]));}
+function sprCorrect(input,key){if(clcSf2(input,key))return true;const t=parseNum(key);const s=String(input||'').replace(/−/g,'-').replace(/\s/g,'');const v=parseNum(s);if(v===null||t===null)return false;
 if(Math.abs(v-t)<1e-9)return true;
 if(s.includes('/'))return false;
 const neg=s.startsWith('-');const body=neg?s.slice(1):s;const parts=body.split('.');if(parts.length<2)return false;
