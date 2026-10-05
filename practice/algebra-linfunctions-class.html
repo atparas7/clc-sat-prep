@@ -207,7 +207,7 @@ function sprCorrect(input,key){if(clcSf2(input,key))return true;const t=parseNum
 if(Math.abs(v-t)<1e-9)return true;
 if(s.includes('/'))return false;
 const neg=s.startsWith('-');const body=neg?s.slice(1):s;const parts=body.split('.');if(parts.length<2)return false;
-let ip=parts[0].replace(/^0+/,'');const dec=parts[1];const need=Math.max(0,(neg?6:5)-(neg?1:0)-ip.length-1);if(dec.length<need)return false;
+let ip=parts[0];const dec=parts[1];const need=Math.max(0,(neg?6:5)-(neg?1:0)-ip.length-1);if(dec.length<need)return false;
 const k=dec.length,p=Math.pow(10,k);const trunc=Math.trunc(t*p)/p,round=Math.round(t*p)/p;return Math.abs(v-trunc)<1e-9||Math.abs(v-round)<1e-9}
 function isCorrect(i){const q=QS[i],a=ans[i];if(!a)return false;return q.ch?a===q.a:sprCorrect(a,q.a)}
 function submitTest(){if(submitted)return;submitted=true;clearInterval(tick);$('timer').classList.add('hide');
