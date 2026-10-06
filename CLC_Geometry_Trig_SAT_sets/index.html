@@ -1139,7 +1139,7 @@ function screenSignin(){
   function gridClean(s){return String(s==null?'':s).replace(/[\u2212\u2013]/g,'-').replace(/[()]/g,' ').trim().toLowerCase();}
   function gridNum(s){s=s.replace(/\s+/g,'');var m=s.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);if(m){return +m[2]===0?null:(+m[1])/(+m[2]);}return /^-?\d*\.?\d+$/.test(s)?Number(s):null;}
   function gridOne(a,k){var s=a.replace(/\s+/g,''),t=gridNum(k),v=gridNum(s);if(s===k.replace(/\s+/g,''))return true;if(v===null||t===null)return false;if(Math.abs(v-t)<1e-9)return true;if(s.indexOf('/')>=0)return false;
-    var neg=s.charAt(0)==='-',p=(neg?s.slice(1):s).split('.');if(p.length<2)return false;var ip=p[0].replace(/^0+/,'');if(p[1].length<Math.max(0,5-ip.length-1))return false;var f=Math.pow(10,p[1].length);return Math.abs(v-Math.trunc(t*f)/f)<1e-9||Math.abs(v-Math.round(t*f)/f)<1e-9;}
+    var neg=s.charAt(0)==='-',p=(neg?s.slice(1):s).split('.');if(p.length<2)return false;var ip=p[0];if(p[1].length<Math.max(0,5-ip.length-1))return false;var f=Math.pow(10,p[1].length);return Math.abs(v-Math.trunc(t*f)/f)<1e-9||Math.abs(v-Math.round(t*f)/f)<1e-9;}
   function ansMatch(a,key){a=gridClean(a);var ks=gridClean(key).split(/\s+or\s+/);for(var i=0;i<ks.length;i++){if(gridOne(a,ks[i].trim()))return true;}return false;}
   function normalizeAns(s){ return String(s).trim().toLowerCase().replace(/\s+/g,''); }
 
