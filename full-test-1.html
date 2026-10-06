@@ -453,7 +453,7 @@ function reviewCard(it,open){
  const yourTxt=a==null||a===''?'—':esc(a);
  const corTxt=q.mc===false?q.cadisp:q.ca;
  h+=`<div class="ansline">Your answer: <b>${yourTxt}</b> · Correct answer: <b style="color:var(--ok)">${corTxt}</b></div>`;
- h+=`<details ${open||r!==true?'open':''}><summary>Show question &amp; review</summary>`;
+ h+=`<details open><summary>Show question &amp; review</summary>`;
  if(m.sec==='RW'){
   h+=`<div class="ctx">${passageHTML(q)}<p><b>${q.stem}</b></p></div>`;
   h+=`<div class="rch">${'ABCD'.split('').map(k=>`<div class="${k===q.ca?'cor':(k===a?'wr':'')}"><span class="L">${k}</span><span>${q.choices[k]}</span>${k===q.ca?'<span class="mk" style="color:var(--ok)">✓ correct</span>':k===a?'<span class="mk" style="color:var(--no)">your answer</span>':''}</div>`).join('')}</div>`;

@@ -230,7 +230,7 @@ else{ch='<div class="rvch"><div class="c"><b>Correct answer:</b> '+q.a.replace(/
 out.push('<div class="rv '+(ok?'ok':'no')+'"><div class="rvh"><span class="qnum">Q'+(i+1)+'</span><span class="res '+(ok?'ok':'no')+'">'+(ok?'Correct':(ans[i]?'Incorrect':'Omitted'))+'</span>'+
 (q.ch?'<span class="pill">Your answer: '+your+' · Correct: '+q.a+'</span>':'')+'<span class="pill sk">'+SKILLS[q.skill]+'</span><span class="pill '+q.d+'">'+DN[q.d]+'</span>'+(flags[i]?'<span class="pill" style="color:#6a4c10">⚑ Flagged</span>':'')+'<span class="pill sk">ID '+q.id+'</span></div>'+
 figHTML(q)+'<div class="qbody">'+q.q+'</div>'+ch+'<div class="boxes">'+
-'<div class="bx F"><b>Formula</b>'+q.b.F+'</div><div class="bx T"><b>Tip</b>'+q.b.T+'</div><div class="bx R"><b>Trap</b>'+q.b.R+'</div><div class="bx D"><b>Desmos</b>'+q.b.D+'</div></div></div>')});
+'<div class="bx F"><b>Formula</b>'+q.b.F+'</div><div class="bx T"><b>Tip</b>'+q.b.T+'</div><div class="bx R"><b>Trap</b>'+q.b.R+'</div><div class="bx S"><b>Fastest Way</b>'+q.b.S+'</div><div class="bx D"><b>Desmos</b>'+q.b.D+'</div></div></div>')});
 $('review').innerHTML=out.join('')||'<p style="color:var(--mut)">No questions in this view.</p>';typeset($('review'))}
 function status(p){return p>=80?['s','Strong']:(p>=60?['d','Developing']:['f','Focus area'])}
 function renderFocus(sk,dd){const rows=sk.map(g=>{const p=Math.round(100*g.c/g.n);const st=status(p);return '<tr><td>'+g.name+'</td><td>'+g.c+' / '+g.n+'</td><td><b>'+p+'%</b></td><td><span class="tag '+st[0]+'">'+st[1]+'</span></td></tr>'}).join('');

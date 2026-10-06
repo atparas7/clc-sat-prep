@@ -242,7 +242,7 @@ function submitTest(){
         <div><b>Question ${i+1}</b> &nbsp; <span style="color:#666;font-size:13px;">${q.skill}</span></div>
         <div style="font-weight:600;color:${isCorrect?'#2e7d32':'#A8002E'}">${isCorrect?'Correct':'Review'}</div>
       </div>
-      <div class="revbody" id="revbody-${i}">
+      <div class="revbody open" id="revbody-${i}">
         <div class="qprompt" style="margin-top:14px;">${q.prompt}</div>
         ${q.figSvg||''}
         <div class="your-answer"><b>Your answer:</b> ${yourAnsText} &nbsp;&nbsp;|&nbsp;&nbsp; <b>Correct answer:</b> ${q.type==='mc'? '('+String.fromCharCode(65+q.correct)+') '+q.choices[q.correct] : q.answer}</div>
