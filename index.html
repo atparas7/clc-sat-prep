@@ -883,7 +883,7 @@ function screenSignin(){
       var htmlR = "<div class=\"card\" style=\"position:relative;\">"+
         "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
         "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Revision English</p>"+
-        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Ten mixed tests of 40 official College Board questions each, mixing Boundaries and Form, Structure &amp; Sense (Standard English Conventions) at all difficulty levels, with the official explanation for every question. No question repeats across the ten tests. Each opens in a new tab.</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Ten mixed tests of 40 official College Board questions each, mixing Boundaries and Form, Structure &amp; Sense (Standard English Conventions) at all difficulty levels, with the official explanation for every question. No question repeats across the ten tests, and there is no going back to earlier questions once you press Next. Each opens in a new tab.</p>"+
         "</div><div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
       ENGLISH_REVISION_TESTS.forEach(function(t){
         htmlR += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:200px; white-space:nowrap;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(40q)</span></a>";
