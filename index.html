@@ -428,7 +428,7 @@
     {key:"vocabulary", label:"Vocabulary", icon:"🔤", desc:"SAT Vocabulary Vol. 1 — word bank and words-in-context practice."},
     {key:"practice", label:"Practice", icon:"✏️", desc:"By SAT domain · Standard English Conventions · Expression of Ideas · Information and Ideas · Craft and Structure."},
     {key:"extra", label:"Extra Practice", icon:"➕", desc:"5 full domain tests (Information & Ideas, Conventions, Expression of Ideas, Craft & Structure, Transitions) — 180 questions total."},
-    {key:"revision", label:"Revision English", icon:"🔁", desc:"Quick review of everything covered so far — coming soon."},
+    {key:"revision", label:"Revision English", icon:"🔁", desc:"10 mixed Standard English Conventions tests (40 questions each) from the official College Board question bank."},
     {key:"fulltests", label:"Full Tests", icon:"🎯", desc:"12 full-length Digital SAT Reading & Writing practice tests — Module 1 + Module 2, 54 questions each."}
   ];
   var ENGLISH_CB_SETS = {
@@ -436,6 +436,8 @@
     "craft-structure": {skills:[["wic","Words in Context","🔤"],["tsp","Text Structure and Purpose","🏗️"],["ctc","Cross-Text Connections","🔗"]], bank:"practice/eng-cb-craft-bank.html", bankN:471, bankDesc:"471 official College Board questions (Words in Context, Text Structure and Purpose, Cross-Text Connections) — filter by skill and difficulty, instant check with the official explanation."},
     "info-ideas": {skills:[["cid","Central Ideas and Details","🎯"],["coe","Command of Evidence","📊"],["inf","Inferences","🔍"]], bank:"practice/eng-cb-info-bank.html", bankN:555, bankDesc:"555 official College Board questions (Command of Evidence, Inferences, Central Ideas and Details) — filter by skill and difficulty, instant check with the official explanation."}
   };
+  var ENGLISH_REVISION_TESTS = [];
+  for(var ert=1; ert<=10; ert++){ var rn=(ert<10?"0":"")+ert; ENGLISH_REVISION_TESTS.push({label:"Mixed Test "+rn, href:"practice/eng-revision-test-"+rn+".html"}); }
   var ENGLISH_FULL_TESTS = [];
   for(var eft=1; eft<=12; eft++){ var nn=(eft<10?"0":"")+eft; ENGLISH_FULL_TESTS.push({label:"Practice Test "+nn, href:"practice/english-full-test-"+nn+".html"}); }
 
@@ -876,6 +878,18 @@ function screenSignin(){
       });
       htmlEF += "</div></div>";
       return htmlEF;
+    }
+    if(key==="revision"){
+      var htmlR = "<div class=\"card\" style=\"position:relative;\">"+
+        "<div class=\"subject-strip\" style=\"background:var(--english);\"></div>"+
+        "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Revision English</p>"+
+        "<p style=\"font-size:14px; color:var(--muted); margin:0;\">Ten mixed tests of 40 official College Board questions each, mixing Boundaries and Form, Structure &amp; Sense (Standard English Conventions) at all difficulty levels, with the official explanation for every question. No question repeats across the ten tests. Each opens in a new tab.</p>"+
+        "</div><div class=\"card\"><div style=\"display:flex; gap:10px; flex-wrap:wrap;\">";
+      ENGLISH_REVISION_TESTS.forEach(function(t){
+        htmlR += "<a class=\"btn ghost\" href=\""+t.href+"\" style=\"text-decoration:none; flex:1; min-width:200px; white-space:nowrap;\">"+escapeHtml(t.label)+" <span style=\"opacity:.65;\">(40q)</span></a>";
+      });
+      htmlR += "</div></div>";
+      return htmlR;
     }
     if(key==="practice"){
       var htmlT = "<p class=\"eyebrow\" style=\"color:var(--english);\">"+sc.icon+" Practice — choose a domain</p><div class=\"section-grid grid-4\">";
