@@ -1,4 +1,6 @@
 <meta charset="utf-8">
+<script>window.CLC_GUARD_SIGNIN_PAGE=true;</script>
+<script src="assets/clc-guard.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CLC SAT Practice</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -497,7 +499,7 @@
     } else {
       document.body.classList.remove("signin-page");
     }
-    if(t.screen==="signin" || t.screen==="admincodes"){
+    if(t.screen==="signin"){
       app.innerHTML = "<main id=\"screenContent\" style=\"padding:20px 0 48px;\"></main>";
       document.getElementById("screenContent").innerHTML = renderScreen(t);
       return;
@@ -519,7 +521,6 @@
   function screenTitle(t){
     switch(t.screen){
       case "signin": return "CLC SAT Practice";
-      case "admincodes": return "Κωδικοί Πρόσβασης";
       case "welcome": return "Welcome";
       case "home": return "CLC SAT Practice";
       case "section": return SECTIONS[t.params.key].title;
@@ -543,7 +544,6 @@
   function renderScreen(t){
     switch(t.screen){
       case "signin": return screenSignin();
-      case "admincodes": return screenAdminCodes();
       case "welcome": return screenWelcome();
       case "home": return screenHome();
       case "section": return screenSection(t.params.key);
@@ -582,86 +582,10 @@ function screenSignin(){
       "</div>";
   }
 
-  /* ---------------- WEEKLY ROTATING ACCESS CODE ----------------
-     The code changes automatically every week (Mon–Sun, Athens time) with
-     no manual updates needed. CODE_SECRET is the only "master key" — change
-     it (and republish) if you ever want to invalidate every past/future code
-     at once. ADMIN_KEY is a separate secret used only to view the code
-     calendar at ?codes=<ADMIN_KEY> — keep that link private to staff. */
-  var CODE_SECRET = "CLC-Prep-Rotate-2026-v1";
-  var ADMIN_KEY = "clc-teacher-2026-view";
-
-  function athensYMD(d){
-    var fmt = new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Athens', year:'numeric', month:'2-digit', day:'2-digit'});
-    var o = {};
-    fmt.formatToParts(d).forEach(function(p){ o[p.type] = p.value; });
-    return {y:parseInt(o.year,10), m:parseInt(o.month,10), d:parseInt(o.day,10)};
-  }
-  function isoWeekInfo(y,m,d){
-    var date = new Date(Date.UTC(y, m-1, d));
-    var dayNum = (date.getUTCDay()+6)%7;
-    date.setUTCDate(date.getUTCDate() - dayNum + 3);
-    var firstThu = new Date(Date.UTC(date.getUTCFullYear(),0,4));
-    var fDayNum = (firstThu.getUTCDay()+6)%7;
-    firstThu.setUTCDate(firstThu.getUTCDate() - fDayNum + 3);
-    var week = 1 + Math.round((date - firstThu)/(7*24*3600*1000));
-    var monday = new Date(Date.UTC(y,m-1,d));
-    monday.setUTCDate(monday.getUTCDate() - dayNum);
-    var sunday = new Date(monday); sunday.setUTCDate(monday.getUTCDate()+6);
-    return {key: date.getUTCFullYear()+"-W"+(week<10?"0":"")+week, monday:monday, sunday:sunday};
-  }
-  function fnv1a(str){
-    var h = 0x811c9dc5;
-    for(var i=0;i<str.length;i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 0x01000193); }
-    return h >>> 0;
-  }
-  function mulberry32(seed){
-    return function(){
-      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
-      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  var CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no O/0/I/1 confusion
-  function weeklyCodeForKey(weekKey){
-    var rnd = mulberry32(fnv1a(CODE_SECRET+"::"+weekKey));
-    var raw = "";
-    for(var i=0;i<6;i++){ raw += CODE_ALPHABET[Math.floor(rnd()*CODE_ALPHABET.length)]; }
-    return "CLC-"+raw.slice(0,3)+"-"+raw.slice(3);
-  }
-  function currentWeekInfo(){
-    var ymd = athensYMD(new Date());
-    return isoWeekInfo(ymd.y, ymd.m, ymd.d);
-  }
-  function currentWeeklyCode(){
-    return weeklyCodeForKey(currentWeekInfo().key);
-  }
-  function normCode(s){ return String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
-  function fmtDate(d){
-    return d.toLocaleDateString('el-GR', {timeZone:'UTC', day:'2-digit', month:'2-digit', year:'numeric'});
-  }
-
-  function screenAdminCodes(){
-    var cur = currentWeekInfo();
-    var rows = "";
-    for(var i=0;i<10;i++){
-      var d = athensYMD(new Date(Date.now() + i*7*24*3600*1000));
-      var wk = isoWeekInfo(d.y, d.m, d.d);
-      var code = weeklyCodeForKey(wk.key);
-      var isCurrent = wk.key === cur.key;
-      rows += "<div class=\"card\" style=\"display:flex; align-items:center; justify-content:space-between; gap:10px;"+(isCurrent?" border-color:var(--accent);":"")+"\">"+
-        "<div><div style=\"font-size:13px; color:var(--muted);\">"+fmtDate(wk.monday)+" – "+fmtDate(wk.sunday)+(isCurrent?" <b style=\"color:var(--accent);\">(τρέχουσα)</b>":"")+"</div>"+
-        "<div class=\"mono\" style=\"font-size:20px; font-weight:700; margin-top:4px;\">"+code+"</div></div>"+
-        "</div>";
-    }
-    return "<div class=\"card\" style=\"position:relative;\">"+
-      "<div class=\"subject-strip\" style=\"background:var(--accent);\"></div>"+
-      "<p class=\"eyebrow\" style=\"color:var(--accent);\">🔑 Κωδικοί Πρόσβασης — Επόμενες 10 εβδομάδες</p>"+
-      "<p style=\"font-size:13px; color:var(--muted); margin:0;\">Ο κωδικός αλλάζει αυτόματα κάθε Δευτέρα (ώρα Ελλάδας). Δώσε στους μαθητές μόνο τον τρέχοντα κωδικό. Αυτή η σελίδα είναι ιδιωτική — μην μοιραστείς αυτό το link.</p>"+
-      "</div>"+rows+
-      "<button class=\"btn ghost\" onclick=\"location.search=''\">← Πίσω στο Sign In</button>";
-  }
+  /* ---------------- WEEKLY ACCESS CODE ----------------
+     The code changes every Monday (Athens time). The codes themselves are kept
+     offline by the staff; assets/clc-guard.js holds only PBKDF2 hashes of them
+     and checks the code entered here. */
 
   /* ---------------- NAME VALIDATION ----------------
      A real full name: first name + surname (2–4 words), letters only
@@ -705,16 +629,20 @@ function screenSignin(){
       return;
     }
     nameEl.value = nameCheck.name;
-    if(normCode(pass) !== normCode(currentWeeklyCode())){
+    var btn = document.querySelector(".signin-btn"); if(btn) btn.disabled = true;
+    window.CLCGuard.check(pass).then(function(ok){
+    if(btn) btn.disabled = false;
+    if(!ok){
       if(errEl){ errEl.textContent = "\u039b\u03ac\u03b8\u03bf\u03c2 \u03ba\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2. \u0394\u03bf\u03ba\u03af\u03bc\u03b1\u03c3\u03b5 \u03be\u03b1\u03bd\u03ac."; errEl.hidden = false; }
       return;
     }
     var v = nameCheck.name;
     setUser(v);
-    try{ sessionStorage.setItem("clc_signed", currentWeeklyCode()); }catch(e){}
+    window.CLCGuard.save(pass);
     state.nav = [{screen:"welcome"}];
     render();
     histSave(false);
+    });
   };
 
   function screenWelcome(){
@@ -1465,20 +1393,15 @@ function gridOne(a,k){if(clcSf2(a,k))return true;var s=a.replace(/\s+/g,''),t=gr
   /* ---------------- BOOT ---------------- */
 
   function boot(){
-    var qs;
-    try{ qs = new URLSearchParams(location.search); }catch(e){ qs = null; }
-    if(qs && qs.get("codes") === ADMIN_KEY){
-      state.nav = [{screen:"admincodes"}];
-    } else {
-      state.nav = [{screen:"signin"}];
-      var signed = null; try{ signed = sessionStorage.getItem("clc_signed"); }catch(e){}
-      var h = history.state;
-      if(signed && getUser() && normCode(signed) === normCode(currentWeeklyCode()) && h && h.clc && h.nav && h.nav.length){
-        state.nav = h.nav;
-      }
-    }
-    safeRender();
-    histSave(false);
+    state.nav = [{screen:"signin"}];
+    var h = history.state;
+    var resume = getUser() && h && h.clc && h.nav && h.nav.length ? h.nav : null;
+    if(!resume){ safeRender(); histSave(false); return; }
+    window.CLCGuard.check(window.CLCGuard.stored()).then(function(ok){
+      if(ok) state.nav = resume; else window.CLCGuard.clear();
+      safeRender();
+      histSave(false);
+    });
   }
 
   if(window.claude && window.claude.hot){
