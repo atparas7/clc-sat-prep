@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src https://www.desmos.com; worker-src 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta name="clc-build" content="2026-10-16 07:56 UTC">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLC SAT Practice</title>
+<link rel="icon" href="../clc-logo.png">
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#f6f1e7;font-family:-apple-system,system-ui,"Segoe UI",Arial,sans-serif;color:#1c2340;}
+  .lock{width:min(420px,calc(100% - 32px));background:#fff;border:1px solid #e7ddc7;border-top:4px solid #a8002e;border-radius:14px;padding:28px 24px;box-sizing:border-box;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.06);}
+  .lock img{width:72px;height:auto;} .lock h1{font-family:Georgia,serif;color:#a8002e;font-size:22px;margin:10px 0 4px;}
+  .lock p{font-size:14px;color:#5b6472;line-height:1.5;margin:6px 0 16px;}
+  .lock input{width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid #d9d2bd;border-radius:10px;font-size:16px;}
+  .lock button{margin-top:12px;width:100%;padding:12px;border:none;border-radius:10px;background:#a8002e;color:#fff;font-size:16px;font-weight:600;cursor:pointer;}
+  .lock button[disabled]{opacity:.6;cursor:wait;} .err{color:#b4262c;font-size:13.5px;min-height:20px;margin-top:10px;}
+  .wait{display:none;color:#5b6472;font-size:14px;} .hide{display:none;}
+</style>
+</head>
+<body>
+<div class="lock" id="clc-lock">
+  <img src="../clc-logo.png" alt="CLC">
+  <h1>CLC SAT Practice</h1>
+  <div id="clc-form" class="hide">
+    <p>Please enter this week&rsquo;s password to open this test.<br>The password changes every Monday &mdash; ask your teacher.</p>
+    <input id="clc-pw" type="password" autocomplete="off" placeholder="Password" aria-label="Password">
+    <button id="clc-go" type="button">Open</button>
+    <div class="err" id="clc-err" role="alert"></div>
+  </div>
+  <div class="wait" id="clc-wait">Opening&hellip;</div>
+  <div style="font-size:11px;color:#9aa3ad;margin-top:14px;">Updated 2026-10-16 07:56 UTC</div>
+</div>
+<script type="application/octet-stream" id="clc-payload">QDBVTyci93kNAtmHMFGB38L9qE562SJ16Aj2pmgTDEift9IXvuj8mEORXGl6AJZ3AGlxxibIL4qc8Gl8lSo/ckiDG90cgVF7xsYfeF0CrzS7NO7DWb0+ptnSAdIyhC46d2RPi5n0FeNhPRReJACkUaV8EDZoVIpT4TliBti+OKRTkIjJMm9KcGYPn29AE3fTyT6hMXCRTstgZLGsQgVWlR+ZLY3p36Ew0d2lY2RuTqX6Wao5O0YDoMMI+DajEzIc8zHVZLWz9OVkwshCmAf9r7ovAEjqUV1+32PTJzN5A115BFMR9KH6SfBMEISqIlw5vfw8Oue2z1nmW8yJStfpb0G68baCl/j+RJ4IjmCdjhFFqUQwY53aksCxYxjwC0LK8Xfmrgetw+/E88PPZtGjQCrpQk7ACbcvZCarhQyph7h0nN/7OtIK8nAjSWQcZwGIIQZTDvkBCa5IhxR0AGC5IFc/PD7Zcqh74yVI3bIPtD07UPlNtqTCEy21z98pL2hPPDPk4CapW61o5tDYdUgEo3Q3Is0xywDFsonARnXuWF9v09axoEb/6rGNoy6rGEYhA35aL5FISmgbs2wFra88NkPmCY6/sK141zAKZA8w9Fqv7QGop93qwj5TnP1kphzTBJ4pcAex6SdgWLbS95yqtC46XCpBMlm09g3H3aYEdg6Emy/oMFbyjbJ1ryt112t0HEwiql9IIFfpqpa+p7MVQHyBGqFFOK7zGULPgX0ZDiIA9d9BcSAtcgIABYtbFqPXVLFA+2+AY4mu8XLWwqIKwblIaZSyO/nKSX8HYSbe5Ryrk2MqN88DeD0Dl3u+3N/lP5KVO7c1HVLTewmX6zPu4yey9BmP6EkekUccuxjqQTItk7IK9Skr3bNJGOM12xqDlAwTJXiLR9Inms2Lx8XVUJ2jXAyF1xw5muEiRLtM0frQoYrA3GGUjLrEVdwvCVMDlwK4ErSgQLfvbM0WudH1/TlwLGxfuI482pNnflqxd0liX44vCKzXXpJRAApCVRMFmndvN0sIdABFxSWagFYws8heuuhxg7OyP/WRN6nIrzs8mk3GjWx7mb3yOIO5zw9tQpSvodlUmKaGYRilydqi2Nc/vEkVLK0L3+l+mBU399yyq2jlhitmYQjNKGiT2lcGnjWKVWjFpyHKrjg5Vn6Uu3PljYNVe+pUAJlOkQmPDSyRhE0k4jbme13SXhoRw11Khh0hQmmRUabASIKP/QdJlJRULDN07JjRo8zQ8Q8j4l5ahoIIHMUMggl1r/35gDaVhBjrFEzM4DoBcbO3myCPM7gw1SigADZ8D/ORFRVKCLl5qgrWY413OUlS859kt4qq8p2k+JVfWFWfcgpEEPgpmzP5tNUlF2b8PtP1Mwh35I36Ha3Y+znoPAM3f4b0S/1PSkHT05xk/ijScOlGor0cF6MaGfm7jAA1GP69NXpNAyp9ezboaB6cKDRXuWT20dLqnj0qSK2/DZHBZP6Zw23HWPmbwJK2SO2GVMw7HEIqWktk+Ud9hk3NyFwmEvOvc5RAZqrzIysLCqWAV87TLkJPkPdplh0z90PQoliUnE9PKxpjgST5H8NxT5l4edGHt+3oPBMUW6xMD/fzaz/eUcmabd4+uFCOgVnFoFQPskwqdcHo2KtMPHIDP2W3a11yPHGBsL6Icc417AOrZWwwkQerZDCCdVBWexsROPCp0GdTAV3MC4ZsJBDsuAsNfCaDEiuWCdv94mjlDIUVVo4FZ9nyEMv92cKkkGMXKuUsm38iTi+/Zyfw5qcSm6ob4tPvGDAHGnjVJJcH284/PMe3ePT7gyooPPexSgiSNkIZaUAslwbmNLQuhqj12mQuuGU9Cc8NYph+UXLlVhkeIGGj+zRFca40NikdXnmW6SVsaTS9APn/eoUf6AhUf/X9YT79DzDWChoNWHaU6ugCQ3r7SsDMoXLKYFaN5NUtWz7bNqm2SQYyKWCEzcw4TMkhBluCZuYco43WufqYJgjtMU5NAayVWHUivmFUBiJLMnkCqaH4tmb+x3OPTtHvRos9nO4Ls0n5/0lMkza7a9/zpnruVS64POJ/pnEBYlLjszcozMTrxOls/IQkcWODjZQBd2eb3OnGCJHTE4E4Rnw8J9KVDlAovFIvvqXd3kdOQ5nhSR91ZaPiTa7wLExz1MX7q223M0Dp0SG56v6gdnnH7Hp0rmF6bPiU/CSGQ8iZKhXWwXoT9rPjXoNtCENo3MqgtzvIYxYjfhj3Y2UrTQD7mzhedWE2bHM/Fmuz1eQ6XklEGVOw3m8bmsH9zNzv6ZdMoCTeFRMaftz1OQHkg3GVSS/eKlyeZo8NOy1z7ut+4UUzULfNXeDwmCIVd1x85clPh/H9EbNczCZxBwjmIikni0hJF7AFGFzl4QOnnVhvrA2W1qo8lNScog/hyGcjF6hv1O2Qct7stYRTvoQ66nFZlygHzRMj8H+VfuEQXz+gNyEzVHvO9gj7OeVN506wHlyXOWHh6jU9xDT+EG7R38xTF1st3j24rvQRrtjlS3k78TQQbNmcAWh5VFO1Rc6nNGIXP1lTN91PCQ21U4fVSmVoiGN9TtlgtqnF4lklj2+CFQBsX7JLtj5HTwra366A7f00//xaZqVSZaQ4/39KtyeJFAgUS79BrW9MdY+J7+khJtFGxdQMzN5MNNyPj/8krsDEmm5bJOe7MEMKs7v0Kh6Y8k8GGmIXErrgvWwedEdCdXkAp8jz2lSiCS8FnCTftakHZm6HSnRdrd0DkDS0uH8HH4Z754RnE3Vx96b3pA21CT/EWc8vsWaQCuTWcn4p1zu6ezQDPMr2ES1FKSVbfvgqCzmWlaAj437hExsPiVm6SkAqe9E2TxwGTNnGK6T6y/2F/HU5ZvD4k9Zl/lDf23ULycqi2t1+je1Aum9YZ0GNHHgGqM+vMOPTAMfr4Zwlu1dWQa2EoW8KB92JUYxM5U4O1cN7ee9lZ+g/CAcjggPUQPE26Yv9fdW27KK8XMGobg8Kb0IRVdL+ye/3xDKeD/ereKkSXQ/jmuWUiqowxCBfgJVJpJYq+IecHrHY4wN5J31N46buEjZeXteXaeM9qrIaRD13NS+aHF6d0Rk45CM0jBuvmnSCcjMg79x3I0jhGHqtJbI3NX6qK+OH9K2hW0Am1F7uetGOsAfTfr/lb2MjgA7aoJ0Z9zOjZsYq/aIzyuQaAU2F4NWHphckoygk/K2CJlnEqQ0ymsLup5/6jJlP/8l24YYMVkSqErkGx+KDyn3HHZVs7OiDMlvQnDBRtrx+bYTPbKrKmHW6JNNRhFlq/EM3Yp3Fpxmam6uP3yomT2RCiDNvcPhEqQO5zh60k7Z+YIYs4IfP83Uv8rZOs80v0UVAPDzx6uplgF0WDBzOti3rwbm3OvE7O2sVyb0RMiCWpvif6DJtJkwijmcZBr7pOaW2WyfgRX90txwyWLRarI//BXjAMPvnSg0Ttyi/QRAMpoNIVzyqZKzhXa60BZOu9oKo8oZjzSS1/LJU7KTn00LG9QF6XX35OacrSrOpPAuJlzi55NcBUNCmFexOGdJ6/DwNDYz3SKBzK6iNrGGdpdMIUqHA/Euhd0G2KiNXu5jLERQd244Ez+/2QVu1/Lr/dSybKES1rKhr4kNnn5Q+56wnu/TiE528GijqF7puqsy/JXZ1XArd2tuyMn3c/HK1XD8FHnLf7BAFZ9gFfZRYL1HLO1jockYkSgXUYoxKq8IJXAN3+U/1Ql2Uqgl1VxAwC1vr9wv9wdSHwkQzdBaVgQtejdXl4FO94INT+VVa+UlYWsrc4ZIbz7+Om8cRRzJDQN1JmsGRNRVg+Nd3iRGMGnNdHmh4beqogjqoBIh+p+25NN/9+4iVw3kvFPhRi9HOlIq2OGzw0zM9rM3Bahmf178ctx65UEhraq2JRztx0Yu0V6FSpu4C3gMK4im2v7apwP981OJSdhtuYgvQVYfZS1ccmhU=</script>
+<script>
+(function(){
+  var WEEK = 1, ITER = 600000, SITE = "clc-sat-prep", STORE = "clc_site_key";
+  var te = new TextEncoder();
+  function el(id){ return document.getElementById(id); }
+  function bytes(b64){ return Uint8Array.from(atob(b64), function(c){ return c.charCodeAt(0); }); }
+  function b64(buf){ var s = "", a = new Uint8Array(buf); for (var i = 0; i < a.length; i += 32768) s += String.fromCharCode.apply(null, a.subarray(i, i + 32768)); return btoa(s); }
+  function norm(s){ return String(s || "").normalize("NFC").toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, ""); }
+  var data = bytes(el("clc-payload").textContent.trim());
+  function open(key){
+    return crypto.subtle.decrypt({name: "AES-GCM", iv: data.slice(0, 12)}, key, data.slice(12)).then(function(plain){
+      var html = new TextDecoder().decode(plain);
+      return new Promise(function(done){
+        function show(){                                       // replace this lock page by the real page
+          document.open(); document.write(html); document.close(); done();
+        }
+        if (document.readyState === "complete") setTimeout(show, 0);   // document.open() is ignored while this page is still loading
+        else window.addEventListener("load", function(){ setTimeout(show, 0); });
+      });
+    });
+  }
+  function fromPassword(pw){
+    return crypto.subtle.importKey("raw", te.encode(norm(pw)), "PBKDF2", false, ["deriveKey"]).then(function(base){
+      return crypto.subtle.deriveKey({name: "PBKDF2", hash: "SHA-256", salt: te.encode(SITE + ":week:" + WEEK), iterations: ITER},
+        base, {name: "AES-GCM", length: 256}, true, ["decrypt"]);
+    });
+  }
+  function ask(msg){
+    el("clc-wait").style.display = "none"; el("clc-form").classList.remove("hide");
+    el("clc-err").textContent = msg || ""; el("clc-pw").value = ""; el("clc-pw").focus();
+  }
+  function submit(){
+    var pw = el("clc-pw").value; if (!norm(pw)){ ask("Please type the password."); return; }
+    el("clc-go").disabled = true; el("clc-err").textContent = "Checking…";
+    fromPassword(pw).then(function(key){
+      return crypto.subtle.decrypt({name: "AES-GCM", iv: data.slice(0, 12)}, key, data.slice(12)).then(function(){ return key; });
+    }).then(function(key){
+      return crypto.subtle.exportKey("raw", key).then(function(raw){
+        try{ sessionStorage.setItem(STORE, JSON.stringify({w: WEEK, k: b64(raw)})); }catch(e){}
+        return open(key);
+      });
+    }).catch(function(){
+      el("clc-go").disabled = false;
+      ask("Wrong password. The password changes every Monday — ask your teacher for this week's password.");
+    });
+  }
+  if (!window.crypto || !crypto.subtle){ ask("Please open this page in an up-to-date browser (Chrome, Safari, Edge or Firefox)."); return; }
+  // Browsers may keep an old copy of this page. Ask the server for the current one (this also refreshes the
+  // browser's copy); if it is from a newer build, reload once. Never blocks for more than 2.5 s.
+  function fresh(){
+    var BUILD = (document.querySelector('meta[name="clc-build"]') || {}).content || "";
+    return new Promise(function(done){
+      var over = false, t = setTimeout(function(){ over = true; done(); }, 2500);
+      if (!window.fetch){ clearTimeout(t); done(); return; }
+      fetch(location.href.split("#")[0], {cache: "reload"}).then(function(r){ return r.ok ? r.text() : ""; }).then(function(txt){
+        if (over) return; clearTimeout(t);
+        var m = /<meta name="clc-build" content="([^"]+)">/.exec(txt), flag = "clc_reload_" + (m ? m[1] : "");
+        var tried = false; try{ tried = !!sessionStorage.getItem(flag); }catch(e){}
+        if (m && m[1] !== BUILD && !tried){ try{ sessionStorage.setItem(flag, "1"); }catch(e){} location.reload(); return; }
+        done();
+      }).catch(function(){ if (!over){ clearTimeout(t); done(); } });
+    });
+  }
+  fresh().then(start);
+  function start(){
+  el("clc-go").addEventListener("click", submit);
+  el("clc-pw").addEventListener("keydown", function(e){ if (e.key === "Enter") submit(); });
+  var saved = null; try{ saved = JSON.parse(sessionStorage.getItem(STORE) || "null"); }catch(e){}
+  if (saved && saved.w === WEEK && saved.k){                 // signed in earlier in this tab, same week: open straight away
+    el("clc-wait").style.display = "block";
+    crypto.subtle.importKey("raw", bytes(saved.k), "AES-GCM", true, ["decrypt"]).then(open).catch(function(){
+      try{ sessionStorage.removeItem(STORE); }catch(e){}
+      ask("");
+    });
+  } else ask("");
+  }
+})();
+</script>
+</body>
+</html>
